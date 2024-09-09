@@ -101,6 +101,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
+name = "char_data"
+version = "0.1.0"
+
+[[package]]
 name = "ciborium"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -465,6 +469,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1868808506b929d7b0cfa8f75951347aa71bb21144b7791bae35d9bccfcfe37a"
 dependencies = [
  "wasm-bindgen",
+]
+
+[[package]]
+name = "ketra_frontend"
+version = "0.1.0"
+dependencies = [
+ "char_data",
+ "leptos",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
@@ -1146,13 +1160,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
-]
-
-[[package]]
-name = "test_rust"
-version = "0.1.0"
-dependencies = [
- "leptos",
 ]
 
 [[package]]

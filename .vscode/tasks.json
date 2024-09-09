@@ -3,9 +3,15 @@
 	"tasks": [
 		{
 			"type": "shell",
-			"command": "trunk serve",
+			"command": "trunk serve --config='./ketra_frontend/Trunk.toml'",
 			"group": "build",
 			"label": "rust: run website"
+		},
+		{
+			"type": "shell",
+			"command": "cargo run --manifest-path='./ketra_backend/Cargo.toml'",
+			"group": "build",
+			"label": "rust: run backend"
 		}
 	]
 }

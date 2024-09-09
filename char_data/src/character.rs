@@ -1,5 +1,4 @@
 use std;
-use leptos::html::Main;
 
 #[derive(Debug, Clone)]
 pub struct MainStat{
@@ -86,7 +85,7 @@ impl MainStats {
 
     pub fn set_stat(&mut self, id: &str, value: i32){
         for s in self.mut_vec() {
-            if(s.get_id() == id){
+            if s.get_id() == id {
                 s.value = value;
             }
         }

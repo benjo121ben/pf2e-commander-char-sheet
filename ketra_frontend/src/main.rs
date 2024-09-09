@@ -2,13 +2,11 @@ use leptos::*;
 use leptos::logging::log;
 use mainstats_view::*;
 
-mod character;
 mod mainstats_view;
-mod char_data_structs;
 
-use char_data_structs::proficiency::ProficiencyLevel;
+use char_data::proficiency::ProficiencyLevel;
 
-use character::Character;
+use char_data::character::Character;
 
 
 fn main() { 
@@ -50,7 +48,5 @@ fn App() -> impl IntoView {
             let val: i32 = event_target_value(&event).parse().unwrap();
             c.main_stats.strength.value = val;
         })}/>
-
-        
     }
 }
