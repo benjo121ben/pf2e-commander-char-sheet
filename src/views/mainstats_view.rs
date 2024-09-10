@@ -1,4 +1,4 @@
-use char_data::character::*;
+use crate::char_data::character::*;
 use leptos::*;
 use leptos::logging::log;
 

@@ -1,6 +1,7 @@
 use std;
+use serde::{Serialize, Deserialize};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MainStat{
     id: String,
     name: String,
@@ -39,7 +40,7 @@ impl std::cmp::PartialEq for MainStat {
 }
 
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MainStats {
     pub strength: MainStat,
     pub dexterity: MainStat,
@@ -117,7 +118,7 @@ pub struct DependentStat{
 
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Character {
     pub name: String,
     pub level: i32,
