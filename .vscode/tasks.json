@@ -3,15 +3,9 @@
 	"tasks": [
 		{
 			"type": "shell",
-			"command": "trunk serve --config='./ketra_frontend/Trunk.toml'",
-			"group": "build",
-			"label": "rust: run website"
-		},
-		{
-			"type": "shell",
-			"command": "cargo run --manifest-path='./ketra_backend/Cargo.toml'",
-			"group": "build",
-			"label": "rust: run backend"
+			"command": "cargo leptos watch",
+			"group": {"isDefault": true, "kind": "build"},
+			"label": "rust: deploy website and server"
 		}
 	]
 }
