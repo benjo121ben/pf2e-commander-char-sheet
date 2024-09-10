@@ -9,9 +9,11 @@ use crate::char_data::proficiency::ProficiencyLevel;
 
 use crate::char_data::character::Character;
 
-#[server(AddTodo, "/api")]
+#[server(GetChar, "/api")]
 pub async fn get_char() -> Result<Character, ServerFnError> {
-    Ok(Character::new("Ketrania Valenzia Adriaste Uth Viharin VII"))
+    let mut ketra = Character::new("Ketrania Valenzia Adriaste Uth Viharin VII");
+    ketra.main_stats.set_stat("str", 1);
+    return Ok(ketra);
 }
 
 #[component]
@@ -21,28 +23,35 @@ pub fn App() -> impl IntoView {
     let (read_ketra, write_ketra) = create_signal(Character::new(""));
     let (error_read, error_write) = create_signal(ServerFnError::new("Empty"));
     let (flag_error_read, flag_error_write) = create_signal(false);
-    let get_ketra = async {
+    let get_ketra = create_action( move |_:&i32| async move {
+        let ret_val: Option<Character> = None;
         match get_char().await {
             Ok(val) => write_ketra.set(val),
             Err(err) => log!("{err}")
         }
-    };
+        log!("KETRA IS HERE");
+    });
     let error_message = move || flag_error_read().then(|| error_read().to_string());
-    let prof = ProficiencyLevel::Half;
+    let (prof_read, prof_write) = create_signal(ProficiencyLevel::Half);
+    get_ketra.dispatch(0);
     view! {
-        // injects a stylesheet into the document <head>
-        // id=leptos means cargo-leptos will hot-reload this stylesheet
         <Stylesheet id="leptos" href="/pkg/pf2e-char-sheet.css"/>
         // sets the document title
         <Title text="Welcome to Leptos"/>
+        <Suspense
+            fallback=move || view! {<p>"Loading ...."</p>}
+        >
+            // injects a stylesheet into the document <head>
+        // id=leptos means cargo-leptos will hot-reload this stylesheet
+        
         <h3>{move || read_ketra().name} Level {move || read_ketra().level}</h3>
-        <p>{error_message}</p>
-        <input type="number" on:change={move|event| write_ketra.update(|c| {
+        <p>{move || error_message}</p>
+        <input type="number" on:change={move|event| write_ketra.update(move |c| {
             let val: i32 = event_target_value(&event).parse().unwrap();
             c.level = val;
         })}/>
         <p>
-            This is a test value {move || prof.get_bonus(read_ketra().level)}
+            This is a test value {move || prof_read().get_bonus(read_ketra().level)}
         </p> 
         <For
             each=move || read_ketra().main_stats.as_vec().into_iter().map(|f| f.get_id().to_string())
@@ -66,6 +75,7 @@ pub fn App() -> impl IntoView {
             let val: i32 = event_target_value(&event).parse().unwrap();
             c.main_stats.strength.value = val;
         })}/>
+        </Suspense>
     }
 }
 
