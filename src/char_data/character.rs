@@ -51,7 +51,18 @@ pub struct MainStats {
 }
 
 impl MainStats {
-    pub fn new() -> MainStats{
+    pub fn new (str: i32, dex: i32, con: i32, int: i32, wis: i32, cha: i32) -> MainStats{
+        MainStats { 
+            strength: MainStat::new("str", "Strength", "Str", str),
+            dexterity: MainStat::new("dex", "Dexterity", "Dex", dex),
+            constitution: MainStat::new("con", "Constitution", "Con", con),
+            intelligence: MainStat::new("int", "Intelligence", "Int", int),
+            wisdom: MainStat::new("wis", "Wisdom", "Wis", wis),
+            charisma: MainStat::new("char", "Charisma", "Cha", cha),
+         }
+    }
+
+    pub fn zero() -> MainStats{
         MainStats { 
             strength: MainStat::new("str", "Strength", "Str", 0),
             dexterity: MainStat::new("dex", "Dexterity", "Dex", 0),
@@ -128,11 +139,11 @@ pub struct Character {
 }
 
 impl Character {
-    pub fn new(name: &str) -> Character {
+    pub fn new(name: &str, main_stats: MainStats) -> Character {
         Character {
             name: String::from(name),
             level: 1,
-            main_stats: MainStats::new(),
+            main_stats: main_stats,
             background: String::from("Squire"),
             class: String::from("Commander"),
         }

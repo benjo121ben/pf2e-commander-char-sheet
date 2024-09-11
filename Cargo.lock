@@ -1248,6 +1248,7 @@ dependencies = [
  "leptos_meta",
  "leptos_router",
  "serde",
+ "serde_json",
  "thiserror",
  "tokio",
  "tower",
