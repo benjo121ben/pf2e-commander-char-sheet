@@ -26,40 +26,58 @@ pub fn CharacterView(
     });
     let (prof_read, prof_write) = create_signal(ProficiencyLevel::Half);
     view! {
-    
-        <h3>{move || read_ketra().name} Level {move || read_ketra().level}</h3>
+        <h3>{move || read_ketra().name}Level {move || read_ketra().level}</h3>
         <p>{move || read_save_error()}</p>
-        <input type="number" on:change={move|event| write_ketra.update(move |c| {
-            let val: i32 = event_target_value(&event).parse().unwrap();
-            c.level = val;
-        })}/>
-        <p>
-            This is a test value {move || prof_read().get_bonus(read_ketra().level)}
-        </p> 
+        <input
+            type="number"
+            on:change=move |event| {
+                write_ketra
+                    .update(move |c| {
+                        let val: i32 = event_target_value(&event).parse().unwrap();
+                        c.level = val;
+                    })
+            }
+        />
+        <p>This is a test value {move || prof_read().get_bonus(read_ketra().level)}</p>
         <For
-            each=move || read_ketra().main_stats.as_vec().into_iter().map(|f| f.get_id().to_string())
+            each=move || {
+                read_ketra().main_stats.as_vec().into_iter().map(|f| f.get_id().to_string())
+            }
             key=|id| id.clone()
             children=move |id| {
                 let idForInput = id.clone();
-                let trueVal = create_memo(move |_|{
+                let trueVal = create_memo(move |_| {
                     let idClone = id.clone();
-                    read_ketra.with(move|k| k.main_stats.get_stat_val(&idClone)).unwrap()
+                    read_ketra.with(move |k| k.main_stats.get_stat_val(&idClone)).unwrap()
                 });
-                view!{
-                    <input type="number" value={trueVal} on:change={move |event| write_ketra.update(|f| {
-                        let val: i32 = event_target_value(&event).parse().unwrap();
-                        f.main_stats.set_stat(&idForInput, val);
-                    })}/>
+                view! {
+                    <input
+                        type="number"
+                        value=trueVal
+                        on:change=move |event| {
+                            write_ketra
+                                .update(|f| {
+                                    let val: i32 = event_target_value(&event).parse().unwrap();
+                                    f.main_stats.set_stat(&idForInput, val);
+                                })
+                        }
+                    />
                 }
             }
         />
-        <crate::views::mainstats_view::MainStatsView char=read_ketra/>
-        <input type="number" on:change={move|event| write_ketra.update(|c| {
-            let val: i32 = event_target_value(&event).parse().unwrap();
-            c.main_stats.strength.value = val;
-        })}/>
+        <crate::views::mainstats_view::MainStatsView char=read_ketra />
+        <input
+            type="number"
+            on:change=move |event| {
+                write_ketra
+                    .update(|c| {
+                        let val: i32 = event_target_value(&event).parse().unwrap();
+                        c.main_stats.strength.value = val;
+                    })
+            }
+        />
 
-        <button type="submit" on:click={move |_| upload_ketra.dispatch(0)}>
+        <button type="submit" on:click=move |_| upload_ketra.dispatch(0)>
             "saveChar"
         </button>
     }
