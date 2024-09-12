@@ -26,8 +26,11 @@ pub fn CharacterView(
     });
     let (prof_read, prof_write) = create_signal(ProficiencyLevel::Half);
     view! {
-        <h3>{move || read_ketra().name}Level {move || read_ketra().level}</h3>
+        <h2>{move || read_ketra().name}</h2>
+        <button>Level {move || read_ketra().level}</button>
+
         <p>{move || read_save_error()}</p>
+        
         <input
             type="number"
             on:change=move |event| {
@@ -66,19 +69,5 @@ pub fn CharacterView(
             }
         />
         <crate::views::mainstats_view::MainStatsView char=read_ketra />
-        <input
-            type="number"
-            on:change=move |event| {
-                write_ketra
-                    .update(|c| {
-                        let val: i32 = event_target_value(&event).parse().unwrap();
-                        c.main_stats.strength.value = val;
-                    })
-            }
-        />
-
-        <button type="submit" on:click=move |_| upload_ketra.dispatch(0)>
-            "saveChar"
-        </button>
     }
 }
