@@ -1,7 +1,8 @@
 use std::fmt;
 
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ProficiencyLevel{
     Untrained,
     Half,

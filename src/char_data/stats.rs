@@ -1,5 +1,6 @@
-use std;
 use serde::{Deserialize, Serialize};
+
+use super::proficiency::ProficiencyLevel;
 
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -125,7 +126,30 @@ impl MainStats {
 
 
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DependentStat{
+    pub main_stat: String, 
+    pub name: String, 
+    pub proficiency: ProficiencyLevel,
+    pub lore: bool
+}
 
+impl DependentStat {
+    pub fn default_skill(main_stat: &str, name: &str) -> DependentStat {
+        DependentStat {
+            main_stat: String::from(main_stat),
+            name: String::from(name),
+            proficiency: ProficiencyLevel::Untrained,
+            lore: false
+        }
+    }
+
+    pub fn new(main_stat: &str, name: &str, proficiency: ProficiencyLevel, lore: bool) -> DependentStat {
+        DependentStat {
+            main_stat: String::from(main_stat),
+            name: String::from(name),
+            proficiency: proficiency,
+            lore
+        }
+    }
 }
