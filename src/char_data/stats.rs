@@ -152,4 +152,12 @@ impl DependentStat {
             lore
         }
     }
+
+    pub fn make_new_saves(fortitude: ProficiencyLevel, reflex: ProficiencyLevel, will: ProficiencyLevel) -> Vec<DependentStat> {
+        return vec![
+            DependentStat::new("con", "Fortitude", fortitude, false),
+            DependentStat::new("dex", "Reflex", reflex, false),
+            DependentStat::new("wis", "Will", will, false),
+        ]
+    }
 }

@@ -2,18 +2,19 @@ use leptos::logging::log;
 use std::error::Error;
 use std::fs::read_to_string;
 use std::path::Path;
-use crate::char_data::character::Character;
+use crate::char_data::character::{Character, SimpleCharacter};
 
 
-pub fn read_user_from_file<P: AsRef<Path>>(path: P) -> Result<Character, Box<dyn Error>> {
+pub fn read_char_from_file<P: AsRef<Path>>(path: P) -> Result<Character, Box<dyn Error>> {
+
     // Open the file in read-only mode with buffer.
     let check_file_path_result = std::fs::exists(&path);
     match check_file_path_result {
         Ok(exists) => {
             if exists {
                 let file_str = read_to_string(&path)?;
-                let character = serde_json::from_str(&file_str)?;
-                return Ok(character);
+                let character: SimpleCharacter = serde_json::from_str(&file_str)?;
+                return Ok(Character::from(character));
             }
             else {
                 log!("Filepath does not exist, retun new char");
@@ -31,7 +32,7 @@ pub fn read_user_from_file<P: AsRef<Path>>(path: P) -> Result<Character, Box<dyn
 }
 
 pub fn write_char_to_file<P: AsRef<Path>>(path: P, character: &Character) -> Result<(), Box<dyn Error>>{
-    match serde_json::to_string_pretty(character) {
+    match serde_json::to_string_pretty(&SimpleCharacter::from(character)) {
         Ok(json) => {
             match std::fs::write(path, json) {
                 Ok(_) => {

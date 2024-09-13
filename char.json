@@ -42,101 +42,74 @@
   "background": "Squire",
   "class": "Commander",
   "skills": [
-    {
-      "main_stat": "dex",
-      "name": "Acrobatics",
-      "proficiency": "Untrained",
-      "lore": false
-    },
-    {
-      "main_stat": "int",
-      "name": "Arcana",
-      "proficiency": "Untrained",
-      "lore": false
-    },
-    {
-      "main_stat": "str",
-      "name": "Athletics",
-      "proficiency": "Untrained",
-      "lore": false
-    },
-    {
-      "main_stat": "int",
-      "name": "Crafting",
-      "proficiency": "Untrained",
-      "lore": false
-    },
-    {
-      "main_stat": "cha",
-      "name": "Deception",
-      "proficiency": "Untrained",
-      "lore": false
-    },
-    {
-      "main_stat": "cha",
-      "name": "Diplomacy",
-      "proficiency": "Untrained",
-      "lore": false
-    },
-    {
-      "main_stat": "cha",
-      "name": "Intimidation",
-      "proficiency": "Untrained",
-      "lore": false
-    },
-    {
-      "main_stat": "wis",
-      "name": "Medicine",
-      "proficiency": "Untrained",
-      "lore": false
-    },
-    {
-      "main_stat": "wis",
-      "name": "Nature",
-      "proficiency": "Untrained",
-      "lore": false
-    },
-    {
-      "main_stat": "int",
-      "name": "Occultism",
-      "proficiency": "Untrained",
-      "lore": false
-    },
-    {
-      "main_stat": "cha",
-      "name": "Performance",
-      "proficiency": "Untrained",
-      "lore": false
-    },
-    {
-      "main_stat": "wis",
-      "name": "Religion",
-      "proficiency": "Untrained",
-      "lore": false
-    },
-    {
-      "main_stat": "int",
-      "name": "Society",
-      "proficiency": "Untrained",
-      "lore": false
-    },
-    {
-      "main_stat": "dex",
-      "name": "Stealth",
-      "proficiency": "Untrained",
-      "lore": false
-    },
-    {
-      "main_stat": "wis",
-      "name": "Survival",
-      "proficiency": "Untrained",
-      "lore": false
-    },
-    {
-      "main_stat": "dex",
-      "name": "Thievery",
-      "proficiency": "Untrained",
-      "lore": false
-    }
+    [
+      "Acrobatics",
+      "Untrained"
+    ],
+    [
+      "Arcana",
+      "Untrained"
+    ],
+    [
+      "Athletics",
+      "Untrained"
+    ],
+    [
+      "Crafting",
+      "Untrained"
+    ],
+    [
+      "Deception",
+      "Untrained"
+    ],
+    [
+      "Diplomacy",
+      "Untrained"
+    ],
+    [
+      "Intimidation",
+      "Untrained"
+    ],
+    [
+      "Medicine",
+      "Untrained"
+    ],
+    [
+      "Nature",
+      "Untrained"
+    ],
+    [
+      "Occultism",
+      "Untrained"
+    ],
+    [
+      "Performance",
+      "Untrained"
+    ],
+    [
+      "Religion",
+      "Untrained"
+    ],
+    [
+      "Society",
+      "Untrained"
+    ],
+    [
+      "Stealth",
+      "Untrained"
+    ],
+    [
+      "Survival",
+      "Untrained"
+    ],
+    [
+      "Thievery",
+      "Untrained"
+    ]
+  ],
+  "saves": [
+    "Untrained",
+    "Untrained",
+    "Untrained"
   ]
 }
