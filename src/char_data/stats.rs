@@ -1,19 +1,19 @@
 use serde::{Deserialize, Serialize};
-
-use super::proficiency::ProficiencyLevel;
+use leptos::logging::log;
+use super::{character::Character, proficiency::ProficiencyLevel};
 
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
-pub struct MainStat{
+pub struct Attribute{
     id: String,
     name: String,
     abbrv: String,
     pub value: i32
 }
 
-impl MainStat{
-    pub fn new(id: &str, name: &str, abbrv: &str, val: i32) -> MainStat {
-        MainStat{
+impl Attribute{
+    pub fn new(id: &str, name: &str, abbrv: &str, val: i32) -> Attribute {
+        Attribute{
             id: String::from(id),
             name: String::from(name),
             abbrv: String::from(abbrv),
@@ -34,7 +34,7 @@ impl MainStat{
     }
 }
 
-impl std::cmp::PartialEq for MainStat {
+impl std::cmp::PartialEq for Attribute {
     // Required method
     fn eq(&self, other: &Self) -> bool {
         return self.id == other.id && self.abbrv == other.abbrv && self.value == other.value;
@@ -43,39 +43,39 @@ impl std::cmp::PartialEq for MainStat {
 
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
-pub struct MainStats {
-    pub strength: MainStat,
-    pub dexterity: MainStat,
-    pub constitution: MainStat,
-    pub wisdom: MainStat,
-    pub intelligence: MainStat,
-    pub charisma: MainStat,
+pub struct Attributes {
+    pub strength: Attribute,
+    pub dexterity: Attribute,
+    pub constitution: Attribute,
+    pub wisdom: Attribute,
+    pub intelligence: Attribute,
+    pub charisma: Attribute,
 }
 
-impl MainStats {
-    pub fn new (str: i32, dex: i32, con: i32, int: i32, wis: i32, cha: i32) -> MainStats{
-        MainStats { 
-            strength: MainStat::new("str", "Strength", "Str", str),
-            dexterity: MainStat::new("dex", "Dexterity", "Dex", dex),
-            constitution: MainStat::new("con", "Constitution", "Con", con),
-            intelligence: MainStat::new("int", "Intelligence", "Int", int),
-            wisdom: MainStat::new("wis", "Wisdom", "Wis", wis),
-            charisma: MainStat::new("char", "Charisma", "Cha", cha),
+impl Attributes {
+    pub fn new (str: i32, dex: i32, con: i32, int: i32, wis: i32, cha: i32) -> Attributes{
+        Attributes { 
+            strength: Attribute::new("str", "Strength", "Str", str),
+            dexterity: Attribute::new("dex", "Dexterity", "Dex", dex),
+            constitution: Attribute::new("con", "Constitution", "Con", con),
+            intelligence: Attribute::new("int", "Intelligence", "Int", int),
+            wisdom: Attribute::new("wis", "Wisdom", "Wis", wis),
+            charisma: Attribute::new("cha", "Charisma", "Cha", cha),
          }
     }
 
-    pub fn zero() -> MainStats{
-        MainStats { 
-            strength: MainStat::new("str", "Strength", "Str", 0),
-            dexterity: MainStat::new("dex", "Dexterity", "Dex", 0),
-            constitution: MainStat::new("con", "Constitution", "Con", 0),
-            wisdom: MainStat::new("wis", "Wisdom", "Wis", 0),
-            intelligence: MainStat::new("int", "Intelligence", "Int", 0),
-            charisma: MainStat::new("char", "Charisma", "Cha", 0),
+    pub fn zero() -> Attributes{
+        Attributes { 
+            strength: Attribute::new("str", "Strength", "Str", 0),
+            dexterity: Attribute::new("dex", "Dexterity", "Dex", 0),
+            constitution: Attribute::new("con", "Constitution", "Con", 0),
+            wisdom: Attribute::new("wis", "Wisdom", "Wis", 0),
+            intelligence: Attribute::new("int", "Intelligence", "Int", 0),
+            charisma: Attribute::new("cha", "Charisma", "Cha", 0),
          }
     }
 
-    pub fn as_vec(&self) -> Vec<MainStat> {
+    pub fn as_vec(&self) -> Vec<Attribute> {
         vec![
             self.strength.clone(),
             self.dexterity.clone(),
@@ -86,7 +86,18 @@ impl MainStats {
         ]
     }
 
-    fn mut_vec(&mut self) -> Vec<&mut MainStat>{
+    pub fn as_number_vec(&self) -> Vec<i32> {
+        vec![
+            self.strength.value,
+            self.dexterity.value,
+            self.constitution.value,
+            self.wisdom.value,
+            self.intelligence.value,
+            self.charisma.value
+        ]
+    }
+
+    fn mut_vec(&mut self) -> Vec<&mut Attribute>{
         vec![
             &mut self.strength,
             &mut self.dexterity,
@@ -105,7 +116,7 @@ impl MainStats {
         }
     }
 
-    pub fn get_stat(&self, id: &str) -> std::option::Option::<MainStat> {
+    pub fn get_stat(&self, id: &str) -> std::option::Option::<Attribute> {
         for s in self.as_vec() {
             if s.get_id() == id {
                 return std::option::Option::Some(s.clone());
@@ -124,29 +135,65 @@ impl MainStats {
     }
 }
 
+impl From<Vec<i32>> for Attributes {
+    fn from(vector: Vec<i32>) -> Self {
+        let mut ret_val = Self::zero();
+        if vector.len() < 6 {
+            panic!("Not enough values to create attributes from vector");
+        }
+        else{
+            ret_val.strength.value = vector[0];
+            ret_val.dexterity.value = vector[1];
+            ret_val.constitution.value = vector[2];
+            ret_val.intelligence.value = vector[3];
+            ret_val.wisdom.value = vector[4];
+            ret_val.charisma.value = vector[5];
+            return ret_val;
+        }
+    }
+}
+
+impl From<&Vec<i32>> for Attributes {
+    fn from(vector: &Vec<i32>) -> Self {
+        let mut ret_val = Self::zero();
+        if vector.len() < 6 {
+            panic!("Not enough values to create attributes from vector");
+        }
+        else{
+            ret_val.strength.value = vector[0];
+            ret_val.dexterity.value = vector[1];
+            ret_val.constitution.value = vector[2];
+            ret_val.intelligence.value = vector[3];
+            ret_val.wisdom.value = vector[4];
+            ret_val.charisma.value = vector[5];
+            return ret_val;
+        }
+    }
+}
+
 
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DependentStat{
-    pub main_stat: String, 
+    pub attribute: String, 
     pub name: String, 
     pub proficiency: ProficiencyLevel,
     pub lore: bool
 }
 
 impl DependentStat {
-    pub fn default_skill(main_stat: &str, name: &str) -> DependentStat {
+    pub fn default_skill(attribute: &str, name: &str) -> DependentStat {
         DependentStat {
-            main_stat: String::from(main_stat),
+            attribute: String::from(attribute),
             name: String::from(name),
             proficiency: ProficiencyLevel::Untrained,
             lore: false
         }
     }
 
-    pub fn new(main_stat: &str, name: &str, proficiency: ProficiencyLevel, lore: bool) -> DependentStat {
+    pub fn new(attribute: &str, name: &str, proficiency: ProficiencyLevel, lore: bool) -> DependentStat {
         DependentStat {
-            main_stat: String::from(main_stat),
+            attribute: String::from(attribute),
             name: String::from(name),
             proficiency: proficiency,
             lore
@@ -159,5 +206,15 @@ impl DependentStat {
             DependentStat::new("dex", "Reflex", reflex, false),
             DependentStat::new("wis", "Will", will, false),
         ]
+    }
+
+    pub fn calculate_stat(self: &Self, character: &Character) -> i32 {
+        let attribute_name = self.attribute.clone();
+        let char_attributes = &character.attributes;
+        let base_val = char_attributes.get_stat(&attribute_name);
+        match base_val {
+            Some(val) => val.value + self.proficiency.get_bonus(character.level),
+            None => {log!("There was an error getting attribute: {attribute_name}"); return -99},
+        }
     }
 }

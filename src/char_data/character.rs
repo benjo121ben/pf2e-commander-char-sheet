@@ -1,11 +1,11 @@
 use serde::{Deserialize, Serialize};
-use super::{proficiency::ProficiencyLevel, stats::{DependentStat, MainStats}};
+use super::{proficiency::ProficiencyLevel, stats::{DependentStat, Attributes}};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Character {
     pub name: String,
     pub level: i32,
-    pub main_stats: MainStats,
+    pub attributes: Attributes,
     pub background: String,
     pub class: String,
     pub skills: Vec<DependentStat>,
@@ -13,11 +13,11 @@ pub struct Character {
 }
 
 impl Character {
-    pub fn new(name: &str, main_stats: MainStats, skills: Vec<DependentStat>, saves: Vec<DependentStat>) -> Character {
+    pub fn new(name: &str, attributes: Attributes, skills: Vec<DependentStat>, saves: Vec<DependentStat>) -> Character {
         Character {
             name: String::from(name),
             level: 1,
-            main_stats: main_stats,
+            attributes,
             background: String::from("Squire"),
             class: String::from("Commander"),
             skills: skills,
@@ -29,7 +29,7 @@ impl Character {
         Character {
             name: String::from(""),
             level: 1,
-            main_stats: MainStats::zero(),
+            attributes: Attributes::zero(),
             background: String::from("Squire"),
             class: String::from("Commander"),
             skills: vec![
@@ -60,9 +60,9 @@ impl Character {
 }
 
 impl Character {
-    fn get_appropriate_skill(skill_name: &str) -> (String, bool){
+    fn get_attribute_and_lore_flag_from_skill_name(skill_name: &str) -> (String, bool){
         let mut is_lore = false;
-        let main_stat = match skill_name {
+        let attribute = match skill_name {
             "Acrobatics" => "dex",
             "Arcana" => "int",
             "Athletics" => "str",
@@ -82,57 +82,68 @@ impl Character {
             _ => {is_lore = true; "int"}
 
         };
-        return (String::from(main_stat), is_lore);
+        return (String::from(attribute), is_lore);
+
+        
+    }
+
+    fn get_skill_obj_from_skill_name(self: &Self, skill_name: &str) -> Option<DependentStat>{
+        for skill in &self.skills {
+            if skill.name == skill_name {
+                return Some((*skill).clone());
+            }
+        }
+        return None;
     }
 }
 
 impl From<SimpleCharacter> for Character{
-    fn from(value: SimpleCharacter) -> Self {
+    fn from(simp_char: SimpleCharacter) -> Self {
         let mut ret_val = Character {
-            name: value.name.clone(),
-            level: value.level,
-            main_stats: value.main_stats.clone(),
-            background: value.background.clone(),
-            class: value.class.clone(),
+            name: simp_char.name.clone(),
+            level: simp_char.level,
+            attributes: Attributes::from(&simp_char.attributes),
+            background: simp_char.background.clone(),
+            class: simp_char.class.clone(),
             skills: vec![],
             saves: vec![]
         };
 
-        for skill_tuple in value.skills {
-            let (main_stat, is_lore) = Character::get_appropriate_skill(skill_tuple.0.as_str());
-            ret_val.skills.push(DependentStat::new(&main_stat, skill_tuple.0.as_str(), skill_tuple.1, is_lore))
+        for skill_tuple in simp_char.skills {
+            let (attribute, is_lore) = Character::get_attribute_and_lore_flag_from_skill_name(skill_tuple.0.as_str());
+            ret_val.skills.push(DependentStat::new(&attribute, skill_tuple.0.as_str(), skill_tuple.1, is_lore))
         }
 
         ret_val.saves = DependentStat::make_new_saves(
-            value.saves.get(0).unwrap().clone(),
-            value.saves.get(1).unwrap().clone(),
-            value.saves.get(2).unwrap().clone()
+            simp_char.saves.get(0).unwrap().clone(),
+            simp_char.saves.get(1).unwrap().clone(),
+            simp_char.saves.get(2).unwrap().clone()
         );
         return ret_val;
     }
 }
 
 impl From<&SimpleCharacter> for Character{
-    fn from(value: &SimpleCharacter) -> Self {
+    fn from(simp_char: &SimpleCharacter) -> Self {
         let mut ret_val = Character {
-            name: value.name.clone(),
-            level: value.level,
-            main_stats: value.main_stats.clone(),
-            background: value.background.clone(),
-            class: value.class.clone(),
+            name: simp_char.name.clone(),
+            level: simp_char.level,
+            attributes: Attributes::from(&((*simp_char).attributes)),
+            background: simp_char.background.clone(),
+            class: simp_char.class.clone(),
             skills: vec![],
             saves: vec![]
         };
 
-        for skill_tuple in value.skills.clone() {
-            let (main_stat, is_lore) = Character::get_appropriate_skill(skill_tuple.0.as_str());
-            ret_val.skills.push(DependentStat::new(&main_stat, skill_tuple.0.as_str(), skill_tuple.1, is_lore))
+        for skill_tuple in simp_char.skills.clone() {
+            let (attribute, is_lore) = Character::get_attribute_and_lore_flag_from_skill_name(skill_tuple.0.as_str());
+            ret_val.skills.push(DependentStat::new(&attribute, skill_tuple.0.as_str(), skill_tuple.1, is_lore))
         }
 
         ret_val.saves = DependentStat::make_new_saves(
-            value.saves.get(0).unwrap().clone(),
-            value.saves.get(1).unwrap().clone(),
-            value.saves.get(2).unwrap().clone()
+            simp_char.saves.get(0).unwrap().clone(),
+            simp_char.saves.get(1).unwrap().clone(),
+            simp_char.saves.get(2).unwrap().clone()
         );
         return ret_val;
     }
@@ -143,7 +154,7 @@ impl From<&SimpleCharacter> for Character{
 pub struct SimpleCharacter {
     pub name: String,
     pub level: i32,
-    pub main_stats: MainStats,
+    pub attributes: Vec<i32>,
     pub background: String,
     pub class: String,
     pub skills: Vec<(String, ProficiencyLevel)>,
@@ -153,37 +164,37 @@ pub struct SimpleCharacter {
 
 
 impl From<Character> for SimpleCharacter{
-    fn from(value: Character) -> Self {
+    fn from(ref_char: Character) -> Self {
         let mut ret_val = SimpleCharacter {
-            name: value.name.clone(),
-            level: value.level,
-            main_stats: value.main_stats.clone(),
-            background: value.background.clone(),
-            class: value.class.clone(),
+            name: ref_char.name.clone(),
+            level: ref_char.level,
+            attributes: ref_char.attributes.as_number_vec(),
+            background: ref_char.background.clone(),
+            class: ref_char.class.clone(),
             skills: vec![],
             saves: vec![]
         };
 
-        ret_val.skills.extend(value.skills.into_iter().map(|s: DependentStat| return (s.name, s.proficiency)));
-        ret_val.saves.extend(value.saves.into_iter().map(|s: DependentStat| return s.proficiency));
+        ret_val.skills.extend(ref_char.skills.into_iter().map(|s: DependentStat| return (s.name, s.proficiency)));
+        ret_val.saves.extend(ref_char.saves.into_iter().map(|s: DependentStat| return s.proficiency));
         return ret_val;
     }
 }
 
 impl From<&Character> for SimpleCharacter{
-    fn from(value: &Character) -> Self {
+    fn from(ref_char: &Character) -> Self {
         let mut ret_val = SimpleCharacter {
-            name: value.name.clone(),
-            level: value.level,
-            main_stats: value.main_stats.clone(),
-            background: value.background.clone(),
-            class: value.class.clone(),
+            name: ref_char.name.clone(),
+            level: ref_char.level,
+            attributes: ref_char.attributes.as_number_vec(),
+            background: ref_char.background.clone(),
+            class: ref_char.class.clone(),
             skills: vec![],
             saves: vec![]
         };
 
-        ret_val.skills.extend(value.skills.clone().into_iter().map(|s: DependentStat| return (s.name, s.proficiency)));
-        ret_val.saves.extend(value.saves.clone().into_iter().map(|s: DependentStat| return s.proficiency));
+        ret_val.skills.extend(ref_char.skills.clone().into_iter().map(|s: DependentStat| return (s.name, s.proficiency)));
+        ret_val.saves.extend(ref_char.saves.clone().into_iter().map(|s: DependentStat| return s.proficiency));
         return ret_val;
     }
 }
