@@ -1,44 +1,14 @@
 {
   "name": "Ketrania Valenzia Adriaste Uth Viharin VII",
   "level": 1,
-  "main_stats": {
-    "strength": {
-      "id": "str",
-      "name": "Strength",
-      "abbrv": "Str",
-      "value": 3
-    },
-    "dexterity": {
-      "id": "dex",
-      "name": "Dexterity",
-      "abbrv": "Dex",
-      "value": 1
-    },
-    "constitution": {
-      "id": "con",
-      "name": "Constitution",
-      "abbrv": "Con",
-      "value": 1
-    },
-    "wisdom": {
-      "id": "wis",
-      "name": "Wisdom",
-      "abbrv": "Wis",
-      "value": 0
-    },
-    "intelligence": {
-      "id": "int",
-      "name": "Intelligence",
-      "abbrv": "Int",
-      "value": 3
-    },
-    "charisma": {
-      "id": "char",
-      "name": "Charisma",
-      "abbrv": "Cha",
-      "value": 1
-    }
-  },
+  "attributes": [
+    3,
+    1,
+    1,
+    3,
+    0,
+    1
+  ],
   "background": "Squire",
   "class": "Commander"
 }

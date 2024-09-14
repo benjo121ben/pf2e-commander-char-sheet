@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use super::{proficiency::ProficiencyLevel, stats::{DependentStat, Attributes}};
+use super::{proficiency::ProficiencyLevel, stats::{ProficiencyStat, ProficiencyStatType, Attributes}, feats::Feat};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Character {
@@ -8,23 +8,13 @@ pub struct Character {
     pub attributes: Attributes,
     pub background: String,
     pub class: String,
-    pub skills: Vec<DependentStat>,
-    pub saves: Vec<DependentStat>
+    #[serde(default)]
+    pub proficiencies: Vec<ProficiencyStat>,
+    #[serde(default)]
+    pub feats: Vec<Feat>
 }
 
 impl Character {
-    pub fn new(name: &str, attributes: Attributes, skills: Vec<DependentStat>, saves: Vec<DependentStat>) -> Character {
-        Character {
-            name: String::from(name),
-            level: 1,
-            attributes,
-            background: String::from("Squire"),
-            class: String::from("Commander"),
-            skills: skills,
-            saves: saves
-        }
-    }
-
     pub fn zero() -> Character {
         Character {
             name: String::from(""),
@@ -32,63 +22,56 @@ impl Character {
             attributes: Attributes::zero(),
             background: String::from("Squire"),
             class: String::from("Commander"),
-            skills: vec![
-                DependentStat::default_skill("dex", "Acrobatics"),
-                DependentStat::default_skill("int", "Arcana"),
-                DependentStat::default_skill("str", "Athletics"),
-                DependentStat::default_skill("int", "Crafting"),
-                DependentStat::default_skill("cha", "Deception"),
-                DependentStat::default_skill("cha", "Diplomacy"),
-                DependentStat::default_skill("cha", "Intimidation"),
-                DependentStat::default_skill("wis", "Medicine"),
-                DependentStat::default_skill("wis", "Nature"),
-                DependentStat::default_skill("int", "Occultism"),
-                DependentStat::default_skill("cha", "Performance"),
-                DependentStat::default_skill("wis", "Religion"),
-                DependentStat::default_skill("int", "Society"),
-                DependentStat::default_skill("dex", "Stealth"),
-                DependentStat::default_skill("wis", "Survival"),
-                DependentStat::default_skill("dex", "Thievery"),
-            ],
-            saves: DependentStat::make_new_saves(
-                ProficiencyLevel::Untrained, 
-                ProficiencyLevel::Untrained, 
-                ProficiencyLevel::Untrained
-            )
+            proficiencies: ProficiencyStat::default_array(),
+            feats: vec![]
         }
     }
 }
 
 impl Character {
-    fn get_attribute_and_lore_flag_from_skill_name(skill_name: &str) -> (String, bool){
-        let mut is_lore = false;
-        let attribute = match skill_name {
-            "Acrobatics" => "dex",
-            "Arcana" => "int",
-            "Athletics" => "str",
-            "Crafting" => "int",
-            "Deception" => "cha",
-            "Diplomacy" => "cha",
-            "Intimidation" => "cha",
-            "Medicine" => "wis",
-            "Nature" => "wis",
-            "Occultism" => "int",
-            "Performance" => "cha",
-            "Religion" => "wis",
-            "Society" => "int",
-            "Stealth" => "dex",
-            "Survival" => "wis",
-            "Thievery" => "dex",
-            _ => {is_lore = true; "int"}
-
-        };
-        return (String::from(attribute), is_lore);
-
+    fn get_attribute_and_lore_flag_from_skill_name(skill_name: &str, p_type: &ProficiencyStatType) -> String{
+        return String::from(match p_type {
+            ProficiencyStatType::Save => {
+                match skill_name {
+                    "Fortitude" => "con",
+                    "Reflex" => "dex",
+                    "Will" => "wis",
+                    _ => {panic!("This save does not exist {skill_name}");}
+                }
+            },
+            ProficiencyStatType::Skill => {
+                match skill_name {
+                    "Acrobatics" => "dex",
+                    "Arcana" => "int",
+                    "Athletics" => "str",
+                    "Crafting" => "int",
+                    "Deception" => "cha",
+                    "Diplomacy" => "cha",
+                    "Intimidation" => "cha",
+                    "Medicine" => "wis",
+                    "Nature" => "wis",
+                    "Occultism" => "int",
+                    "Performance" => "cha",
+                    "Religion" => "wis",
+                    "Society" => "int",
+                    "Stealth" => "dex",
+                    "Survival" => "wis",
+                    "Thievery" => "dex",
+                    _ => {panic!("This skill does not exist {skill_name}");}
+                }
+            },
+            ProficiencyStatType::Lore => "int",
+            ProficiencyStatType::Armor => "dex",
+            ProficiencyStatType::Weapon => "str",
+            ProficiencyStatType::Spell => "key",
+            ProficiencyStatType::ClassDC => "key",
+            ProficiencyStatType::Perception => "wis",
+        });
         
     }
 
-    pub fn get_skill_obj_from_skill_name(self: &Self, skill_name: &str) -> Option<DependentStat>{
-        for skill in &self.skills {
+    pub fn get_skill_obj_from_skill_name(self: &Self, skill_name: &str) -> Option<ProficiencyStat>{
+        for skill in &self.proficiencies {
             if skill.name == skill_name {
                 return Some((*skill).clone());
             }
@@ -97,7 +80,7 @@ impl Character {
     }
 
     pub fn get_skill_obj_indx_from_skill_name(self: &Self, skill_name: &str) -> Option<usize>{
-        for (indx, skill) in self.skills.iter().enumerate() {
+        for (indx, skill) in self.proficiencies.iter().enumerate() {
             if skill.name == skill_name {
                 return Some(indx);
             }
@@ -114,20 +97,15 @@ impl From<SimpleCharacter> for Character{
             attributes: Attributes::from(&simp_char.attributes),
             background: simp_char.background.clone(),
             class: simp_char.class.clone(),
-            skills: vec![],
-            saves: vec![]
+            proficiencies: vec![],
+            feats: vec![]
         };
 
-        for skill_tuple in simp_char.skills {
-            let (attribute, is_lore) = Character::get_attribute_and_lore_flag_from_skill_name(skill_tuple.0.as_str());
-            ret_val.skills.push(DependentStat::new(&attribute, skill_tuple.0.as_str(), skill_tuple.1, is_lore))
+        for skill_tuple in simp_char.proficiencies {
+            let attribute = Character::get_attribute_and_lore_flag_from_skill_name(skill_tuple.0.as_str(), &skill_tuple.1);
+            ret_val.proficiencies.push(ProficiencyStat::new(skill_tuple.1, &attribute, skill_tuple.0.as_str(), skill_tuple.2))
         }
 
-        ret_val.saves = DependentStat::make_new_saves(
-            simp_char.saves.get(0).unwrap().clone(),
-            simp_char.saves.get(1).unwrap().clone(),
-            simp_char.saves.get(2).unwrap().clone()
-        );
         return ret_val;
     }
 }
@@ -140,20 +118,15 @@ impl From<&SimpleCharacter> for Character{
             attributes: Attributes::from(&((*simp_char).attributes)),
             background: simp_char.background.clone(),
             class: simp_char.class.clone(),
-            skills: vec![],
-            saves: vec![]
+            proficiencies: vec![],
+            feats: vec![]
         };
 
-        for skill_tuple in simp_char.skills.clone() {
-            let (attribute, is_lore) = Character::get_attribute_and_lore_flag_from_skill_name(skill_tuple.0.as_str());
-            ret_val.skills.push(DependentStat::new(&attribute, skill_tuple.0.as_str(), skill_tuple.1, is_lore))
+        for skill_tuple in simp_char.proficiencies.clone() {
+            let attribute = Character::get_attribute_and_lore_flag_from_skill_name(skill_tuple.0.as_str(), &skill_tuple.1);
+            ret_val.proficiencies.push(ProficiencyStat::new(skill_tuple.1, &attribute, skill_tuple.0.as_str(), skill_tuple.2))
         }
 
-        ret_val.saves = DependentStat::make_new_saves(
-            simp_char.saves.get(0).unwrap().clone(),
-            simp_char.saves.get(1).unwrap().clone(),
-            simp_char.saves.get(2).unwrap().clone()
-        );
         return ret_val;
     }
 }
@@ -166,8 +139,10 @@ pub struct SimpleCharacter {
     pub attributes: Vec<i32>,
     pub background: String,
     pub class: String,
-    pub skills: Vec<(String, ProficiencyLevel)>,
-    pub saves: Vec<ProficiencyLevel>
+    #[serde(default)]
+    pub proficiencies: Vec<(String, ProficiencyStatType, ProficiencyLevel)>,
+    #[serde(default)]
+    pub feats: Vec<Feat>
 }
 
 
@@ -180,12 +155,11 @@ impl From<Character> for SimpleCharacter{
             attributes: ref_char.attributes.as_number_vec(),
             background: ref_char.background.clone(),
             class: ref_char.class.clone(),
-            skills: vec![],
-            saves: vec![]
+            proficiencies: vec![],
+            feats: vec![]
         };
 
-        ret_val.skills.extend(ref_char.skills.into_iter().map(|s: DependentStat| return (s.name, s.proficiency)));
-        ret_val.saves.extend(ref_char.saves.into_iter().map(|s: DependentStat| return s.proficiency));
+        ret_val.proficiencies.extend(ref_char.proficiencies.into_iter().map(|s: ProficiencyStat| return (s.name, s.p_type, s.proficiency)));
         return ret_val;
     }
 }
@@ -198,12 +172,11 @@ impl From<&Character> for SimpleCharacter{
             attributes: ref_char.attributes.as_number_vec(),
             background: ref_char.background.clone(),
             class: ref_char.class.clone(),
-            skills: vec![],
-            saves: vec![]
+            proficiencies: vec![],
+            feats: vec![]
         };
 
-        ret_val.skills.extend(ref_char.skills.clone().into_iter().map(|s: DependentStat| return (s.name, s.proficiency)));
-        ret_val.saves.extend(ref_char.saves.clone().into_iter().map(|s: DependentStat| return s.proficiency));
+        ret_val.proficiencies.extend(ref_char.proficiencies.clone().into_iter().map(|s: ProficiencyStat| return (s.name, s.p_type, s.proficiency)));
         return ret_val;
     }
 }

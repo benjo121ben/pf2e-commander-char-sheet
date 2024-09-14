@@ -1,6 +1,6 @@
 use crate::char_data::character::*;
 use crate::char_data::proficiency::ProficiencyLevel;
-use crate::char_data::stats::DependentStat;
+use crate::char_data::stats::ProficiencyStat;
 use leptos::*;
 use leptos::logging::log;
 
@@ -93,7 +93,7 @@ pub fn SkillView(
         <div style="display:flex; flex-direction: column">
         <For
             each=move || {
-                read_character.with(|k| k.skills.clone())
+                read_character.with(|k| k.proficiencies.clone())
             }
             key=|skill| skill.name.clone()
             children=move |skill| {
@@ -118,7 +118,7 @@ pub fn SkillView(
                                     let indx = character.get_skill_obj_indx_from_skill_name(&skill.name);
                                     let panic_name = skill.name.clone();
                                     match indx {
-                                        Some(i) => {character.skills[i].proficiency = ProficiencyLevel::from(val)},
+                                        Some(i) => {character.proficiencies[i].proficiency = ProficiencyLevel::from(val)},
                                         None => {panic!("Could not get index for {panic_name}")}
                                     };
                                     

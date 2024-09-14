@@ -49,7 +49,7 @@ pub struct Attributes {
     pub constitution: Attribute,
     pub wisdom: Attribute,
     pub intelligence: Attribute,
-    pub charisma: Attribute,
+    pub charisma: Attribute
 }
 
 impl Attributes {
@@ -171,41 +171,85 @@ impl From<&Vec<i32>> for Attributes {
     }
 }
 
-
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum ProficiencyStatType {
+    Save,
+    Skill,
+    Lore,
+    Armor,
+    Weapon,
+    Spell,
+    ClassDC,
+    Perception
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct DependentStat{
+pub struct ProficiencyStat{
+    pub p_type: ProficiencyStatType,
     pub attribute: String, 
     pub name: String, 
     pub proficiency: ProficiencyLevel,
-    pub lore: bool
 }
 
-impl DependentStat {
-    pub fn default_skill(attribute: &str, name: &str) -> DependentStat {
-        DependentStat {
+impl ProficiencyStat {
+    pub fn default_skill(attribute: &str, name: &str) -> ProficiencyStat {
+        ProficiencyStat {
+            p_type: ProficiencyStatType::Skill,
             attribute: String::from(attribute),
             name: String::from(name),
             proficiency: ProficiencyLevel::Untrained,
-            lore: false
         }
     }
 
-    pub fn new(attribute: &str, name: &str, proficiency: ProficiencyLevel, lore: bool) -> DependentStat {
-        DependentStat {
+    pub fn default_save(attribute: &str, name: &str) -> ProficiencyStat {
+        ProficiencyStat {
+            p_type: ProficiencyStatType::Save,
+            attribute: String::from(attribute),
+            name: String::from(name),
+            proficiency: ProficiencyLevel::Trained,
+        }
+    }
+
+    pub fn new(p_type: ProficiencyStatType, attribute: &str, name: &str, proficiency: ProficiencyLevel) -> ProficiencyStat {
+        ProficiencyStat {
+            p_type: p_type,
             attribute: String::from(attribute),
             name: String::from(name),
             proficiency: proficiency,
-            lore
         }
     }
 
-    pub fn make_new_saves(fortitude: ProficiencyLevel, reflex: ProficiencyLevel, will: ProficiencyLevel) -> Vec<DependentStat> {
-        return vec![
-            DependentStat::new("con", "Fortitude", fortitude, false),
-            DependentStat::new("dex", "Reflex", reflex, false),
-            DependentStat::new("wis", "Will", will, false),
-        ]
+    pub fn default_array() -> Vec<ProficiencyStat> {
+        vec![
+                ProficiencyStat::default_skill("dex", "Acrobatics"),
+                ProficiencyStat::default_skill("int", "Arcana"),
+                ProficiencyStat::default_skill("str", "Athletics"),
+                ProficiencyStat::default_skill("int", "Crafting"),
+                ProficiencyStat::default_skill("cha", "Deception"),
+                ProficiencyStat::default_skill("cha", "Diplomacy"),
+                ProficiencyStat::default_skill("cha", "Intimidation"),
+                ProficiencyStat::default_skill("wis", "Medicine"),
+                ProficiencyStat::default_skill("wis", "Nature"),
+                ProficiencyStat::default_skill("int", "Occultism"),
+                ProficiencyStat::default_skill("cha", "Performance"),
+                ProficiencyStat::default_skill("wis", "Religion"),
+                ProficiencyStat::default_skill("int", "Society"),
+                ProficiencyStat::default_skill("dex", "Stealth"),
+                ProficiencyStat::default_skill("wis", "Survival"),
+                ProficiencyStat::default_skill("dex", "Thievery"),
+                ProficiencyStat::default_save("con", "Fortitude"),
+                ProficiencyStat::default_save("dex", "Reflex"),
+                ProficiencyStat::default_save("wis", "Will"),
+                ProficiencyStat::new(ProficiencyStatType::Armor, "dex", "Unarmored", ProficiencyLevel::Trained),
+                ProficiencyStat::new(ProficiencyStatType::Armor, "dex", "Light", ProficiencyLevel::Untrained),
+                ProficiencyStat::new(ProficiencyStatType::Armor, "dex", "Medium", ProficiencyLevel::Untrained),
+                ProficiencyStat::new(ProficiencyStatType::Armor, "dex", "Heavy", ProficiencyLevel::Untrained),
+                ProficiencyStat::new(ProficiencyStatType::Weapon, "str", "Simple", ProficiencyLevel::Untrained),
+                ProficiencyStat::new(ProficiencyStatType::Weapon, "str", "Martial", ProficiencyLevel::Untrained),
+                ProficiencyStat::new(ProficiencyStatType::Weapon, "str", "Advanced", ProficiencyLevel::Untrained),
+                ProficiencyStat::new(ProficiencyStatType::Perception, "will", "Perception", ProficiencyLevel::Untrained),
+                ProficiencyStat::new(ProficiencyStatType::ClassDC, "key", "ClassDC", ProficiencyLevel::Trained),
+            ]
     }
 
     pub fn calculate_stat(self: &Self, character: &Character) -> i32 {

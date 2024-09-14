@@ -1,6 +1,6 @@
 {
-  "name": "Ketrania Valenzia Adriaste Uth Viharin VII",
-  "level": 4,
+  "name": "",
+  "level": 1,
   "attributes": [
     3,
     1,
@@ -11,75 +11,147 @@
   ],
   "background": "Squire",
   "class": "Commander",
-  "skills": [
+  "proficiencies": [
     [
       "Acrobatics",
+      "Skill",
       "Untrained"
     ],
     [
       "Arcana",
+      "Skill",
       "Untrained"
     ],
     [
       "Athletics",
+      "Skill",
       "Untrained"
     ],
     [
       "Crafting",
+      "Skill",
       "Untrained"
     ],
     [
       "Deception",
+      "Skill",
       "Untrained"
     ],
     [
       "Diplomacy",
+      "Skill",
       "Untrained"
     ],
     [
       "Intimidation",
+      "Skill",
       "Untrained"
     ],
     [
       "Medicine",
+      "Skill",
       "Untrained"
     ],
     [
       "Nature",
+      "Skill",
       "Untrained"
     ],
     [
       "Occultism",
+      "Skill",
       "Untrained"
     ],
     [
       "Performance",
+      "Skill",
       "Untrained"
     ],
     [
       "Religion",
+      "Skill",
       "Untrained"
     ],
     [
       "Society",
+      "Skill",
       "Untrained"
     ],
     [
       "Stealth",
+      "Skill",
       "Untrained"
     ],
     [
       "Survival",
+      "Skill",
       "Untrained"
     ],
     [
       "Thievery",
+      "Skill",
       "Untrained"
+    ],
+    [
+      "Fortitude",
+      "Save",
+      "Trained"
+    ],
+    [
+      "Reflex",
+      "Save",
+      "Trained"
+    ],
+    [
+      "Will",
+      "Save",
+      "Trained"
+    ],
+    [
+      "Unarmored",
+      "Armor",
+      "Trained"
+    ],
+    [
+      "Light",
+      "Armor",
+      "Untrained"
+    ],
+    [
+      "Medium",
+      "Armor",
+      "Untrained"
+    ],
+    [
+      "Heavy",
+      "Armor",
+      "Untrained"
+    ],
+    [
+      "Simple",
+      "Weapon",
+      "Untrained"
+    ],
+    [
+      "Martial",
+      "Weapon",
+      "Untrained"
+    ],
+    [
+      "Advanced",
+      "Weapon",
+      "Untrained"
+    ],
+    [
+      "Perception",
+      "Perception",
+      "Untrained"
+    ],
+    [
+      "ClassDC",
+      "ClassDC",
+      "Trained"
     ]
   ],
-  "saves": [
-    "Untrained",
-    "Untrained",
-    "Untrained"
-  ]
+  "feats": []
 }
