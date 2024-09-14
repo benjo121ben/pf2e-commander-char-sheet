@@ -2,7 +2,7 @@ use std::fmt;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone,Eq, PartialEq, Serialize, Deserialize)]
 pub enum ProficiencyLevel{
     Untrained,
     Half,
@@ -30,5 +30,19 @@ impl fmt::Display for ProficiencyLevel {
         write!(f, "{:?}", self)
         // or, alternatively:
         // fmt::Debug::fmt(self, f)
+    }
+}
+
+impl From<String> for ProficiencyLevel {
+    fn from(s: String) -> Self {
+        match s.as_str() {
+            "Untrained" => Self::Untrained,
+            "Half" => Self::Half,
+            "Trained" => Self::Trained,
+            "Expert" => Self::Expert,
+            "Master" => Self::Master,
+            "Legendary" => Self::Legendary,
+            _ => panic!("cannot convert this proficiency Level: {s}")
+        }
     }
 }

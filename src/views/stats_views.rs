@@ -98,24 +98,38 @@ pub fn SkillView(
             key=|skill| skill.name.clone()
             children=move |skill| {
                 let name = skill.name.clone();
-                let skill_value = create_memo({move |_| read_character.with(|c| skill.calculate_stat(&c))});
-
+                let name2 = skill.name.clone();
+                let skill_prof = skill.proficiency.clone();
+                let skill_value = create_memo({move |_| read_character.with(|c| c.get_skill_obj_from_skill_name(&(name.clone())).unwrap().calculate_stat(&c))});
+                let options = vec![ProficiencyLevel::Untrained, ProficiencyLevel::Half, ProficiencyLevel::Trained, ProficiencyLevel::Expert, ProficiencyLevel::Master, ProficiencyLevel::Legendary];
                 view! {
                     <div style="display:flex; flex-direction: row">
                         <label>
-                            {move || name.clone()}
+                            {move || name2.clone()}
                         </label>
 
                         <label style="margin-left=10px">
                             {move || skill_value}
                         </label>
-                        <select name="proficiency" id="profs">
-                            <option value=ProficiencyLevel::Untrained.to_string()>{ProficiencyLevel::Untrained.to_string()}</option>
-                            <option value=ProficiencyLevel::Half.to_string()>{ProficiencyLevel::Half.to_string()}</option>
-                            <option value=ProficiencyLevel::Trained.to_string()>{ProficiencyLevel::Trained.to_string()}</option>
-                            <option value=ProficiencyLevel::Expert.to_string()>{ProficiencyLevel::Expert.to_string()}</option>
-                            <option value=ProficiencyLevel::Master.to_string()>{ProficiencyLevel::Master.to_string()}</option>
-                            <option value=ProficiencyLevel::Legendary.to_string()>{ProficiencyLevel::Legendary.to_string()}</option>
+                        <select name="proficiency" id="profs"
+                            on:change=move |event| {
+                                write_character.update(|character| {
+                                    let val: String = event_target_value(&event);
+                                    let indx = character.get_skill_obj_indx_from_skill_name(&skill.name);
+                                    let panic_name = skill.name.clone();
+                                    match indx {
+                                        Some(i) => {character.skills[i].proficiency = ProficiencyLevel::from(val)},
+                                        None => {panic!("Could not get index for {panic_name}")}
+                                    };
+                                    
+                                })
+                            }
+                        >
+                            {
+                                options.into_iter().map(|lvl| view!{
+                                    <option selected=skill_prof.clone()==lvl value=lvl.to_string()>{lvl.to_string()}</option>
+                                }).collect::<Vec<_>>()
+                            }
                         </select>
                     </div>
                 }

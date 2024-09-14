@@ -69,8 +69,8 @@ impl Attributes {
             strength: Attribute::new("str", "Strength", "Str", 0),
             dexterity: Attribute::new("dex", "Dexterity", "Dex", 0),
             constitution: Attribute::new("con", "Constitution", "Con", 0),
-            wisdom: Attribute::new("wis", "Wisdom", "Wis", 0),
             intelligence: Attribute::new("int", "Intelligence", "Int", 0),
+            wisdom: Attribute::new("wis", "Wisdom", "Wis", 0),
             charisma: Attribute::new("cha", "Charisma", "Cha", 0),
          }
     }
@@ -80,8 +80,8 @@ impl Attributes {
             self.strength.clone(),
             self.dexterity.clone(),
             self.constitution.clone(),
-            self.wisdom.clone(),
             self.intelligence.clone(),
+            self.wisdom.clone(),
             self.charisma.clone()
         ]
     }
@@ -91,8 +91,8 @@ impl Attributes {
             self.strength.value,
             self.dexterity.value,
             self.constitution.value,
-            self.wisdom.value,
             self.intelligence.value,
+            self.wisdom.value,
             self.charisma.value
         ]
     }
@@ -102,8 +102,8 @@ impl Attributes {
             &mut self.strength,
             &mut self.dexterity,
             &mut self.constitution,
-            &mut self.wisdom,
             &mut self.intelligence,
+            &mut self.wisdom,
             &mut self.charisma
         ]
     } 

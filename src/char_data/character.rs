@@ -87,10 +87,19 @@ impl Character {
         
     }
 
-    fn get_skill_obj_from_skill_name(self: &Self, skill_name: &str) -> Option<DependentStat>{
+    pub fn get_skill_obj_from_skill_name(self: &Self, skill_name: &str) -> Option<DependentStat>{
         for skill in &self.skills {
             if skill.name == skill_name {
                 return Some((*skill).clone());
+            }
+        }
+        return None;
+    }
+
+    pub fn get_skill_obj_indx_from_skill_name(self: &Self, skill_name: &str) -> Option<usize>{
+        for (indx, skill) in self.skills.iter().enumerate() {
+            if skill.name == skill_name {
+                return Some(indx);
             }
         }
         return None;
