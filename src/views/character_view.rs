@@ -1,7 +1,7 @@
 use crate::char_data::character::*;
 use crate::char_data::proficiency::*;
 use crate::server_side::server_functions::*;
-use super::stats_views::{EditMainstatsView, MainStatsView, SkillView};
+use super::stats_views::{EditMainstatsView, MainStatsView, SkillView, NonSkillDebugView};
 
 use leptos::*;
 use leptos::logging::log;
@@ -38,5 +38,6 @@ pub fn CharacterView(
         //<EditMainstatsView read_character=read_ketra write_character=write_ketra/>
         <MainStatsView read_char=read_ketra write_char=write_ketra/>
         <SkillView read_character=read_ketra write_character=write_ketra/>
+        <NonSkillDebugView read_character=read_ketra write_character=write_ketra/>
     }
 }

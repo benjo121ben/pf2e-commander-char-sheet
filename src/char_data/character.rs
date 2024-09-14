@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use super::{proficiency::ProficiencyLevel, stats::{ProficiencyStat, ProficiencyStatType, Attributes}, feats::Feat};
+use super::{proficiency::ProficiencyLevel, stats::{CalculatedStat, ProficiencyType, Attributes}, feats::Feat};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Character {
@@ -9,7 +9,7 @@ pub struct Character {
     pub background: String,
     pub class: String,
     #[serde(default)]
-    pub proficiencies: Vec<ProficiencyStat>,
+    pub proficiencies: Vec<CalculatedStat>,
     #[serde(default)]
     pub feats: Vec<Feat>
 }
@@ -22,16 +22,16 @@ impl Character {
             attributes: Attributes::zero(),
             background: String::from("Squire"),
             class: String::from("Commander"),
-            proficiencies: ProficiencyStat::default_array(),
+            proficiencies: CalculatedStat::default_array(),
             feats: vec![]
         }
     }
 }
 
 impl Character {
-    fn get_attribute_and_lore_flag_from_skill_name(skill_name: &str, p_type: &ProficiencyStatType) -> String{
+    fn get_attribute_and_lore_flag_from_skill_name(skill_name: &str, p_type: &ProficiencyType) -> String{
         return String::from(match p_type {
-            ProficiencyStatType::Save => {
+            ProficiencyType::Save => {
                 match skill_name {
                     "Fortitude" => "con",
                     "Reflex" => "dex",
@@ -39,7 +39,7 @@ impl Character {
                     _ => {panic!("This save does not exist {skill_name}");}
                 }
             },
-            ProficiencyStatType::Skill => {
+            ProficiencyType::Skill => {
                 match skill_name {
                     "Acrobatics" => "dex",
                     "Arcana" => "int",
@@ -60,17 +60,17 @@ impl Character {
                     _ => {panic!("This skill does not exist {skill_name}");}
                 }
             },
-            ProficiencyStatType::Lore => "int",
-            ProficiencyStatType::Armor => "dex",
-            ProficiencyStatType::Weapon => "str",
-            ProficiencyStatType::Spell => "key",
-            ProficiencyStatType::ClassDC => "key",
-            ProficiencyStatType::Perception => "wis",
+            ProficiencyType::Lore => "int",
+            ProficiencyType::Armor => "dex",
+            ProficiencyType::Weapon => "str",
+            ProficiencyType::Spell => "key",
+            ProficiencyType::ClassDC => "key",
+            ProficiencyType::Perception => "wis",
         });
         
     }
 
-    pub fn get_skill_obj_from_skill_name(self: &Self, skill_name: &str) -> Option<ProficiencyStat>{
+    pub fn get_skill_obj_from_skill_name(self: &Self, skill_name: &str) -> Option<CalculatedStat>{
         for skill in &self.proficiencies {
             if skill.name == skill_name {
                 return Some((*skill).clone());
@@ -103,7 +103,7 @@ impl From<SimpleCharacter> for Character{
 
         for skill_tuple in simp_char.proficiencies {
             let attribute = Character::get_attribute_and_lore_flag_from_skill_name(skill_tuple.0.as_str(), &skill_tuple.1);
-            ret_val.proficiencies.push(ProficiencyStat::new(skill_tuple.1, &attribute, skill_tuple.0.as_str(), skill_tuple.2))
+            ret_val.proficiencies.push(CalculatedStat::new(skill_tuple.1, &attribute, skill_tuple.0.as_str(), skill_tuple.2))
         }
 
         return ret_val;
@@ -124,7 +124,7 @@ impl From<&SimpleCharacter> for Character{
 
         for skill_tuple in simp_char.proficiencies.clone() {
             let attribute = Character::get_attribute_and_lore_flag_from_skill_name(skill_tuple.0.as_str(), &skill_tuple.1);
-            ret_val.proficiencies.push(ProficiencyStat::new(skill_tuple.1, &attribute, skill_tuple.0.as_str(), skill_tuple.2))
+            ret_val.proficiencies.push(CalculatedStat::new(skill_tuple.1, &attribute, skill_tuple.0.as_str(), skill_tuple.2))
         }
 
         return ret_val;
@@ -140,7 +140,7 @@ pub struct SimpleCharacter {
     pub background: String,
     pub class: String,
     #[serde(default)]
-    pub proficiencies: Vec<(String, ProficiencyStatType, ProficiencyLevel)>,
+    pub proficiencies: Vec<(String, ProficiencyType, ProficiencyLevel)>,
     #[serde(default)]
     pub feats: Vec<Feat>
 }
@@ -159,7 +159,7 @@ impl From<Character> for SimpleCharacter{
             feats: vec![]
         };
 
-        ret_val.proficiencies.extend(ref_char.proficiencies.into_iter().map(|s: ProficiencyStat| return (s.name, s.p_type, s.proficiency)));
+        ret_val.proficiencies.extend(ref_char.proficiencies.into_iter().map(|s: CalculatedStat| return (s.name, s.p_type, s.proficiency)));
         return ret_val;
     }
 }
@@ -176,7 +176,7 @@ impl From<&Character> for SimpleCharacter{
             feats: vec![]
         };
 
-        ret_val.proficiencies.extend(ref_char.proficiencies.clone().into_iter().map(|s: ProficiencyStat| return (s.name, s.p_type, s.proficiency)));
+        ret_val.proficiencies.extend(ref_char.proficiencies.clone().into_iter().map(|s: CalculatedStat| return (s.name, s.p_type, s.proficiency)));
         return ret_val;
     }
 }
