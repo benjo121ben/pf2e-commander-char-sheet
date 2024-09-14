@@ -24,11 +24,11 @@ pub struct CharAddition {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Feat{
-    name: String,
-    actions: i32, 
-    feat_types: Vec<FeatType>,
-    traits: Vec<Trait>,
-    description: String,
+    pub name: String,
+    pub actions: i32, 
+    pub feat_types: Vec<FeatType>,
+    pub traits: Vec<Trait>,
+    pub description: String,
     #[serde(default)]
-    char_additions: Vec<CharAddition>
+    pub char_additions: Vec<CharAddition>
 }

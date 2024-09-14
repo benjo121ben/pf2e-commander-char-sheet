@@ -153,5 +153,21 @@
       "Trained"
     ]
   ],
-  "feats": []
+  "feats": [
+    {
+      "name": "Fleet",
+      "actions": 0,
+      "feat_types": [
+        "General"
+      ],
+      "traits": [
+        {
+          "name": "General",
+          "description": "This is the general description"
+        }
+      ],
+      "description": "Add 5 feet to speed",
+      "char_additions": []
+    }
+  ]
 }

@@ -98,7 +98,7 @@ impl From<SimpleCharacter> for Character{
             background: simp_char.background.clone(),
             class: simp_char.class.clone(),
             proficiencies: vec![],
-            feats: vec![]
+            feats: simp_char.feats.clone()
         };
 
         for skill_tuple in simp_char.proficiencies {
@@ -119,7 +119,7 @@ impl From<&SimpleCharacter> for Character{
             background: simp_char.background.clone(),
             class: simp_char.class.clone(),
             proficiencies: vec![],
-            feats: vec![]
+            feats: simp_char.feats.clone()
         };
 
         for skill_tuple in simp_char.proficiencies.clone() {
@@ -156,7 +156,7 @@ impl From<Character> for SimpleCharacter{
             background: ref_char.background.clone(),
             class: ref_char.class.clone(),
             proficiencies: vec![],
-            feats: vec![]
+            feats: ref_char.feats.clone()
         };
 
         ret_val.proficiencies.extend(ref_char.proficiencies.into_iter().map(|s: CalculatedStat| return (s.name, s.p_type, s.proficiency)));
@@ -173,7 +173,7 @@ impl From<&Character> for SimpleCharacter{
             background: ref_char.background.clone(),
             class: ref_char.class.clone(),
             proficiencies: vec![],
-            feats: vec![]
+            feats: ref_char.feats.clone()
         };
 
         ret_val.proficiencies.extend(ref_char.proficiencies.clone().into_iter().map(|s: CalculatedStat| return (s.name, s.p_type, s.proficiency)));

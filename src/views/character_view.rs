@@ -6,6 +6,27 @@ use super::stats_views::{EditMainstatsView, MainStatsView, SkillView, NonSkillDe
 use leptos::*;
 use leptos::logging::log;
 
+
+#[component]
+pub fn FeatView(
+    read_character: ReadSignal<Character>,
+    write_character: WriteSignal<Character>
+) -> impl IntoView {
+    view!{
+        <h3>Feats</h3>
+        <For
+            each={move || read_character.with(|c| c.feats.clone())}
+            key={move |feat| feat.name.clone()}
+            children=move |feat| {
+                view!{
+                    <h4>{move || feat.name.clone()}</h4>
+                    <p>{move || feat.description.clone()}</p>
+                }
+            }
+        />
+    }
+}
+
 #[component]
 pub fn CharacterView(
     char: Character,
@@ -33,11 +54,18 @@ pub fn CharacterView(
         >
             Level {move || read_ketra.with(|k| k.level)}
         </button>
-        <p style="color: red;">{move || read_save_error()}</p>
-        <p>This is a test value {move || prof_read().get_bonus(read_ketra.with(|k| k.level))}</p>
-        //<EditMainstatsView read_character=read_ketra write_character=write_ketra/>
-        <MainStatsView read_char=read_ketra write_char=write_ketra/>
-        <SkillView read_character=read_ketra write_character=write_ketra/>
-        <NonSkillDebugView read_character=read_ketra write_character=write_ketra/>
+        <div style="display:flex; flex-direction:row; justify-content:space-evenly">
+            <div style="flex-grow:1">
+                <p style="color: red;">{move || read_save_error()}</p>
+                <p>This is a test value {move || prof_read().get_bonus(read_ketra.with(|k| k.level))}</p>
+                //<EditMainstatsView read_character=read_ketra write_character=write_ketra/>
+                <MainStatsView read_char=read_ketra write_char=write_ketra/>
+                <SkillView read_character=read_ketra write_character=write_ketra/>
+                <NonSkillDebugView read_character=read_ketra write_character=write_ketra/>
+            </div>
+            <div style="flex-grow:1">
+                <FeatView read_character=read_ketra write_character=write_ketra/>
+            </div>
+        </div>
     }
 }
