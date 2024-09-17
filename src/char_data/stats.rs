@@ -3,7 +3,7 @@ use leptos::logging::log;
 use super::{character::Character, proficiency::ProficiencyLevel};
 
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize, Eq)]
 pub struct Attribute{
     id: String,
     name: String,
@@ -42,7 +42,7 @@ impl std::cmp::PartialEq for Attribute {
 }
 
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize, Eq, PartialEq)]
 pub struct Attributes {
     pub strength: Attribute,
     pub dexterity: Attribute,
@@ -183,7 +183,7 @@ pub enum ProficiencyType {
     Perception
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Eq)]
 pub struct CalculatedStat{
     pub p_type: ProficiencyType,
     pub attribute: String, 
@@ -260,5 +260,13 @@ impl CalculatedStat {
             Some(val) => val.value + self.proficiency.get_bonus(character.level),
             None => {log!("There was an error getting attribute: {attribute_name}"); return -99},
         }
+    }
+}
+
+impl PartialEq for CalculatedStat {
+    fn eq(&self, other: &Self) -> bool {
+        let val = self.p_type == other.p_type && self.attribute == other.attribute && self.name == other.name && self.proficiency == other.proficiency;
+        log!("calc called {val}");
+        val
     }
 }

@@ -1,13 +1,13 @@
 {
-  "name": "",
-  "level": 1,
+  "name": "Ketrania Valenzia Adriaste Uth Viharin VII",
+  "level": 6,
   "attributes": [
     3,
     1,
     1,
     3,
     0,
-    1
+    -1
   ],
   "background": "Squire",
   "class": "Commander",
@@ -15,7 +15,7 @@
     [
       "Acrobatics",
       "Skill",
-      "Untrained"
+      "Trained"
     ],
     [
       "Arcana",

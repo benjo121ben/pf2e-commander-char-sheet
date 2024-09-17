@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use super::traits::Trait;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Eq, PartialEq)]
 pub enum FeatType{
     General,
     Ancestry,
@@ -10,19 +10,19 @@ pub enum FeatType{
     Class
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Eq, PartialEq)]
 pub enum CharAdditionType{
     ProfIncrease,
     ProfSet,
 
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Eq, PartialEq)]
 pub struct CharAddition {
 
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Eq, PartialEq)]
 pub struct Feat{
     pub name: String,
     pub actions: i32, 

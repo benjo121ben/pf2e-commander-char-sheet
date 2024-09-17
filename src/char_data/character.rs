@@ -1,7 +1,8 @@
 use serde::{Deserialize, Serialize};
+use leptos::logging::log;
 use super::{proficiency::ProficiencyLevel, stats::{CalculatedStat, ProficiencyType, Attributes}, feats::Feat};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Eq)]
 pub struct Character {
     pub name: String,
     pub level: i32,
@@ -70,22 +71,33 @@ impl Character {
         
     }
 
-    pub fn get_skill_obj_from_skill_name(self: &Self, skill_name: &str) -> Option<CalculatedStat>{
-        for skill in &self.proficiencies {
-            if skill.name == skill_name {
-                return Some((*skill).clone());
-            }
-        }
-        return None;
+    pub fn get_prof_obj_from_name(self: &Self, skill_name: &str) -> Option<CalculatedStat>{
+        return self.proficiencies
+        .iter()
+        .find(|prof| prof.name==skill_name).cloned();
     }
 
-    pub fn get_skill_obj_indx_from_skill_name(self: &Self, skill_name: &str) -> Option<usize>{
+    pub fn get_prof_indx_from_name(self: &Self, skill_name: &str) -> Option<usize>{
         for (indx, skill) in self.proficiencies.iter().enumerate() {
             if skill.name == skill_name {
                 return Some(indx);
             }
         }
         return None;
+    }
+}
+
+impl PartialEq for Character {
+    fn eq(&self, other: &Self) -> bool {
+        let val = self.name == other.name && 
+            self.level == other.level && 
+            self.attributes == other.attributes && 
+            self.background == other.background && 
+            self.class == other.class && 
+            self.proficiencies == other.proficiencies && 
+            self.feats == other.feats;
+        log!("PartialEq Char {val}");
+        val
     }
 }
 

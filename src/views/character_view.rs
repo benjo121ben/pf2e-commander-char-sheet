@@ -1,31 +1,9 @@
 use crate::char_data::character::*;
-use crate::char_data::proficiency::*;
 use crate::server_side::server_functions::*;
-use super::stats_views::{EditMainstatsView, MainStatsView, SkillView, NonSkillDebugView};
+use super::stats_views::*;
 
 use leptos::*;
 use leptos::logging::log;
-
-
-#[component]
-pub fn FeatView(
-    read_character: ReadSignal<Character>,
-    write_character: WriteSignal<Character>
-) -> impl IntoView {
-    view!{
-        <h3>Feats</h3>
-        <For
-            each={move || read_character.with(|c| c.feats.clone())}
-            key={move |feat| feat.name.clone()}
-            children=move |feat| {
-                view!{
-                    <h4>{move || feat.name.clone()}</h4>
-                    <p>{move || feat.description.clone()}</p>
-                }
-            }
-        />
-    }
-}
 
 #[component]
 pub fn CharacterView(
@@ -41,30 +19,48 @@ pub fn CharacterView(
             Err(err) => {log!("Error saving "); write_save_error.set(err.to_string())},
         }
     });
-    create_effect(move |_| {
-        let _getUp = read_ketra();
-        upload_ketra.dispatch(0);
+    create_effect(move |prev| {
+        let _getUp = read_ketra.with(|c| c.name.clone());
+        log!("pushed");
+        match prev {
+            Some(_) => {
+                upload_ketra.dispatch(0);
+                return Some(());
+            },
+            None => Some(())
+        }
+        
     });
-    let (prof_read, prof_write) = create_signal(ProficiencyLevel::Half);
+    provide_context(read_ketra);
+    provide_context(write_ketra);
     view! {
         <h2>{move || read_ketra.with(|k| k.name.clone())}</h2>
-        <button
-            on:click=move |_| {write_ketra.update(move |c| c.level += 1)}
-            on:contextmenu=move |_| {write_ketra.update(move |c| c.level -= 1)}
-        >
-            Level {move || read_ketra.with(|k| k.level)}
-        </button>
-        <div style="display:flex; flex-direction:row; justify-content:space-evenly">
-            <div style="flex-grow:1">
-                <p style="color: red;">{move || read_save_error()}</p>
-                <p>This is a test value {move || prof_read().get_bonus(read_ketra.with(|k| k.level))}</p>
-                //<EditMainstatsView read_character=read_ketra write_character=write_ketra/>
-                <MainStatsView read_char=read_ketra write_char=write_ketra/>
-                <SkillView read_character=read_ketra write_character=write_ketra/>
-                <NonSkillDebugView read_character=read_ketra write_character=write_ketra/>
+        <div id="top_div" class="flex-row" style="align-items:stretch">
+            <div class="flex-row align-center">   
+                <button
+                    on:click=move |_| {write_ketra.update(move |c| c.level += 1)}
+                    on:contextmenu=move |_| {write_ketra.update(move |c| c.level -= 1)}
+                >
+                    Level {move || read_ketra.with(|k| k.level)}
+                </button>
+                <div>SIZE<br/>Medium</div>
+                <div>SPEED<br/>30ft.</div>
+                <MainStatsView/>
             </div>
-            <div style="flex-grow:1">
-                <FeatView read_character=read_ketra write_character=write_ketra/>
+            <div class="flex-row flex-grow-1" style="text-align:center">
+                CONDITIONS
+            </div>
+        </div>
+        <div class="flex-row space-between">
+            <div class="flex-col" style="flex-grow: 0">
+                <p style="color: red;">{move || read_save_error()}</p>
+                //<EditMainstatsView read_character=read_ketra write_character=write_ketra/>
+                <SkillListView/>
+                <EditSkillListView/>
+                //<NonSkillDebugView/>
+            </div>
+            <div class="flex-col" style="text-align: right">
+                <FeatView/>
             </div>
         </div>
     }

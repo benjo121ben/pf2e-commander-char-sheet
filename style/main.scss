@@ -2,3 +2,96 @@ body {
 	font-family: sans-serif;
 	text-align: left;
 }
+
+.flex-row {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+
+	h1, h2, h3, h4 {
+		display: block;
+		flex-grow: 0;
+	}
+	* {
+		display: flex;
+		flex-grow: 1;
+		flex-basis: 0;
+	}
+}
+
+.flex-row > div {
+	flex-direction: col;
+}
+
+.flex-col {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	h1, h2, h3, h4 {
+		display: block;
+		flex-grow: 0;
+	}
+	* {
+		display: flex;
+		flex-grow: 1;
+		flex-basis: 0;
+	}
+}
+
+.flex-col > div {
+	flex-direction: column;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.text-right > * {
+	text-align: right;
+}
+
+.flex-grow-1 {
+	flex-grow: 1;
+}
+
+.flex-grow-2 {
+	flex-grow: 1;
+}
+
+.flex-grow-3 {
+	flex-grow: 1;
+}
+
+.flex-grow-4 {
+	flex-grow: 1;
+}
+
+.align-center {
+	align-items: center
+}
+
+.space-between {
+	justify-content: space-between;
+}
+
+.skill-grid  {
+	display:grid;
+	grid-template-columns: auto auto auto;
+	row-gap: 2px;
+	column-gap: 6px;
+	font-size: smaller;
+	* {
+		flex-basis: 0;
+		flex-grow: 0;
+	}
+	:nth-child(3n + 2) {
+		text-align: center;
+		justify-self: center;
+		align-content: center;
+	}
+	:nth-child(3n + 3) {
+		text-align: center;
+		justify-self: center;
+		align-content: center;
+	}
+}
