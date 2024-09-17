@@ -1,4 +1,5 @@
 use crate::char_data::character::*;
+use crate::char_data::stats::ProficiencyType;
 use crate::server_side::server_functions::*;
 use super::stats_views::*;
 
@@ -19,6 +20,7 @@ pub fn CharacterView(
             Err(err) => {log!("Error saving "); write_save_error.set(err.to_string())},
         }
     });
+    let show_edit_stats = create_rw_signal(false);
     create_effect(move |prev| {
         let _getUp = read_ketra.with(|c| c.name.clone());
         log!("pushed");
@@ -36,28 +38,37 @@ pub fn CharacterView(
     view! {
         <h2>{move || read_ketra.with(|k| k.name.clone())}</h2>
         <div id="top_div" class="flex-row" style="align-items:stretch">
-            <div class="flex-row align-center">   
-                <button
-                    on:click=move |_| {write_ketra.update(move |c| c.level += 1)}
-                    on:contextmenu=move |_| {write_ketra.update(move |c| c.level -= 1)}
-                >
-                    Level {move || read_ketra.with(|k| k.level)}
-                </button>
-                <div>SIZE<br/>Medium</div>
-                <div>SPEED<br/>30ft.</div>
+            <div class="flex-col no-grow">
+                <div class="flex-row align-center">   
+                    <button
+                        on:click=move |_| {write_ketra.update(move |c| c.level += 1)}
+                        on:contextmenu=move |_| {write_ketra.update(move |c| c.level -= 1)}
+                    >
+                        Level {move || read_ketra.with(|k| k.level)}
+                    </button>
+                    <div>SIZE<br/>Medium</div>
+                    <div>SPEED<br/>30ft.</div>
+                </div>
                 <MainStatsView/>
             </div>
-            <div class="flex-row flex-grow-1" style="text-align:center">
+            <div class="flex-row flex-grow-1" style="justify-content:center">
                 CONDITIONS
             </div>
         </div>
+        <p style="color: red;">{move || read_save_error()}</p>
         <div class="flex-row space-between">
             <div class="flex-col" style="flex-grow: 0">
-                <p style="color: red;">{move || read_save_error()}</p>
-                //<EditMainstatsView read_character=read_ketra write_character=write_ketra/>
-                <SkillListView/>
-                <EditSkillListView/>
-                //<NonSkillDebugView/>
+            {
+                move || if !show_edit_stats.get() {
+                    view! {<SkillListView/>}
+                }
+                else {
+                    view! {
+                        <EditSkillListView types=vec![ProficiencyType::Skill, ProficiencyType::Lore]/>
+                    }.into_view()
+                } 
+            }
+            <button on:click=move |_| show_edit_stats.update(|b| *b=!*b) style="justify-content:center">Edit</button>
             </div>
             <div class="flex-col" style="text-align: right">
                 <FeatView/>

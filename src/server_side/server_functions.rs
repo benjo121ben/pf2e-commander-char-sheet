@@ -1,6 +1,5 @@
 use leptos::*;
 
-use leptos::logging::log;
 use crate::server_side::read_json::{read_char_from_file, write_char_to_file};
 use crate::char_data::character::Character;
 

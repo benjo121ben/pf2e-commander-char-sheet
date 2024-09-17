@@ -1,6 +1,6 @@
 use crate::char_data::character::*;
 use crate::char_data::proficiency::ProficiencyLevel;
-use crate::char_data::stats::{CalculatedStat, ProficiencyType};
+use crate::char_data::stats::ProficiencyType;
 use ev::Event;
 use leptos::*;
 use leptos::logging::log;
@@ -8,6 +8,7 @@ use leptos::logging::log;
 
 #[component]
 pub fn MainStatsView() -> impl IntoView {
+    let unlocked = create_rw_signal(false);
     let read_char= use_context::<ReadSignal<Character>>().expect("Edit skill List expects a character to be set");
     let write_char = use_context::<WriteSignal<Character>>().expect("Edit skill List expects a character to be set");
     let update_stat = move |id: String, offset: i32| write_char
@@ -27,21 +28,40 @@ pub fn MainStatsView() -> impl IntoView {
                 }
                 key=|(id, _)| id.clone()
                 children=move |(id, abbr)| {
-                    let idForLeftClick = id.clone();
-                    let idForrightClick = id.clone();
+                    let id_for_left_click = id.clone();
+                    let id_for_right_click = id.clone();
                     let val = create_memo(move |_| {
-                        let idClone = id.clone();
-                        read_char.with(move |cha_obj| cha_obj.attributes.get_stat_val(&idClone).unwrap())
+                        let id_clone = id.clone();
+                        read_char.with(move |cha_obj| cha_obj.attributes.get_stat_val(&id_clone).unwrap())
                     });
                     view! { 
                         <div 
-                            on:click=move |_| {update_stat(idForLeftClick.clone(), 1)}
-                            on:contextmenu=move |_| update_stat(idForrightClick.clone(), -1)
+                            on:click=move |_| {
+                                if unlocked.get() {
+                                    update_stat(id_for_left_click.clone(), 1)
+                                }
+                            }
+                            on:contextmenu=move |_| {
+                                if unlocked.get() {
+                                    update_stat(id_for_right_click.clone(), -1)
+                                }
+                            }
                         >
                             {abbr}: {val}
                         </div> }
                 }
             />
+            <button
+                on:click=move |_| unlocked.update(|l| *l = !*l)
+            >
+            {
+                move || if unlocked.get() {
+                    "Unlocked"
+                } else {
+                    "Locked"
+                }
+            }
+            </button>
         </div>
     }
 }
@@ -59,14 +79,14 @@ pub fn EditMainstatsView() -> impl IntoView {
             key=|id| id.clone()
             children=move |id| {
                 let idForInput = id.clone();
-                let trueVal = create_memo(move |_| {
-                    let idClone = id.clone();
-                    read_character.with(move |k| k.attributes.get_stat_val(&idClone)).unwrap()
+                let current_val = create_memo(move |_| {
+                    let id_clone = id.clone();
+                    read_character.with(move |k| k.attributes.get_stat_val(&id_clone)).unwrap()
                 });
                 view! {
                     <input
                         type="number"
-                        value=trueVal
+                        value=current_val
                         style="width:35px; margin-right: 10px;"
                         on:change=move |event| {
                             write_character
@@ -84,15 +104,18 @@ pub fn EditMainstatsView() -> impl IntoView {
 
 
 #[component]
-pub fn EditSkillListView() -> impl IntoView {
+pub fn EditSkillListView(
+    types: Vec<ProficiencyType> 
+) -> impl IntoView {
     let read_character= use_context::<ReadSignal<Character>>().expect("Edit skill List expects a character to be set");
     let write_character = use_context::<WriteSignal<Character>>().expect("Edit skill List expects a character to be set");
     view! {
         <div class="skill-grid">
             <For
                 each=move || {
+                    let types_clone = types.clone();
                     read_character.with(
-                        |k| k.proficiencies.clone().into_iter().filter(move |s| s.p_type == ProficiencyType::Skill || s.p_type == ProficiencyType::Lore)
+                        |k| k.proficiencies.clone().into_iter().filter(move |s| types_clone.contains(&s.p_type.clone()))
                     )
                 }
                 key=|skill| skill.name.clone()
@@ -101,7 +124,7 @@ pub fn EditSkillListView() -> impl IntoView {
                     let name2 = skill.name.clone();
                     let skill_prof = skill.proficiency.clone();
                     let skill_value = create_memo({move |_| read_character.with(|c| c.get_prof_obj_from_name(&(name.clone())).expect("should be able to find proficiency").calculate_stat(&c))});
-                    let options = vec![ProficiencyLevel::Untrained, ProficiencyLevel::Half, ProficiencyLevel::Trained, ProficiencyLevel::Expert, ProficiencyLevel::Master, ProficiencyLevel::Legendary];
+                    let options = vec![ProficiencyLevel::Untrained, ProficiencyLevel::Trained, ProficiencyLevel::Expert, ProficiencyLevel::Master, ProficiencyLevel::Legendary];
                     let change_proficiency = move |event: Event| {
                         write_character.update(|character| {
                             let val: String = event_target_value(&event);
@@ -122,13 +145,13 @@ pub fn EditSkillListView() -> impl IntoView {
                         <div style="margin-left=10px">
                             {move || skill_value}
                         </div>
-                        <select name="proficiency" id="profs"
+                        <select name="proficiency" 
+                            id="profs"
                             on:change=change_proficiency
-                            prop:value={move || skill_prof.to_string()}
                         >
                             {
                                 options.into_iter().map(|lvl| view!{
-                                    <option>{lvl.to_string()}</option>
+                                    <option selected=lvl.to_string()==skill_prof.clone().to_string() value=lvl.to_string()>{lvl.to_string()}</option>
                                 }).collect::<Vec<_>>()
                             }
                         </select>
@@ -141,7 +164,6 @@ pub fn EditSkillListView() -> impl IntoView {
 
 #[component]
 pub fn SkillListView() -> impl IntoView {
-    let write_test = use_context::<WriteSignal<Character>>().expect("Character should be set at this point");
     let character_data = use_context::<ReadSignal<Character>>().expect("Character should be set at this point");
     let var_name = view! {
         <div class="skill-grid">
@@ -172,66 +194,8 @@ pub fn SkillListView() -> impl IntoView {
                 }
             />
         </div>
-        <button on:click=move |_| write_test.update(|c| c.level += 1)>CLICK</button>
     };
     var_name
-}
-
-
-#[component]
-pub fn NonSkillDebugView() -> impl IntoView {
-    let write_character = use_context::<WriteSignal<Character>>().expect("Character should be set at this point");
-    let read_character = use_context::<ReadSignal<Character>>().expect("Character should be set at this point");
-    view! {
-        <div style="display:flex; flex-direction: column; margin-top:20px">
-            <For
-                each=move || {
-                    read_character.with(
-                        |k| k.proficiencies.clone().into_iter().filter(move |s| s.p_type != ProficiencyType::Skill && s.p_type != ProficiencyType::Lore)
-                    )
-                }
-                key=|skill| skill.name.clone()
-                children=move |skill| {
-                    let name = skill.name.clone();
-                    let name2 = skill.name.clone();
-                    let skill_prof = skill.proficiency.clone();
-                    let skill_value = create_memo({move |_| read_character.with(|c| c.get_prof_obj_from_name(&(name.clone())).unwrap().calculate_stat(&c))});
-                    let options = vec![ProficiencyLevel::Untrained, ProficiencyLevel::Half, ProficiencyLevel::Trained, ProficiencyLevel::Expert, ProficiencyLevel::Master, ProficiencyLevel::Legendary];
-                    view! {
-                        <div style="display:flex; flex-direction: row">
-                            <div>
-                                {move || name2.clone()}
-                            </div>
-
-                            <div style="margin-left=10px">
-                                {move || skill_value}
-                            </div>
-                            <select name="proficiency" id="profs"
-                                on:change=move |event| {
-                                    write_character.update(|character| {
-                                        let val: String = event_target_value(&event);
-                                        let indx = character.get_prof_indx_from_name(&skill.name);
-                                        let panic_name = skill.name.clone();
-                                        match indx {
-                                            Some(i) => {character.proficiencies[i].proficiency = ProficiencyLevel::from(val)},
-                                            None => {panic!("Could not get index for {panic_name}")}
-                                        };
-                                        
-                                    })
-                                }
-                            >
-                                {
-                                    options.into_iter().map(|lvl| view!{
-                                        <option selected=skill_prof.clone()==lvl value=lvl.to_string()>{lvl.to_string()}</option>
-                                    }).collect::<Vec<_>>()
-                                }
-                            </select>
-                        </div>
-                    }
-                }
-            />
-        </div>
-    }
 }
 
 
@@ -246,7 +210,7 @@ pub fn FeatView() -> impl IntoView {
                 key={move |feat| feat.name.clone()}
                 children=move |feat| {
                     view!{
-                        <div>
+                        <div class="flex-col">
                             <h4>{move || feat.name.clone()}</h4>
                             <p style="justify-content:flex-end">{move || feat.description.clone()}</p>
                         </div>
