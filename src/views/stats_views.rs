@@ -189,13 +189,40 @@ pub fn ProficiencyListView(
                         let data = get_skill_data.clone();
                         move || character_data.with(|c| data().calculate_stat(c))
                     };
+                    let is_proficient = {
+                        let get_prof = get_skill_prof.clone();
+                        move || get_prof() != String::from("U")
+                    };
                     view! {
                         <div>{move || name_clone.clone()}</div>
-                        <div>{get_skill_prof}</div>
+                        <div class="proficiency-letter" class:proficiency-letter-trained=is_proficient>{get_skill_prof}</div>
                         <div>{get_skill_val}</div>
                     }.into_view()
                 }
             />
+        </div>
+    }
+}
+
+#[component]
+pub fn SwitchProfView(
+    types: Vec<ProficiencyType> 
+) -> impl IntoView {
+    let show_edit_stats = create_rw_signal(false);
+    view!{
+        <div class="flex-col" style="flex-grow: 0">
+            {
+                let t_clone = types.clone();
+                move || if !show_edit_stats.get() {
+                    view! {<ProficiencyListView types=t_clone.clone()/>}
+                }
+                else {
+                    view! {
+                        <EditProfListView types=t_clone.clone()/>
+                    }.into_view()
+                } 
+            }
+            <button on:click=move |_| show_edit_stats.update(|b| *b=!*b) style="justify-content:center">Edit</button>
         </div>
     }
 }

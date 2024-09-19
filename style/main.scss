@@ -4,6 +4,14 @@ body {
 	text-align: left;
 }
 
+h2, h3 {
+	margin: 10px;
+}
+
+h4, h5 {
+	margin: 5px;
+}
+
 .flex-row {
 	display: flex;
 	flex-direction: row;
@@ -23,7 +31,7 @@ body {
 .flex-col {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 5px;
 	h1, h2, h3, h4 {
 		display: block;
 		flex-grow: 0;
@@ -86,6 +94,17 @@ body {
 		justify-self: center;
 		align-content: center;
 	}
+}
+
+.proficiency-letter {
+	background-color: gray;
+	color: white;
+	padding-left: 0.2em;
+	padding-right: 0.2em;
+}
+
+.proficiency-letter-trained {
+	background-color: orangered;
 }
 
 .no-grow {

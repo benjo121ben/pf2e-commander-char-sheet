@@ -20,7 +20,6 @@ pub fn CharacterView(
             Err(err) => {log!("Error saving "); write_save_error.set(err.to_string())},
         }
     });
-    let show_edit_stats = create_rw_signal(false);
     create_effect(move |prev| {
         let _getUp = read_ketra.with(|c| c.name.clone());
         log!("pushed");
@@ -59,18 +58,18 @@ pub fn CharacterView(
         <p style="color: red;">{move || read_save_error()}</p>
         <div class="flex-row space-between">
             <div class="flex-col" style="flex-grow: 0">
-                {
-                    move || if !show_edit_stats.get() {
-                        view! {<ProficiencyListView types=vec![ProficiencyType::Skill, ProficiencyType::Lore]/>}
-                    }
-                    else {
-                        view! {
-                            <EditProfListView types=vec![ProficiencyType::Skill, ProficiencyType::Lore]/>
-                        }.into_view()
-                    } 
-                }
-                <ProficiencyListView types=vec![ProficiencyType::Save, ProficiencyType::Armor]/>
-                <button on:click=move |_| show_edit_stats.update(|b| *b=!*b) style="justify-content:center">Edit</button>
+                <div style="flex-direction:column">
+                    <h5>Skills</h5>
+                    <SwitchProfView types=vec![ProficiencyType::Skill, ProficiencyType::Lore]/>
+                </div>
+                <div style="flex-direction:column">
+                    <h5>Saves</h5>
+                    <SwitchProfView types=vec![ProficiencyType::Save]/>
+                </div>
+                <div style="flex-direction:column">
+                    <h5>Armor</h5>
+                    <SwitchProfView types=vec![ProficiencyType::Armor]/>
+                </div>
             </div>
             <div class="flex-col" style="text-align: right">
                 <FeatView/>
