@@ -85,6 +85,15 @@ impl Character {
         }
         return None;
     }
+
+    pub fn calculate_ac(self: & Self) -> i32 {
+        let calc_stat = self.get_prof_obj_from_name("Medium").expect("Character must have a medium proficiency");
+        let dex_cap = 1;
+        let item_bonus = 4;
+        let prof_bonus = calc_stat.proficiency.get_bonus(self.level);
+        log!("prof bonus {prof_bonus}");
+        10 + std::cmp::min(self.attributes.get_stat("dex").expect("Defense expects a dex attribute to be set").value, dex_cap) + prof_bonus + item_bonus
+    }
 }
 
 impl PartialEq for Character {

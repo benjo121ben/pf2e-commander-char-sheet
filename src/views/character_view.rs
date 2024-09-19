@@ -50,6 +50,7 @@ pub fn CharacterView(
                     <div>SPEED<br/>30ft.</div>
                 </div>
                 <MainStatsView/>
+                <DefenseView/>
             </div>
             <div class="flex-row flex-grow-1" style="justify-content:center">
                 CONDITIONS
@@ -58,17 +59,18 @@ pub fn CharacterView(
         <p style="color: red;">{move || read_save_error()}</p>
         <div class="flex-row space-between">
             <div class="flex-col" style="flex-grow: 0">
-            {
-                move || if !show_edit_stats.get() {
-                    view! {<SkillListView/>}
+                {
+                    move || if !show_edit_stats.get() {
+                        view! {<ProficiencyListView types=vec![ProficiencyType::Skill, ProficiencyType::Lore]/>}
+                    }
+                    else {
+                        view! {
+                            <EditProfListView types=vec![ProficiencyType::Skill, ProficiencyType::Lore]/>
+                        }.into_view()
+                    } 
                 }
-                else {
-                    view! {
-                        <EditSkillListView types=vec![ProficiencyType::Skill, ProficiencyType::Lore]/>
-                    }.into_view()
-                } 
-            }
-            <button on:click=move |_| show_edit_stats.update(|b| *b=!*b) style="justify-content:center">Edit</button>
+                <ProficiencyListView types=vec![ProficiencyType::Save, ProficiencyType::Armor]/>
+                <button on:click=move |_| show_edit_stats.update(|b| *b=!*b) style="justify-content:center">Edit</button>
             </div>
             <div class="flex-col" style="text-align: right">
                 <FeatView/>

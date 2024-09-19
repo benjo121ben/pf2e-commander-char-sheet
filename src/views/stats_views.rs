@@ -104,7 +104,7 @@ pub fn EditMainstatsView() -> impl IntoView {
 
 
 #[component]
-pub fn EditSkillListView(
+pub fn EditProfListView(
     types: Vec<ProficiencyType> 
 ) -> impl IntoView {
     let read_character= use_context::<ReadSignal<Character>>().expect("Edit skill List expects a character to be set");
@@ -163,14 +163,17 @@ pub fn EditSkillListView(
 }
 
 #[component]
-pub fn SkillListView() -> impl IntoView {
+pub fn ProficiencyListView(
+    types: Vec<ProficiencyType> 
+) -> impl IntoView {
     let character_data = use_context::<ReadSignal<Character>>().expect("Character should be set at this point");
-    let var_name = view! {
+    view! {
         <div class="skill-grid">
             <For
                 each=move || {
+                    let types_clone = types.clone();
                     character_data.with(
-                        |k| k.proficiencies.clone().into_iter().filter(move |s| s.p_type == ProficiencyType::Skill || s.p_type == ProficiencyType::Lore)
+                        |k| k.proficiencies.clone().into_iter().filter(move |s| types_clone.contains(&s.p_type.clone()))
                     )
                 }
                 key=|skill| skill.name.clone()
@@ -194,8 +197,17 @@ pub fn SkillListView() -> impl IntoView {
                 }
             />
         </div>
-    };
-    var_name
+    }
+}
+
+#[component]
+pub fn DefenseView() -> impl IntoView {
+    let read_character = use_context::<ReadSignal<Character>>().expect("Feat view expects character to be set");
+    view!{
+        <div>
+            <div>{move || read_character.with(|c| c.calculate_ac())}</div>
+        </div>
+    }
 }
 
 
