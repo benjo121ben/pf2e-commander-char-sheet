@@ -1,7 +1,19 @@
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
 body {
 	font-family: sans-serif;
-	font-size: 18px;
+	
 	text-align: left;
+}
+
+@media screen and (min-width: 800px) {
+	body {
+		font-size: 18px;
+	}
 }
 
 h2, h3 {
@@ -10,6 +22,12 @@ h2, h3 {
 
 h4, h5 {
 	margin: 5px;
+}
+
+section {
+	border-radius: 10px;
+	background-color: rgb(235, 209, 198);
+	padding: 8px;
 }
 
 .flex-row {
@@ -109,4 +127,10 @@ h4, h5 {
 
 .no-grow {
 	flex-grow: 0;
+}
+
+.no-grow-children {
+	* {
+		flex-grow: 0;
+	}
 }

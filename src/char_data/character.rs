@@ -91,7 +91,6 @@ impl Character {
         let dex_cap = 1;
         let item_bonus = 4;
         let prof_bonus = calc_stat.proficiency.get_bonus(self.level);
-        log!("prof bonus {prof_bonus}");
         10 + std::cmp::min(self.attributes.get_stat("dex").expect("Defense expects a dex attribute to be set").value, dex_cap) + prof_bonus + item_bonus
     }
 }

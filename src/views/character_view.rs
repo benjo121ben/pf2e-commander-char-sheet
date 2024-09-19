@@ -2,6 +2,7 @@ use crate::char_data::character::*;
 use crate::char_data::stats::ProficiencyType;
 use crate::server_side::server_functions::*;
 use super::stats_views::*;
+use super::equip_views::*;
 
 use leptos::*;
 use leptos::logging::log;
@@ -36,9 +37,9 @@ pub fn CharacterView(
     provide_context(write_ketra);
     view! {
         <h2>{move || read_ketra.with(|k| k.name.clone())}</h2>
-        <div id="top_div" class="flex-row" style="align-items:stretch">
-            <div class="flex-col no-grow">
-                <div class="flex-row align-center">   
+        <div id="top_div" class="flex-row">
+            <section class="flex-col no-grow">
+                <div class="flex-row align-center no-grow-children">   
                     <button
                         on:click=move |_| {write_ketra.update(move |c| c.level += 1)}
                         on:contextmenu=move |_| {write_ketra.update(move |c| c.level -= 1)}
@@ -50,14 +51,14 @@ pub fn CharacterView(
                 </div>
                 <MainStatsView/>
                 <DefenseView/>
-            </div>
-            <div class="flex-row flex-grow-1" style="justify-content:center">
+            </section>
+            <section class="flex-row flex-grow-1" style="justify-content:center">
                 CONDITIONS
-            </div>
+            </section>
         </div>
         <p style="color: red;">{move || read_save_error()}</p>
         <div class="flex-row space-between">
-            <div class="flex-col" style="flex-grow: 0">
+            <section class="flex-col" style="flex-grow: 0">
                 <div style="flex-direction:column">
                     <h5>Skills</h5>
                     <SwitchProfView types=vec![ProficiencyType::Skill, ProficiencyType::Lore]/>
@@ -70,10 +71,13 @@ pub fn CharacterView(
                     <h5>Armor</h5>
                     <SwitchProfView types=vec![ProficiencyType::Armor]/>
                 </div>
-            </div>
-            <div class="flex-col" style="text-align: right">
+            </section>
+            <section class="flex-col" style="flex-grow: 1">
+                <WeaponView/>
+            </section>
+            <section class="flex-col" style="flex-grow: 0; text-align: right">
                 <FeatView/>
-            </div>
+            </section>
         </div>
     }
 }

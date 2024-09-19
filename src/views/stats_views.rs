@@ -141,10 +141,6 @@ pub fn EditProfListView(
                         <div>
                             {move || name2.clone()}
                         </div>
-
-                        <div style="margin-left=10px">
-                            {move || skill_value}
-                        </div>
                         <select name="proficiency" 
                             id="profs"
                             on:change=change_proficiency
@@ -155,6 +151,9 @@ pub fn EditProfListView(
                                 }).collect::<Vec<_>>()
                             }
                         </select>
+                        <div style="margin-left=10px">
+                            {move || skill_value}
+                        </div>
                     }
                 }
             />
@@ -231,9 +230,7 @@ pub fn SwitchProfView(
 pub fn DefenseView() -> impl IntoView {
     let read_character = use_context::<ReadSignal<Character>>().expect("Feat view expects character to be set");
     view!{
-        <div>
-            <div>{move || read_character.with(|c| c.calculate_ac())}</div>
-        </div>
+        <h3>AC: {move || read_character.with(|c| c.calculate_ac())}</h3>
     }
 }
 
