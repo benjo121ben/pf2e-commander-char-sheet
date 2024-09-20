@@ -37,8 +37,8 @@ pub fn CharacterView(
     provide_context(write_ketra);
     view! {
         <h2>{move || read_ketra.with(|k| k.name.clone())}</h2>
-        <div id="top_div" class="flex-row">
-            <section class="flex-col no-grow">
+        <div id="top_div" class="flex-row flex-wrap no-grow-children">
+            <section>
                 <div class="flex-row align-center no-grow-children">   
                     <button
                         on:click=move |_| {write_ketra.update(move |c| c.level += 1)}
@@ -49,15 +49,19 @@ pub fn CharacterView(
                     <div>SIZE<br/>Medium</div>
                     <div>SPEED<br/>30ft.</div>
                 </div>
-                <MainStatsView/>
+            </section>
+            <section>
                 <DefenseView/>
+            </section>
+            <section class="align-center">
+                <MainStatsView/>
             </section>
             <section class="flex-row flex-grow-1" style="justify-content:center">
                 CONDITIONS
             </section>
         </div>
         <p style="color: red;">{move || read_save_error()}</p>
-        <div class="flex-row space-between">
+        <div class="flex-row flex-wrap space-between">
             <section class="flex-col" style="flex-grow: 0">
                 <div style="flex-direction:column">
                     <h5>Skills</h5>
@@ -72,11 +76,12 @@ pub fn CharacterView(
                     <SwitchProfView types=vec![ProficiencyType::Armor]/>
                 </div>
             </section>
-            <section class="flex-col" style="flex-grow: 1">
+            <section class="flex-col flex-grow-4">
                 <WeaponView/>
             </section>
-            <section class="flex-col" style="flex-grow: 0; text-align: right">
+            <section class="flex-col right-side-col flex-grow-1 text-right">
                 <FeatView/>
+                <p>We need to test a really long text, why does it behave this way?</p>
             </section>
         </div>
     }

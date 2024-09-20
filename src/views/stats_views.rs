@@ -239,16 +239,16 @@ pub fn DefenseView() -> impl IntoView {
 pub fn FeatView() -> impl IntoView {
     let read_character = use_context::<ReadSignal<Character>>().expect("Feat view expects character to be set");
     view!{
-        <div class="flex-col">
+        <div class="flex-col right-side-col">
             <h3>Feats</h3>
             <For
                 each={move || read_character.with(|c| c.feats.clone())}
                 key={move |feat| feat.name.clone()}
                 children=move |feat| {
                     view!{
-                        <div class="flex-col">
+                        <div class="flex-col right-side-col">
                             <h4>{move || feat.name.clone()}</h4>
-                            <p style="justify-content:flex-end">{move || feat.description.clone()}</p>
+                            <p>{move || feat.description.clone()}</p>
                         </div>
                     }
                 }
