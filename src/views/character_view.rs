@@ -1,4 +1,5 @@
 use crate::char_data::character::*;
+use crate::char_data::conditions::Condition;
 use crate::char_data::stats::ProficiencyType;
 use crate::server_side::server_functions::*;
 use super::stats_views::*;
@@ -10,9 +11,11 @@ use leptos::logging::log;
 #[component]
 pub fn CharacterView(
     char: Character,
+    conditions: Vec<Condition>
 ) -> impl IntoView {
     let (read_ketra, write_ketra) = create_signal(char);
     let (read_save_error, write_save_error) = create_signal(String::from(""));
+    log!("{conditions:#?}");
     let upload_ketra = create_action( move |_:&i32| async move {
         let ketra = read_ketra.get_untracked();
         let ret_val = set_char(ketra).await;

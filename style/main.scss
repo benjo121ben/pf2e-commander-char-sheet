@@ -36,6 +36,7 @@ h4, h5, p {
 }
 
 section {
+	display: flex;
 	border-radius: 0.7rem;
 	background-color: rgb(235, 209, 198);
 	padding: 0.6rem;
@@ -106,7 +107,6 @@ section {
 		flex-grow: 0;
 	}
 }
-
 
 .flex-grow-1 {
 	flex-grow: 1;

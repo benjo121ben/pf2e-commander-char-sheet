@@ -230,7 +230,7 @@ pub fn SwitchProfView(
 pub fn DefenseView() -> impl IntoView {
     let read_character = use_context::<ReadSignal<Character>>().expect("Feat view expects character to be set");
     view!{
-        <h3>AC: {move || read_character.with(|c| c.calculate_ac())}</h3>
+        <h3 style="margin: 0">AC: {move || read_character.with(|c| c.calculate_ac())}</h3>
     }
 }
 

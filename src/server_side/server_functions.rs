@@ -1,13 +1,25 @@
 use leptos::*;
 
+use crate::char_data::conditions::Condition;
 use crate::server_side::read_json::{read_char_from_file, write_char_to_file};
 use crate::char_data::character::Character;
+
+use super::read_json::read_conditions_from_file;
 
 #[server(GetChar, "/api")]
 pub async fn get_char() -> Result<Character, ServerFnError> {
     let read_char_result = read_char_from_file("char.json");
     match read_char_result {
         Ok(read_char) => return Ok(read_char),
+        Err(error) => return Err(ServerFnError::new(error.to_string())),
+    }
+}
+
+#[server(GetConditions, "/api")]
+pub async fn get_conditions() -> Result<Vec<Condition>, ServerFnError> {
+    let read_cond_result = read_conditions_from_file("resources/conditions.json");
+    match read_cond_result {
+        Ok(conditions) => return Ok(conditions),
         Err(error) => return Err(ServerFnError::new(error.to_string())),
     }
 }
