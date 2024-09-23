@@ -53,14 +53,22 @@ pub fn CharacterView(
                     <div>SPEED<br/>30ft.</div>
                 </div>
             </section>
-            <section>
+            <section class="align-center">
                 <DefenseView/>
             </section>
             <section class="align-center">
                 <MainStatsView/>
             </section>
             <section class="flex-row flex-grow-1" style="justify-content:center">
-                CONDITIONS
+                {
+                    move || {
+                        let condition_clone: Condition = conditions[0].clone();
+                        view!{
+                            <h3 style="no-grow">{move || condition_clone.name.clone()}</h3>
+                            <p style="flex-grow-1">{move || condition_clone.description.clone()}</p>
+                        }
+                    }
+                }
             </section>
         </div>
         <p style="color: red;">{move || read_save_error()}</p>
