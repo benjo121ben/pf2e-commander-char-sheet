@@ -160,3 +160,22 @@ section {
 	max-width: 15rem;
 	text-align: end;
 }
+
+.center-text-area {
+	min-height: 20rem; 
+	background:unset;
+	border: unset
+	
+}
+
+@media screen and (min-height: 700px) {
+	.center-text-area {
+		font-size: 1.1rem;
+	}
+}
+
+@media screen and (min-height: 800px) {
+	.center-text-area {
+		font-size: 1.25rem;
+	}
+}

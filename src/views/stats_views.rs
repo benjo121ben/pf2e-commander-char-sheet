@@ -138,7 +138,7 @@ pub fn EditProfListView(
                         })
                     };
                     view! {
-                        <div>
+                        <div style="display:flex; flex: 1">
                             {move || name2.clone()}
                         </div>
                         <select name="proficiency" 
@@ -193,7 +193,7 @@ pub fn ProficiencyListView(
                         move || get_prof() != String::from("U")
                     };
                     view! {
-                        <div>{move || name_clone.clone()}</div>
+                        <div style="display:flex; flex: 1">{move || name_clone.clone()}</div>
                         <div class="proficiency-letter" class:proficiency-letter-trained=is_proficient>{get_skill_prof}</div>
                         <div>{get_skill_val}</div>
                     }.into_view()

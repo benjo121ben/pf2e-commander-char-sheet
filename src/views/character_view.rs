@@ -15,7 +15,6 @@ pub fn CharacterView(
 ) -> impl IntoView {
     let (read_ketra, write_ketra) = create_signal(char);
     let (read_save_error, write_save_error) = create_signal(String::from(""));
-    log!("{conditions:#?}");
     let upload_ketra = create_action( move |_:&i32| async move {
         let ketra = read_ketra.get_untracked();
         let ret_val = set_char(ketra).await;
@@ -73,27 +72,45 @@ pub fn CharacterView(
         </div>
         <p style="color: red;">{move || read_save_error()}</p>
         <div class="flex-row flex-wrap space-between">
-            <section class="flex-col" style="flex-grow: 0">
-                <div style="flex-direction:column">
-                    <h5>Skills</h5>
-                    <SwitchProfView types=vec![ProficiencyType::Skill, ProficiencyType::Lore]/>
-                </div>
-                <div style="flex-direction:column">
+            <section class="flex-col flex-wrap" style="flex-grow: 0">
+                <SwitchProfView types=vec![ProficiencyType::Perception]/>
+                <div class="flex-col">
                     <h5>Saves</h5>
                     <SwitchProfView types=vec![ProficiencyType::Save]/>
                 </div>
-                <div style="flex-direction:column">
+                <div class="flex-col">
+                    <h5>Attack</h5>
+                    <SwitchProfView types=vec![ProficiencyType::Weapon]/>
+                </div>
+                <div class="flex-col">
+                    <h5>Skills</h5>
+                    <SwitchProfView types=vec![ProficiencyType::Skill, ProficiencyType::Lore]/>
+                </div>
+                
+                <div class="flex-col">
                     <h5>Armor</h5>
                     <SwitchProfView types=vec![ProficiencyType::Armor]/>
                 </div>
             </section>
             <section class="flex-col flex-grow-4">
-                <WeaponView/>
+                <textarea class="flex-grow-1 center-text-area" id="test"
+                    on:change=move |event| {
+                        write_ketra
+                        .update(|c| {
+                            let val: String = event_target_value(&event);
+                            c.text = val;
+                        })
+                    }
+                    prop:value={move || read_ketra.with(|c| c.text.clone())}
+                />
             </section>
             <section class="flex-col right-side-col flex-grow-1 text-right">
                 <FeatView/>
                 <p>We need to test a really long text, why does it behave this way?</p>
             </section>
+        </div>
+        <div class="flex-row">
+        
         </div>
     }
 }

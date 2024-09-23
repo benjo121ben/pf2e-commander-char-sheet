@@ -7,7 +7,11 @@ pub struct Character {
     pub name: String,
     pub level: i32,
     pub attributes: Attributes,
+    #[serde(default)]
+    pub text: String,
+    #[serde(default)]
     pub background: String,
+    #[serde(default)]
     pub class: String,
     #[serde(default)]
     pub proficiencies: Vec<CalculatedStat>,
@@ -22,6 +26,7 @@ impl Character {
         Character {
             name: String::from(""),
             level: 1,
+            text: String::from(""),
             attributes: Attributes::zero(),
             background: String::from("Squire"),
             class: String::from("Commander"),
@@ -115,14 +120,15 @@ impl PartialEq for Character {
 impl From<SimpleCharacter> for Character{
     fn from(simp_char: SimpleCharacter) -> Self {
         let mut ret_val = Character {
-            name: simp_char.name.clone(),
+            name: simp_char.name,
             level: simp_char.level,
+            text: simp_char.text,
             attributes: Attributes::from(&simp_char.attributes),
-            background: simp_char.background.clone(),
-            class: simp_char.class.clone(),
+            background: simp_char.background,
+            class: simp_char.class,
             proficiencies: vec![],
-            feats: simp_char.feats.clone(),
-            conditions: simp_char.conditions.clone()
+            feats: simp_char.feats,
+            conditions: simp_char.conditions
         };
 
         for skill_tuple in simp_char.proficiencies {
@@ -139,6 +145,7 @@ impl From<&SimpleCharacter> for Character{
         let mut ret_val = Character {
             name: simp_char.name.clone(),
             level: simp_char.level,
+            text: simp_char.text.clone(),
             attributes: Attributes::from(&((*simp_char).attributes)),
             background: simp_char.background.clone(),
             class: simp_char.class.clone(),
@@ -162,7 +169,11 @@ pub struct SimpleCharacter {
     pub name: String,
     pub level: i32,
     pub attributes: Vec<i32>,
+    #[serde(default)]
+    pub text: String,
+    #[serde(default)]
     pub background: String,
+    #[serde(default)]
     pub class: String,
     #[serde(default)]
     pub proficiencies: Vec<(String, ProficiencyType, ProficiencyLevel)>,
@@ -179,6 +190,7 @@ impl From<Character> for SimpleCharacter{
         let mut ret_val = SimpleCharacter {
             name: ref_char.name.clone(),
             level: ref_char.level,
+            text: ref_char.text,
             attributes: ref_char.attributes.as_number_vec(),
             background: ref_char.background.clone(),
             class: ref_char.class.clone(),
@@ -197,6 +209,7 @@ impl From<&Character> for SimpleCharacter{
         let mut ret_val = SimpleCharacter {
             name: ref_char.name.clone(),
             level: ref_char.level,
+            text: ref_char.text.clone(),
             attributes: ref_char.attributes.as_number_vec(),
             background: ref_char.background.clone(),
             class: ref_char.class.clone(),

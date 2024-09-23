@@ -9,6 +9,7 @@
     0,
     1
   ],
+  "text": "Yellow darkness my old friend\nasd asda ",
   "background": "Squire",
   "class": "Commander",
   "proficiencies": [
@@ -41,6 +42,11 @@
       "Diplomacy",
       "Skill",
       "Untrained"
+    ],
+    [
+      "Heraldry Lore",
+      "Lore",
+      "Trained"
     ],
     [
       "Intimidation",
@@ -100,11 +106,16 @@
     [
       "Reflex",
       "Save",
-      "Trained"
+      "Expert"
     ],
     [
       "Will",
       "Save",
+      "Expert"
+    ],
+    [
+      "Warfare Lore",
+      "Lore",
       "Trained"
     ],
     [
@@ -130,22 +141,22 @@
     [
       "Simple",
       "Weapon",
-      "Untrained"
+      "Trained"
     ],
     [
       "Martial",
       "Weapon",
-      "Untrained"
+      "Trained"
     ],
     [
       "Advanced",
       "Weapon",
-      "Untrained"
+      "Trained"
     ],
     [
       "Perception",
       "Perception",
-      "Untrained"
+      "Expert"
     ],
     [
       "ClassDC",
@@ -169,5 +180,6 @@
       "description": "Add 5 feet to speed",
       "char_additions": []
     }
-  ]
+  ],
+  "conditions": []
 }
