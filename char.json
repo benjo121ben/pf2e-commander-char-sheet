@@ -3,11 +3,11 @@
   "hp_info": {
     "ancestry_hp": 8,
     "class_hp": 8,
-    "max_hp": 17,
-    "current_hp": 17,
+    "max_hp": 26,
+    "current_hp": 24,
     "temp_hp": 0
   },
-  "level": 1,
+  "level": 2,
   "attributes": [
     3,
     1,
@@ -16,7 +16,7 @@
     0,
     1
   ],
-  "text": "Pferd Litta\nNorik Luke\nVaris Andi\nVilly Joseph\n\nMein Wappen hat eine blaue burgmauer mit rotem himmel, im vordergrund liegt eine Spindel mit weißem Garn. An der Spitze ein einziger Tropfen Blut.\n\nBin auf dem Weg von Maelgoth\nVilly findet broken shit irgendeiner gottheit (Brancala), hat eine vision einer Schlacht\n\nTreffe einen alten mann mit weißem bart als ich unterkunft unter einem Stein suche. Er nennt sich Fiz, ist ein sehr exzentrischer Magier, fragt mich nach meinen Zielen. Er ist hier und dort und überall. Verschwindet als ich mich umdrehe.\n",
+  "text": "Pferd Litta\nNorik Luke\nVaris Andi\nVinny Joseph\n\nMein Wappen hat eine blaue burgmauer mit rotem himmel, im vordergrund liegt eine Spindel mit weißem Garn. An der Spitze ein einziger Tropfen Blut.\n\nBin auf dem Weg von Maelgoth\nVilly findet broken shit irgendeiner gottheit (Brancala), hat eine vision einer Schlacht\n\nTreffe einen alten mann mit weißem bart als ich unterkunft unter einem Stein suche. Er nennt sich Fiz, ist ein sehr exzentrischer Magier, fragt mich nach meinen Zielen. Er ist hier und dort und überall. Verschwindet als ich mich umdrehe.\n",
   "shield_raised": false,
   "background": "Squire",
   "class": "Commander",
@@ -186,6 +186,36 @@
         }
       ],
       "description": "Add 5 feet to speed",
+      "char_additions": []
+    },
+    {
+      "name": "Combat Assessment",
+      "actions": 1,
+      "feat_types": [
+        "Class"
+      ],
+      "traits": [
+        {
+          "name": "Fighter",
+          "description": "This indicates abilities from the Fighter Class"
+        }
+      ],
+      "description": "You make a telegraphed attack to learn about your foe. Make a melee Strike. On a hit, you can immediately attempt a check to Recall Knowledge about the target. On a critical hit, you gain a +2 circumstance bonus to the check to Recall Knowledge. The target is temporarily immune to Combat Assessment for 1 day.",
+      "char_additions": []
+    },
+    {
+      "name": "Combat Medic",
+      "actions": 0,
+      "feat_types": [
+        "Class"
+      ],
+      "traits": [
+        {
+          "name": "Fighter",
+          "description": "This indicates abilities from the Fighter Class"
+        }
+      ],
+      "description": "Requirements You can prepare at least two tactics. You’re trained in battlefield triage and wound treatment. You are trained in Medicine and can use your Intelligence modifier in place of your Wisdom modifier for Medicine checks. You gain the Battle Medicine feat (Player Core 253).",
       "char_additions": []
     }
   ],

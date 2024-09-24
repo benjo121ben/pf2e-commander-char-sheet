@@ -58,6 +58,8 @@ section {
 
 .right-side-col {
 	align-items: flex-end;
+	flex-shrink: 1; 
+	max-width: 20vw;
 }
 
 .text-right {

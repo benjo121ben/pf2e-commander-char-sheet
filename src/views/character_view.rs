@@ -94,9 +94,8 @@ pub fn CharacterView(
                     prop:value={move || read_ketra.with(|c| c.text.clone())}
                 />
             </section>
-            <section class="flex-col right-side-col text-right no-grow" style="flex-shrink: 1">
+            <section class="flex-col right-side-col text-right no-grow">
                 <FeatView/>
-                <p style="max-width: 20vw">We need to test a really long text, why does it behave this way?</p>
             </section>
         </div>
         <div class="flex-row">
