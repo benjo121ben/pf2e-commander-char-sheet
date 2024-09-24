@@ -9,8 +9,8 @@ use leptos::logging::log;
 #[component]
 pub fn MainStatsView() -> impl IntoView {
     let unlocked = create_rw_signal(false);
-    let read_char= use_context::<ReadSignal<Character>>().expect("Edit skill List expects a character to be set");
-    let write_char = use_context::<WriteSignal<Character>>().expect("Edit skill List expects a character to be set");
+    let read_char= use_context::<ReadSignal<Character>>().expect("MainstatsView expects a character to be set");
+    let write_char = use_context::<WriteSignal<Character>>().expect("MainstatsView expects a character to be set");
     let update_stat = move |id: String, offset: i32| write_char
     .update(|f| {
         f.attributes.set_stat(&id, f.attributes.get_stat(&id).unwrap().value + offset);
@@ -69,8 +69,8 @@ pub fn MainStatsView() -> impl IntoView {
 
 #[component]
 pub fn EditMainstatsView() -> impl IntoView {
-    let read_character= use_context::<ReadSignal<Character>>().expect("Edit skill List expects a character to be set");
-    let write_character = use_context::<WriteSignal<Character>>().expect("Edit skill List expects a character to be set");
+    let read_character= use_context::<ReadSignal<Character>>().expect("Edit MainStatView expects a character to be set");
+    let write_character = use_context::<WriteSignal<Character>>().expect("Edit MainStatView expects a character to be set");
     view! {
         <For
             each=move || {
@@ -110,7 +110,7 @@ pub fn EditProfListView(
     let read_character= use_context::<ReadSignal<Character>>().expect("Edit skill List expects a character to be set");
     let write_character = use_context::<WriteSignal<Character>>().expect("Edit skill List expects a character to be set");
     view! {
-        <div class="skill-grid">
+        <div class="skill-grid skill-grid-edit">
             <For
                 each=move || {
                     let types_clone = types.clone();
@@ -138,7 +138,7 @@ pub fn EditProfListView(
                         })
                     };
                     view! {
-                        <div style="display:flex; flex: 1">
+                        <div style="display:flex; flex: 1 0 0">
                             {move || name2.clone()}
                         </div>
                         <select name="proficiency" 
@@ -165,7 +165,7 @@ pub fn EditProfListView(
 pub fn ProficiencyListView(
     types: Vec<ProficiencyType> 
 ) -> impl IntoView {
-    let character_data = use_context::<ReadSignal<Character>>().expect("Character should be set at this point");
+    let character_data = use_context::<ReadSignal<Character>>().expect("ProfView: Character should be set at this point");
     view! {
         <div class="skill-grid">
             <For
@@ -193,7 +193,7 @@ pub fn ProficiencyListView(
                         move || get_prof() != String::from("U")
                     };
                     view! {
-                        <div style="display:flex; flex: 1">{move || name_clone.clone()}</div>
+                        <div style="display:flex; flex: 1 0 0">{move || name_clone.clone()}</div>
                         <div class="proficiency-letter" class:proficiency-letter-trained=is_proficient>{get_skill_prof}</div>
                         <div>{get_skill_val}</div>
                     }.into_view()
@@ -228,9 +228,28 @@ pub fn SwitchProfView(
 
 #[component]
 pub fn DefenseView() -> impl IntoView {
-    let read_character = use_context::<ReadSignal<Character>>().expect("Feat view expects character to be set");
+    let read_character = use_context::<ReadSignal<Character>>().expect("Defense view expects character to be set");
+    let write_character = use_context::<WriteSignal<Character>>().expect("Defense view expects character to be set");
+    let shield_raised = move || read_character.with(|c| c.shield_raised);
+    let calc_ac = move || read_character.with(|c| c.calculate_ac());
+    let switch_shield_pos = move |_| write_character.update(|c| c.shield_raised=!c.shield_raised);
+
     view!{
-        <h3 style="margin: 0">AC: {move || read_character.with(|c| c.calculate_ac())}</h3>
+        <div class="flex-col" style="align-items: stretch">
+            <h3 style="margin: 0; white-spacce:nowrap" on:click=switch_shield_pos class:boosted-stat=shield_raised.clone()>
+                AC: {calc_ac}
+            </h3>
+            <button on:click=switch_shield_pos style="justify-content:center">
+                {
+                    move || if shield_raised() {
+                        "Lower"
+                    }
+                    else {
+                        "Raise"
+                    }
+                }
+            </button>
+        </div>
     }
 }
 

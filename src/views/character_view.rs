@@ -17,9 +17,10 @@ pub fn CharacterView(
     let (read_save_error, write_save_error) = create_signal(String::from(""));
     let upload_ketra = create_action( move |_:&i32| async move {
         let ketra = read_ketra.get_untracked();
+        write_save_error.set("".to_string());
         let ret_val = set_char(ketra).await;
         match ret_val {
-            Ok(_) => {write_save_error.set("".to_string())},
+            Ok(_) => {},
             Err(err) => {log!("Error saving "); write_save_error.set(err.to_string())},
         }
     });
@@ -37,6 +38,7 @@ pub fn CharacterView(
     });
     provide_context(read_ketra);
     provide_context(write_ketra);
+    provide_context(conditions.clone());
     view! {
         <h2>{move || read_ketra.with(|k| k.name.clone())}</h2>
         <div id="top_div" class="flex-row flex-wrap no-grow-children">
@@ -58,7 +60,7 @@ pub fn CharacterView(
             <section class="align-center">
                 <MainStatsView/>
             </section>
-            <section class="flex-row flex-grow-1" style="justify-content:center">
+            <section class="flex-row flex-grow-1 flex-shrink" style="justify-content:center">
                 {
                     move || {
                         let condition_clone: Condition = conditions[0].clone();
@@ -70,28 +72,13 @@ pub fn CharacterView(
                 }
             </section>
         </div>
-        <p style="color: red;">{move || read_save_error()}</p>
+        <Show
+            when=move || read_save_error() != String::from("")
+        >
+            <p style="color: red;">{move || read_save_error()}</p>
+        </Show>
         <div class="flex-row flex-wrap space-between">
-            <section class="flex-col flex-wrap" style="flex-grow: 0">
-                <SwitchProfView types=vec![ProficiencyType::Perception]/>
-                <div class="flex-col">
-                    <h5>Saves</h5>
-                    <SwitchProfView types=vec![ProficiencyType::Save]/>
-                </div>
-                <div class="flex-col">
-                    <h5>Attack</h5>
-                    <SwitchProfView types=vec![ProficiencyType::Weapon]/>
-                </div>
-                <div class="flex-col">
-                    <h5>Skills</h5>
-                    <SwitchProfView types=vec![ProficiencyType::Skill, ProficiencyType::Lore]/>
-                </div>
-                
-                <div class="flex-col">
-                    <h5>Armor</h5>
-                    <SwitchProfView types=vec![ProficiencyType::Armor]/>
-                </div>
-            </section>
+            <ProficiencySidebar/>
             <section class="flex-col flex-grow-4">
                 <textarea class="flex-grow-1 center-text-area" id="test"
                     on:change=move |event| {
@@ -104,13 +91,42 @@ pub fn CharacterView(
                     prop:value={move || read_ketra.with(|c| c.text.clone())}
                 />
             </section>
-            <section class="flex-col right-side-col flex-grow-1 text-right">
+            <section class="flex-col right-side-col text-right no-grow" style="flex-shrink: 1">
                 <FeatView/>
-                <p>We need to test a really long text, why does it behave this way?</p>
+                <p style="max-width: 20vw">We need to test a really long text, why does it behave this way?</p>
             </section>
         </div>
         <div class="flex-row">
         
         </div>
+    }
+}
+
+#[component]
+pub fn ProficiencySidebar(
+) -> impl IntoView {
+    view! {
+        <section class="flex-col flex-wrap" style="flex-grow: 0">
+            <b>
+                <SwitchProfView types=vec![ProficiencyType::Perception]/>
+            </b>
+            <div class="flex-col">
+                <h5>Saves</h5>
+                <SwitchProfView types=vec![ProficiencyType::Save]/>
+            </div>
+            <div class="flex-col">
+                <h5>Attack</h5>
+                <SwitchProfView types=vec![ProficiencyType::Weapon]/>
+            </div>
+            <div class="flex-col">
+                <h5>Skills</h5>
+                <SwitchProfView types=vec![ProficiencyType::Skill, ProficiencyType::Lore]/>
+            </div>
+            
+            <div class="flex-col">
+                <h5>Armor</h5>
+                <SwitchProfView types=vec![ProficiencyType::Armor]/>
+            </div>
+        </section>
     }
 }

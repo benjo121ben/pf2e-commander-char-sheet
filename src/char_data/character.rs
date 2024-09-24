@@ -8,6 +8,8 @@ pub struct Character {
     pub level: i32,
     pub attributes: Attributes,
     #[serde(default)]
+    pub shield_raised: bool,
+    #[serde(default)]
     pub text: String,
     #[serde(default)]
     pub background: String,
@@ -28,6 +30,7 @@ impl Character {
             level: 1,
             text: String::from(""),
             attributes: Attributes::zero(),
+            shield_raised: false, 
             background: String::from("Squire"),
             class: String::from("Commander"),
             proficiencies: CalculatedStat::default_array(),
@@ -99,7 +102,8 @@ impl Character {
         let dex_cap = 1;
         let item_bonus = 4;
         let prof_bonus = calc_stat.proficiency.get_bonus(self.level);
-        10 + std::cmp::min(self.attributes.get_stat("dex").expect("Defense expects a dex attribute to be set").value, dex_cap) + prof_bonus + item_bonus
+        let raised_bonus = if self.shield_raised {2} else {0};
+        10 + std::cmp::min(self.attributes.get_stat("dex").expect("Defense expects a dex attribute to be set").value, dex_cap) + prof_bonus + item_bonus + raised_bonus
     }
 }
 
@@ -124,6 +128,7 @@ impl From<SimpleCharacter> for Character{
             level: simp_char.level,
             text: simp_char.text,
             attributes: Attributes::from(&simp_char.attributes),
+            shield_raised: simp_char.shield_raised,
             background: simp_char.background,
             class: simp_char.class,
             proficiencies: vec![],
@@ -147,6 +152,7 @@ impl From<&SimpleCharacter> for Character{
             level: simp_char.level,
             text: simp_char.text.clone(),
             attributes: Attributes::from(&((*simp_char).attributes)),
+            shield_raised: simp_char.shield_raised,
             background: simp_char.background.clone(),
             class: simp_char.class.clone(),
             proficiencies: vec![],
@@ -172,6 +178,8 @@ pub struct SimpleCharacter {
     #[serde(default)]
     pub text: String,
     #[serde(default)]
+    pub shield_raised: bool,
+    #[serde(default)]
     pub background: String,
     #[serde(default)]
     pub class: String,
@@ -192,6 +200,7 @@ impl From<Character> for SimpleCharacter{
             level: ref_char.level,
             text: ref_char.text,
             attributes: ref_char.attributes.as_number_vec(),
+            shield_raised: ref_char.shield_raised,
             background: ref_char.background.clone(),
             class: ref_char.class.clone(),
             proficiencies: vec![],
@@ -211,6 +220,7 @@ impl From<&Character> for SimpleCharacter{
             level: ref_char.level,
             text: ref_char.text.clone(),
             attributes: ref_char.attributes.as_number_vec(),
+            shield_raised: ref_char.shield_raised,
             background: ref_char.background.clone(),
             class: ref_char.class.clone(),
             proficiencies: vec![],

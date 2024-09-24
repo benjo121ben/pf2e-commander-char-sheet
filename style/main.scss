@@ -9,6 +9,10 @@ body {
 	text-align: left;
 }
 
+body > * {
+	margin-bottom: 10px;
+}
+
 button {
 	justify-content: center;
 	text-align: center;
@@ -46,27 +50,16 @@ section {
 	display: flex;
 	flex-direction: row;
 	gap: 10px;
-
-	h1, h2, h3, h4 {
-		display: block;
-		flex-grow: 0;
-	}
-	* {
-		flex: 1;
-	}
 }
 
 .flex-col {
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
-	h1, h2, h3, h4 {
-		display: block;
-		flex-grow: 0;
-	}
-	* {
-		flex: 1;
-	}
+}
+
+.flex-shrink {
+	flex-shrink: 1;
 }
 
 .flex-wrap {
@@ -117,15 +110,19 @@ section {
 	align-items: center
 }
 
+.align-stretch {
+	align-items: center
+}
+
 .space-between {
 	justify-content: space-between;
 }
 
 .skill-grid  {
 	display:grid;
-	grid-template-columns: auto auto auto;
+	grid-template-columns: 6fr 0.5fr 0.5fr;
 	row-gap: 2px;
-	column-gap: 10px;
+	column-gap: 0.5rem;
 	* {
 		flex-basis: 0;
 		flex-grow: 0;
@@ -140,6 +137,10 @@ section {
 		justify-self: center;
 		align-content: center;
 	}
+}
+
+.skill-grid-edit {
+	grid-template-columns: 6fr 4fr 0.5fr;
 }
 
 .proficiency-letter {
@@ -165,7 +166,10 @@ section {
 	min-height: 20rem; 
 	background:unset;
 	border: unset
-	
+}
+
+.boosted-stat {
+	color: rgb(39, 161, 60);
 }
 
 @media screen and (min-height: 700px) {
