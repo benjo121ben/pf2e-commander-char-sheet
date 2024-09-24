@@ -117,6 +117,9 @@ impl Attributes {
     }
 
     pub fn get_stat(&self, id: &str) -> std::option::Option::<Attribute> {
+        if id == "key" {
+            return Some(self.intelligence.clone())
+        }
         for s in self.as_vec() {
             if s.get_id() == id {
                 return std::option::Option::Some(s.clone());
@@ -126,9 +129,12 @@ impl Attributes {
     }
 
     pub fn get_stat_val(&self, id: &str) -> std::option::Option::<i32> {
+        if id == "key" {
+            return Some(self.intelligence.value)
+        }
         for s in self.as_vec() {
             if s.get_id() == id {
-                return std::option::Option::Some(s.value);
+                return Some(s.value);
             }
         }
         return None;

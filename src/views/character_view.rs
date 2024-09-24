@@ -13,6 +13,7 @@ pub fn CharacterView(
     char: Character,
     conditions: Vec<Condition>
 ) -> impl IntoView {
+    log!("Char on init {char:#?}");
     let (read_ketra, write_ketra) = create_signal(char);
     let (read_save_error, write_save_error) = create_signal(String::from(""));
     let upload_ketra = create_action( move |_:&i32| async move {
@@ -86,9 +87,9 @@ pub fn CharacterView(
         >
             <p style="color: red;">{move || read_save_error()}</p>
         </Show>
-        <div class="flex-row flex-wrap space-between">
+        <div class="flex-row space-between">
             <ProficiencySidebar/>
-            <section class="flex-col flex-grow-4">
+            <section class="flex-col flex-grow-4" style="flex-shrink: 4">
                 <textarea class="flex-grow-1 center-text-area" id="test"
                     on:change=move |event| {
                         write_ketra
@@ -99,6 +100,7 @@ pub fn CharacterView(
                     }
                     prop:value={move || read_ketra.with(|c| c.text.clone())}
                 />
+                <TacticsView/>
             </section>
             <section class="flex-col right-side-col text-right no-grow" style="flex-shrink: 1">
                 <FeatView/>
@@ -117,6 +119,7 @@ pub fn ProficiencySidebar(
     view! {
         <section class="flex-col flex-wrap" style="flex-grow: 0">
             <b>
+                <SwitchProfView types=vec![ProficiencyType::ClassDC]/>
                 <SwitchProfView types=vec![ProficiencyType::Perception]/>
             </b>
             <div class="flex-col">
