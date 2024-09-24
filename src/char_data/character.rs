@@ -1,10 +1,11 @@
 use serde::{Deserialize, Serialize};
 use leptos::logging::log;
-use super::{conditions::Condition, feats::Feat, proficiency::ProficiencyLevel, stats::{Attributes, CalculatedStat, ProficiencyType}};
+use super::{conditions::Condition, feats::Feat, proficiency::ProficiencyLevel, stats::{Attributes, CalculatedStat, ProficiencyType}, hp::HpInfo};
 
 #[derive(Debug, Clone, Serialize, Deserialize, Eq)]
 pub struct Character {
     pub name: String,
+    pub hp_info: HpInfo, 
     pub level: i32,
     pub attributes: Attributes,
     #[serde(default)]
@@ -27,6 +28,7 @@ impl Character {
     pub fn zero() -> Character {
         Character {
             name: String::from(""),
+            hp_info: HpInfo::new(0,0,1, 0),
             level: 1,
             text: String::from(""),
             attributes: Attributes::zero(),
@@ -125,6 +127,7 @@ impl From<SimpleCharacter> for Character{
     fn from(simp_char: SimpleCharacter) -> Self {
         let mut ret_val = Character {
             name: simp_char.name,
+            hp_info: simp_char.hp_info,
             level: simp_char.level,
             text: simp_char.text,
             attributes: Attributes::from(&simp_char.attributes),
@@ -149,6 +152,7 @@ impl From<&SimpleCharacter> for Character{
     fn from(simp_char: &SimpleCharacter) -> Self {
         let mut ret_val = Character {
             name: simp_char.name.clone(),
+            hp_info: simp_char.hp_info.clone(),
             level: simp_char.level,
             text: simp_char.text.clone(),
             attributes: Attributes::from(&((*simp_char).attributes)),
@@ -173,6 +177,7 @@ impl From<&SimpleCharacter> for Character{
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SimpleCharacter {
     pub name: String,
+    pub hp_info: HpInfo, 
     pub level: i32,
     pub attributes: Vec<i32>,
     #[serde(default)]
@@ -197,6 +202,7 @@ impl From<Character> for SimpleCharacter{
     fn from(ref_char: Character) -> Self {
         let mut ret_val = SimpleCharacter {
             name: ref_char.name.clone(),
+            hp_info: ref_char.hp_info.clone(),
             level: ref_char.level,
             text: ref_char.text,
             attributes: ref_char.attributes.as_number_vec(),
@@ -217,6 +223,7 @@ impl From<&Character> for SimpleCharacter{
     fn from(ref_char: &Character) -> Self {
         let mut ret_val = SimpleCharacter {
             name: ref_char.name.clone(),
+            hp_info: ref_char.hp_info.clone(),
             level: ref_char.level,
             text: ref_char.text.clone(),
             attributes: ref_char.attributes.as_number_vec(),

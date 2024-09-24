@@ -1,9 +1,11 @@
 use crate::char_data::character::*;
 use crate::char_data::proficiency::ProficiencyLevel;
 use crate::char_data::stats::ProficiencyType;
-use ev::Event;
+use leptos::ev::Event;
 use leptos::*;
 use leptos::logging::log;
+
+
 
 
 #[component]
@@ -66,6 +68,62 @@ pub fn MainStatsView() -> impl IntoView {
     }
 }
 
+
+#[component]
+pub fn HpView() -> impl IntoView {
+    let read_char= use_context::<ReadSignal<Character>>().expect("MainstatsView expects a character to be set");
+    let write_char = use_context::<WriteSignal<Character>>().expect("MainstatsView expects a character to be set");
+    let reset_input = create_rw_signal(true);
+    let hp_view = move || read_char.with(|c| {
+        let hp = c.hp_info.get_hp();
+        let maxhp = c.hp_info.get_max_hp();
+        format!("{hp}/{maxhp}").to_string()
+    });
+    view! {
+        <div class="flex-row">
+            <label name="maxhp" id="maxhp"
+                on:click=move |_| write_char.update(|c| c.hp_info.change_hp(1))
+                on:contextmenu=move |_| write_char.update(|c| c.hp_info.change_hp(-1))
+            >
+                {move || hp_view()}
+            </label>
+            <label style="color: blue" name="temphp" id="temphp">
+                {move || read_char.with(|c| c.hp_info.get_temp())}
+            </label>
+            <label name="label_temphp" id="label_temphp" class="scaling-text">
+                set temp
+            </label>
+            <input 
+                type="number" 
+                name="temphp_inp" 
+                id="temphp_inp" 
+                class="hp-input" 
+                prop:value=move || {read_char.with(|c| c.hp_info.get_temp())} 
+                on:change=move |event: Event| write_char.update(|c|{
+                    let val: i32 = event_target_value(&event).parse().unwrap();
+                    c.hp_info.set_temp(val);
+                })
+            />
+
+            <label name="label_hp" id="label_hp" class="scaling-text">
+                change hp
+            </label>
+            <input 
+                type="number" 
+                name="hp_inp" 
+                id="hp_inp" 
+                class="hp-input"
+                prop:value=move || {let _ = reset_input(); return String::from("")} 
+                on:change=move |event: Event| write_char.update(|c|{
+                    let val: i32 = event_target_value(&event).parse().unwrap();
+                    c.hp_info.change_hp(val);
+                    reset_input.update(|f| *f=!*f);
+                })
+            />
+        </div>
+    }
+
+}
 
 #[component]
 pub fn EditMainstatsView() -> impl IntoView {

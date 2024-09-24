@@ -60,6 +60,9 @@ pub fn CharacterView(
             <section class="align-center">
                 <MainStatsView/>
             </section>
+            <section class="align-center" id="hp_section">
+                <HpView/>
+            </section>
             <section class="flex-row flex-grow-1 flex-shrink" style="justify-content:center">
                 {
                     move || {
