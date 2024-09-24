@@ -16,6 +16,7 @@ pub fn MainStatsView() -> impl IntoView {
     let update_stat = move |id: String, offset: i32| write_char
     .update(|f| {
         f.attributes.set_stat(&id, f.attributes.get_stat(&id).unwrap().value + offset);
+        f.hp_info.calculate_max_hp(f.level, f.attributes.get_stat("con").expect("There should be a con stat").value);
     });
     view! {
         <div style="display: flex; flex-direction: row; gap: 10px">
@@ -123,41 +124,6 @@ pub fn HpView() -> impl IntoView {
         </div>
     }
 
-}
-
-#[component]
-pub fn EditMainstatsView() -> impl IntoView {
-    let read_character= use_context::<ReadSignal<Character>>().expect("Edit MainStatView expects a character to be set");
-    let write_character = use_context::<WriteSignal<Character>>().expect("Edit MainStatView expects a character to be set");
-    view! {
-        <For
-            each=move || {
-                read_character.with(|k| k.attributes.as_vec().into_iter().map(|f| f.get_id().to_string()))
-            }
-            key=|id| id.clone()
-            children=move |id| {
-                let idForInput = id.clone();
-                let current_val = create_memo(move |_| {
-                    let id_clone = id.clone();
-                    read_character.with(move |k| k.attributes.get_stat_val(&id_clone)).unwrap()
-                });
-                view! {
-                    <input
-                        type="number"
-                        value=current_val
-                        style="width:35px; margin-right: 10px;"
-                        on:change=move |event| {
-                            write_character
-                                .update(|f| {
-                                    let val: i32 = event_target_value(&event).parse().unwrap();
-                                    f.attributes.set_stat(&idForInput, val);
-                                })
-                        }
-                    />
-                }
-            }
-        />
-    }
 }
 
 

@@ -22,7 +22,10 @@ impl HpInfo {
     }
 
     pub fn calculate_max_hp(self: &mut Self, level: i32, con: i32) -> i32{
+        let new_max_hp = self.ancestry_hp + (self.class_hp + con) * level;
+        let diff = new_max_hp - self.max_hp;
         self.max_hp = self.ancestry_hp + (self.class_hp + con) * level;
+        self.change_hp(diff);
         self.max_hp
     }
 

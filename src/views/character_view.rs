@@ -45,8 +45,14 @@ pub fn CharacterView(
             <section>
                 <div class="flex-row align-center no-grow-children">   
                     <button
-                        on:click=move |_| {write_ketra.update(move |c| c.level += 1)}
-                        on:contextmenu=move |_| {write_ketra.update(move |c| c.level -= 1)}
+                        on:click=move |_| {write_ketra.update(move |c| {
+                            c.level += 1;
+                            c.hp_info.calculate_max_hp(c.level, c.attributes.get_stat("con").expect("There should be a con stat").value);
+                        })}
+                        on:contextmenu=move |_| {write_ketra.update(move |c| {
+                            c.level -= 1;
+                            c.hp_info.calculate_max_hp(c.level, c.attributes.get_stat("con").expect("There should be a con stat").value);
+                        })}
                     >
                         Level {move || read_ketra.with(|k| k.level)}
                     </button>
