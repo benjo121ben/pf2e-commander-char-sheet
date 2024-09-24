@@ -70,17 +70,6 @@ pub fn CharacterView(
             <section class="align-center" id="hp_section">
                 <HpView/>
             </section>
-            <section class="flex-row flex-grow-1 flex-shrink" style="justify-content:center">
-                {
-                    move || {
-                        let condition_clone: Condition = conditions[0].clone();
-                        view!{
-                            <h3 style="no-grow">{move || condition_clone.name.clone()}</h3>
-                            <p style="flex-grow-1">{move || condition_clone.description.clone()}</p>
-                        }
-                    }
-                }
-            </section>
         </div>
         <Show
             when=move || read_save_error() != String::from("")
@@ -90,7 +79,11 @@ pub fn CharacterView(
         <div class="flex-row space-between">
             <ProficiencySidebar/>
             <section class="flex-col flex-grow-4" style="flex-shrink: 4">
-                <textarea class="flex-grow-1 center-text-area" id="test"
+                <TacticsView/>
+
+                <textarea 
+                    class="no-grow center-text-area" 
+                    id="test"
                     on:change=move |event| {
                         write_ketra
                         .update(|c| {
@@ -100,7 +93,6 @@ pub fn CharacterView(
                     }
                     prop:value={move || read_ketra.with(|c| c.text.clone())}
                 />
-                <TacticsView/>
             </section>
             <section class="flex-col right-side-col text-right no-grow" style="flex-shrink: 1">
                 <FeatView/>
@@ -117,7 +109,7 @@ pub fn CharacterView(
 pub fn ProficiencySidebar(
 ) -> impl IntoView {
     view! {
-        <section class="flex-col flex-wrap" style="flex-grow: 0">
+        <section class="flex-col flex-wrap" style="flex-grow: 0; flex-shrink: 0">
             <b>
                 <SwitchProfView types=vec![ProficiencyType::ClassDC]/>
                 <SwitchProfView types=vec![ProficiencyType::Perception]/>
@@ -142,3 +134,16 @@ pub fn ProficiencySidebar(
         </section>
     }
 }
+
+
+/* <section class="flex-row flex-grow-1 flex-shrink" style="justify-content:center">
+    {
+        move || {
+            let condition_clone: Condition = conditions[0].clone();
+            view!{
+                <h3 style="no-grow">{move || condition_clone.name.clone()}</h3>
+                <p style="flex-grow-1">{move || condition_clone.description.clone()}</p>
+            }
+        }
+    }
+</section> */

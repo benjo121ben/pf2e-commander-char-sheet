@@ -16,7 +16,7 @@
     0,
     1
   ],
-  "text": "Yellow darkness my old friend asd asda lsiisäpuh sdhd hd",
+  "text": "Pferd Litta\nNorik Luke\nVaris Andi\nVilly Joseph\n\nMein Wappen hat eine blaue burgmauer mit rotem himmel, im vordergrund liegt eine Spindel mit weißem Garn. An der Spitze ein einziger Tropfen Blut.\n\nBin auf dem Weg von Maelgoth\nVilly findet broken shit irgendeiner gottheit (Brancala), hat eine vision einer Schlacht\n\nTreffe einen alten mann mit weißem bart als ich unterkunft unter einem Stein suche. Er nennt sich Fiz, ist ein sehr exzentrischer Magier, fragt mich nach meinen Zielen. Er ist hier und dort und überall. Verschwindet als ich mich umdrehe.\n",
   "shield_raised": false,
   "background": "Squire",
   "class": "Commander",
@@ -24,7 +24,7 @@
     [
       "Acrobatics",
       "Skill",
-      "Trained"
+      "Untrained"
     ],
     [
       "Arcana",
@@ -34,12 +34,12 @@
     [
       "Athletics",
       "Skill",
-      "Untrained"
+      "Trained"
     ],
     [
       "Crafting",
       "Skill",
-      "Untrained"
+      "Trained"
     ],
     [
       "Deception",
@@ -59,12 +59,12 @@
     [
       "Intimidation",
       "Skill",
-      "Untrained"
+      "Trained"
     ],
     [
       "Medicine",
       "Skill",
-      "Untrained"
+      "Trained"
     ],
     [
       "Nature",
@@ -79,7 +79,7 @@
     [
       "Performance",
       "Skill",
-      "Untrained"
+      "Trained"
     ],
     [
       "Religion",
@@ -89,7 +89,7 @@
     [
       "Society",
       "Skill",
-      "Untrained"
+      "Trained"
     ],
     [
       "Stealth",
@@ -99,7 +99,7 @@
     [
       "Survival",
       "Skill",
-      "Untrained"
+      "Trained"
     ],
     [
       "Thievery",
@@ -194,7 +194,7 @@
     {
       "name": "Coordinating Maneuvres",
       "actions": 1,
-      "selected": false,
+      "selected": true,
       "traits": [
         "Commander",
         "Tactic"
@@ -227,7 +227,7 @@
     {
       "name": "Pincer Attack",
       "actions": 1,
-      "selected": false,
+      "selected": true,
       "traits": [
         "Commander",
         "Tactic"

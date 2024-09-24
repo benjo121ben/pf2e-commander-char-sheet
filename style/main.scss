@@ -155,7 +155,7 @@ section {
 .center-text-area {
 	min-height: 20rem; 
 	background:unset;
-	border: unset
+	border: 2px solid rgb(114, 49, 17);
 }
 
 .boosted-stat {
@@ -168,6 +168,13 @@ section {
 
 .scaling-text {
 	font-size: 0.8rem;
+}
+
+.trait{
+	padding: 0.2rem;
+	background-color: rgb(114, 49, 17);
+	border: 2px solid rgb(175, 145, 101);
+	color: white;
 }
 
 @media screen and (min-height: 700px) {

@@ -47,7 +47,7 @@ impl HpInfo {
 
     pub fn change_hp(self: &mut Self, value: i32) {
         let mut change = value;
-        if(self.temp_hp > 0 && value < 0) {
+        if self.temp_hp > 0 && value < 0 {
             self.temp_hp += change; 
             change = self.temp_hp;
             self.temp_hp = std::cmp::max(self.temp_hp, 0);
