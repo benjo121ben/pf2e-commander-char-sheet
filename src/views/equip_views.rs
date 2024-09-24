@@ -1,6 +1,7 @@
 use crate::char_data::character::*;
 use crate::char_data::proficiency::ProficiencyLevel;
 use crate::char_data::tactics::Tactic;
+use super::stats_views::TraitView;
 use ev::Event;
 use leptos::*;
 use leptos::logging::log;
@@ -43,7 +44,7 @@ pub fn TacticsView() -> impl IntoView {
                                     }
                                 />
                             <Show when=move || collapse.get()>
-                                <div class="flex-row">{tactic.traits.clone().into_iter().map(|t| view!{<div class="trait">{t}</div>}).collect::<Vec<_>>()}</div>
+                                <TraitView trait_names=tactic.traits.clone()/>
                                 <div inner_html={let desc = tactic.description.clone(); move || desc.clone()}></div>
                             </Show>
                         </div>

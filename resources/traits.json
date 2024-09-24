@@ -1,0 +1,10 @@
+{
+    "General": "",
+    "Tactic": "Tactics are special abilities that involve you signaling your allies to perform predetermined maneuvers. To use a tactic ability, you must have one or more willing allies you have instructed beforehand during your daily preparations. Your squadmates must also be able to perceive your signal, either when you speak or shout it (in which case the tactic action gains the auditory trait), or by physically signaling them, typically by waving your banner (in which case it gains the visual trait). While you can use multiple tactic actions a round, a character cannot respond to more than one tactic per round, regardless of source.",
+    "Banner": "The banner trait indicates an ability that involves you waving or otherwise actively displaying your banner. To use an ability that has the banner trait, you must be holding your banner in one hand or wielding a weapon it is attached to.",
+    "Flourish": "Actions with this trait are special techniques that require too much exertion for you to perform frequently. You can use only one action with the flourish trait per round.",
+    "Skill": "A general feat with the skill trait improves your skills and their actions or gives you new actions for a skill. A feat with this trait can be selected when a class grants a skill feat or general feat. Archetype feats with the skill trait can be selected in place of a skill feat if you have that archetype’s dedication feat.",
+    "Commander": "A Commander Feat",
+    "Fighter": "A Fighter Feat",
+    "Incapacitation": "An ability with this trait can take a character completely out of the fight or even kill them, and it’s harder to use on a more powerful character. If a spell has the incapacitation trait, any creature of more than twice the spell’s rank treats the result of their check to prevent being incapacitated by the spell as one degree of success better, or the result of any check the spellcaster made to incapacitate them as one degree of success worse. If any other effect has the incapacitation trait, a creature of higher level than the item, creature, or hazard generating the effect gains the same benefits."
+}

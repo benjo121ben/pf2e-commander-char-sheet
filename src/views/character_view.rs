@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::char_data::character::*;
 use crate::char_data::conditions::Condition;
 use crate::char_data::stats::ProficiencyType;
@@ -11,7 +13,8 @@ use leptos::logging::log;
 #[component]
 pub fn CharacterView(
     char: Character,
-    conditions: Vec<Condition>
+    conditions: Vec<Condition>,
+    trait_data: HashMap<String, String>
 ) -> impl IntoView {
     log!("Char on init {char:#?}");
     let (read_ketra, write_ketra) = create_signal(char);
@@ -40,6 +43,7 @@ pub fn CharacterView(
     provide_context(read_ketra);
     provide_context(write_ketra);
     provide_context(conditions.clone());
+    provide_context(trait_data.clone());
     view! {
         <h2>{move || read_ketra.with(|k| k.name.clone())}</h2>
         <div id="top_div" class="flex-row flex-wrap no-grow-children">

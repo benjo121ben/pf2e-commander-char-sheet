@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::char_data::character::*;
 use crate::char_data::proficiency::ProficiencyLevel;
 use crate::char_data::stats::ProficiencyType;
@@ -297,5 +299,26 @@ pub fn FeatView() -> impl IntoView {
                 }
             />
         </div>
+    }
+}
+
+#[component]
+pub fn TraitView(
+    trait_names: Vec<String>
+) -> impl IntoView {
+    let traitList = use_context::<HashMap<String, String>>().expect("Trait Hashmap should be set by now");
+    view!{
+        <div class="flex-row">{
+            trait_names.into_iter().map(|t| {
+                let hash_val = traitList.get(&t).clone();
+                let tooltip = match hash_val {
+                    Some(description) => String::from(description),
+                    None => {log!("No tooltip was set for {0}", t); String::from("No tooltip") },
+                };
+                view!{
+                    <div class="trait" title=tooltip>{t}</div>
+                }
+            }).collect::<Vec<_>>()
+        }</div>
     }
 }
