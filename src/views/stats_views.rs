@@ -231,9 +231,9 @@ pub fn ProficiencyListView(
 
 #[component]
 pub fn SwitchProfView(
-    types: Vec<ProficiencyType> 
+    types: Vec<ProficiencyType>,
+    show_edit_stats: RwSignal<bool>
 ) -> impl IntoView {
-    let show_edit_stats = create_rw_signal(false);
     view!{
         <div class="flex-col" style="flex-grow: 0">
             {
@@ -247,7 +247,6 @@ pub fn SwitchProfView(
                     }.into_view()
                 } 
             }
-            <button on:click=move |_| show_edit_stats.update(|b| *b=!*b) style="justify-content:center">Edit</button>
         </div>
     }
 }
@@ -284,7 +283,7 @@ pub fn DefenseView() -> impl IntoView {
 pub fn FeatView() -> impl IntoView {
     let read_character = use_context::<ReadSignal<Character>>().expect("Feat view expects character to be set");
     view!{
-        <div class="flex-col align-flex-start">
+        <div class="flex-col">
             <h3>Feats</h3>
             <For
                 each={move || read_character.with(|c| c.feats.clone())}
@@ -292,7 +291,7 @@ pub fn FeatView() -> impl IntoView {
                 children=move |feat| {
                     let collapse = create_rw_signal(false);
                     view!{
-                        <div class="flex-col smaller-gap" on:click=move |_| collapse.update(|c| *c = !*c)>
+                        <div class="flex-col smaller-gap bright-bg" on:click=move |_| collapse.update(|c| *c = !*c)>
                             <h4>{move || feat.name.clone()}</h4>
                             <Show when=move || collapse.get()>
                                 <TraitView trait_names=feat.traits.clone()/>

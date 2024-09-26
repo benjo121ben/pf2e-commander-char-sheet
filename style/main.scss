@@ -58,17 +58,18 @@ section {
 }
 
 .center-col-layout {
-	flex-basis:2;
-	flex-grow:3;
+	flex-basis:1;
+	flex-grow:2;
 	flex-shrink: 1; 
 }
 
 .right-side-col {
 	align-items: stretch;
-	flex-shrink: 2; 
+	flex-shrink: 1; 
 	gap: 1rem;
 	flex-grow:1;
 	flex-basis:1;
+	max-width: fit-content;
 }
 
 .text-right {
@@ -191,6 +192,12 @@ section {
 	background-color: rgb(114, 49, 17);
 	border: 2px solid rgb(175, 145, 101);
 	color: white;
+}
+
+.bright-bg {
+	background-color: rgb(243, 227, 219);
+	padding: 0.4rem;
+	border-radius: 0.5rem;
 }
 
 .tiny-text {

@@ -28,7 +28,7 @@ pub fn TacticsView() -> impl IntoView {
                     let tac_name = tactic.name.clone();
                     let collapse = create_rw_signal(false);
                     view! {
-                        <div class="flex-col smaller-gap align-flex-start" on:click=move |_| collapse.update(|c| *c = !*c)>
+                        <div class="flex-col smaller-gap align-flex-start bright-bg" on:click=move |_| collapse.update(|c| *c = !*c)>
                             <div class="flex-row">
                                 <h4>{
                                     let actions = tactic.actions; 

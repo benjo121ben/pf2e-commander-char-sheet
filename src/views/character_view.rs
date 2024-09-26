@@ -111,31 +111,33 @@ pub fn CharacterView(
 #[component]
 pub fn ProficiencySidebar(
 ) -> impl IntoView {
+    let show_edit_stats = create_rw_signal(false);
     view! {
         <section class="flex-col flex-wrap" style="flex-grow: 0; flex-shrink: 0">
             <b>
-                <SwitchProfView types=vec![ProficiencyType::ClassDC]/>
+                <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::ClassDC]/>
             </b>
             <b>
-                <SwitchProfView types=vec![ProficiencyType::Perception]/>
+                <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Perception]/>
             </b>
             <div class="flex-col">
                 <h5>Saves</h5>
-                <SwitchProfView types=vec![ProficiencyType::Save]/>
+                <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Save]/>
             </div>
             <div class="flex-col">
                 <h5>Attack</h5>
-                <SwitchProfView types=vec![ProficiencyType::Weapon]/>
+                <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Weapon]/>
             </div>
             <div class="flex-col">
                 <h5>Skills</h5>
-                <SwitchProfView types=vec![ProficiencyType::Skill, ProficiencyType::Lore]/>
+                <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Skill, ProficiencyType::Lore]/>
             </div>
             
             <div class="flex-col">
                 <h5>Armor</h5>
-                <SwitchProfView types=vec![ProficiencyType::Armor]/>
+                <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Armor]/>
             </div>
+            <button on:click=move |_| show_edit_stats.update(|b| *b=!*b) style="justify-content:center">Edit</button>
         </section>
     }
 }
