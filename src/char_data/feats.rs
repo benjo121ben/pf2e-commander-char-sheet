@@ -27,7 +27,7 @@ pub struct Feat{
     pub name: String,
     pub actions: i32, 
     pub feat_types: Vec<FeatType>,
-    pub traits: Vec<Trait>,
+    pub traits: Vec<String>,
     pub description: String,
     #[serde(default)]
     pub char_additions: Vec<CharAddition>

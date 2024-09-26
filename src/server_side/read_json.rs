@@ -2,7 +2,6 @@ use leptos::logging::log;
 use std::{collections::HashMap, error::Error};
 use std::fs::read_to_string;
 use std::path::Path;
-use crate::char_data::traits::Trait;
 use crate::char_data::{character::{Character, SimpleCharacter}, conditions::Condition};
 
 

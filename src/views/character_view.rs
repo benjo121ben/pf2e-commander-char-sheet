@@ -82,11 +82,11 @@ pub fn CharacterView(
         </Show>
         <div class="flex-row space-between">
             <ProficiencySidebar/>
-            <section class="flex-col flex-grow-4" style="flex-shrink: 4">
+            <section class="flex-col center-col-layout">
                 <TacticsView/>
 
                 <textarea 
-                    class="no-grow center-text-area" 
+                    class="center-text-area" 
                     id="test"
                     on:change=move |event| {
                         write_ketra
@@ -98,7 +98,7 @@ pub fn CharacterView(
                     prop:value={move || read_ketra.with(|c| c.text.clone())}
                 />
             </section>
-            <section class="flex-col right-side-col text-right no-grow">
+            <section class="flex-col right-side-col">
                 <FeatView/>
             </section>
         </div>
@@ -115,6 +115,8 @@ pub fn ProficiencySidebar(
         <section class="flex-col flex-wrap" style="flex-grow: 0; flex-shrink: 0">
             <b>
                 <SwitchProfView types=vec![ProficiencyType::ClassDC]/>
+            </b>
+            <b>
                 <SwitchProfView types=vec![ProficiencyType::Perception]/>
             </b>
             <div class="flex-col">

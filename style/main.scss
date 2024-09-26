@@ -39,13 +39,14 @@ section {
 .flex-row {
 	display: flex;
 	flex-direction: row;
-	gap: 10px;
+	gap: 0.5rem;
+	flex-wrap: wrap;
 }
 
 .flex-col {
 	display: flex;
 	flex-direction: column;
-	gap: 5px;
+	gap: 0.5rem;
 }
 
 .flex-shrink {
@@ -56,10 +57,18 @@ section {
 	flex-wrap: wrap;
 }
 
-.right-side-col {
-	align-items: flex-end;
+.center-col-layout {
+	flex-basis:2;
+	flex-grow:3;
 	flex-shrink: 1; 
-	max-width: 20vw;
+}
+
+.right-side-col {
+	align-items: stretch;
+	flex-shrink: 2; 
+	gap: 1rem;
+	flex-grow:1;
+	flex-basis:1;
 }
 
 .text-right {
@@ -79,22 +88,18 @@ section {
 }
 
 .flex-grow-1 {
-	display:flex;
 	flex-grow: 1;
 }
 
 .flex-grow-2 {
-	display:flex;
 	flex-grow: 2;
 }
 
 .flex-grow-3 {
-	display:flex;
 	flex-grow: 3;
 }
 
 .flex-grow-4 {
-	display:flex;
 	flex-grow: 4;
 }
 
@@ -146,11 +151,14 @@ section {
 	background-color: orangered;
 }
 
+.align-flex-start {
+	align-items: flex-start;
+}
+
 .feat-paragraph-layout {
 	flex:unset;
 	display: inline-block;
 	width: max-content;
-	max-width: 15rem;
 	text-align: end;
 }
 
@@ -158,6 +166,8 @@ section {
 	min-height: 20rem; 
 	background:unset;
 	border: 2px solid rgb(114, 49, 17);
+	flex-grow: 2;
+	resize: none;
 }
 
 .boosted-stat {
@@ -172,11 +182,19 @@ section {
 	font-size: 0.8rem;
 }
 
+.smaller-gap {
+	gap: 0.05rem
+}
+
 .trait{
 	padding: 0.2rem;
 	background-color: rgb(114, 49, 17);
 	border: 2px solid rgb(175, 145, 101);
 	color: white;
+}
+
+.tiny-text {
+	font-size: 0.7rem;
 }
 
 @media screen and (min-height: 700px) {
@@ -190,6 +208,10 @@ section {
 	.scaling-text {
 		font-size: 1.1rem;
 	}
+
+	.tiny-text {
+		font-size: 0.85rem;
+	}
 }
 
 @media screen and (min-height: 800px) {
@@ -202,5 +224,9 @@ section {
 
 	.scaling-text {
 		font-size: 1.25rem;
+	}
+	
+	.tiny-text {
+		font-size: 1rem;
 	}
 }

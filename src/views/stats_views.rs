@@ -284,16 +284,20 @@ pub fn DefenseView() -> impl IntoView {
 pub fn FeatView() -> impl IntoView {
     let read_character = use_context::<ReadSignal<Character>>().expect("Feat view expects character to be set");
     view!{
-        <div class="flex-col right-side-col">
+        <div class="flex-col align-flex-start">
             <h3>Feats</h3>
             <For
                 each={move || read_character.with(|c| c.feats.clone())}
                 key={move |feat| feat.name.clone()}
                 children=move |feat| {
+                    let collapse = create_rw_signal(false);
                     view!{
-                        <div class="flex-col right-side-col">
+                        <div class="flex-col smaller-gap" on:click=move |_| collapse.update(|c| *c = !*c)>
                             <h4>{move || feat.name.clone()}</h4>
-                            <p>{move || feat.description.clone()}</p>
+                            <Show when=move || collapse.get()>
+                                <TraitView trait_names=feat.traits.clone()/>
+                                <p class="tiny-text">{let desc = feat.description.clone(); move || desc.clone()}</p>
+                            </Show>
                         </div>
                     }
                 }
@@ -316,7 +320,7 @@ pub fn TraitView(
                     None => {log!("No tooltip was set for {0}", t); String::from("No tooltip") },
                 };
                 view!{
-                    <div class="trait" title=tooltip>{t}</div>
+                    <div class="trait tiny-text" title=tooltip>{t}</div>
                 }
             }).collect::<Vec<_>>()
         }</div>

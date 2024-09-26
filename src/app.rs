@@ -1,7 +1,6 @@
 use leptos::*;
 use leptos_meta::*;
 
-use crate::char_data::traits::Trait;
 use crate::views::character_view::CharacterView;
 use crate::server_side::server_functions::{get_char, get_conditions, get_traits};
 
