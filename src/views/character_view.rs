@@ -16,7 +16,7 @@ pub fn CharacterView(
     conditions: Vec<Condition>,
     trait_data: HashMap<String, String>
 ) -> impl IntoView {
-    log!("Char on init {char:#?}");
+    //log!("Char on init {char:#?}");
     let (read_ketra, write_ketra) = create_signal(char);
     let (read_save_error, write_save_error) = create_signal(String::from(""));
     let upload_ketra = create_action( move |_:&i32| async move {

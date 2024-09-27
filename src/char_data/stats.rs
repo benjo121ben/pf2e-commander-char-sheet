@@ -253,7 +253,7 @@ impl CalculatedStat {
                 CalculatedStat::new(ProficiencyType::Weapon, "str", "Simple", ProficiencyLevel::Untrained),
                 CalculatedStat::new(ProficiencyType::Weapon, "str", "Martial", ProficiencyLevel::Untrained),
                 CalculatedStat::new(ProficiencyType::Weapon, "str", "Advanced", ProficiencyLevel::Untrained),
-                CalculatedStat::new(ProficiencyType::Perception, "will", "Perception", ProficiencyLevel::Untrained),
+                CalculatedStat::new(ProficiencyType::Perception, "wis", "Perception", ProficiencyLevel::Untrained),
                 CalculatedStat::new(ProficiencyType::ClassDC, "key", "ClassDC", ProficiencyLevel::Trained),
             ]
     }
