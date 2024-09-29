@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use crate::char_data::character::*;
 use crate::char_data::proficiency::ProficiencyLevel;
 use crate::char_data::stats::ProficiencyType;
+use crate::views::action_view::ActionView;
 use leptos::ev::Event;
 use leptos::*;
 use leptos::logging::log;
@@ -292,7 +293,12 @@ pub fn FeatView() -> impl IntoView {
                     let collapse = create_rw_signal(false);
                     view!{
                         <div class="flex-col smaller-gap bright-bg" on:click=move |_| collapse.update(|c| *c = !*c)>
-                            <h4>{move || feat.name.clone()}</h4>
+                            <div class="flex-row feat-title-row ">
+                                <h4>{move || feat.name.clone()}</h4>
+                                <Show when=move || feat.actions != 0>
+                                    <ActionView number=feat.actions/>
+                                </Show>
+                            </div>
                             <Show when=move || collapse.get()>
                                 <TraitView trait_names=feat.traits.clone()/>
                                 <p class="tiny-text">{let desc = feat.description.clone(); move || desc.clone()}</p>

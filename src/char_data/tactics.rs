@@ -5,7 +5,7 @@ use serde::Serialize;
 #[serde(rename_all = "camelCase")]
 pub struct Tactic {
     pub name: String,
-    pub actions: i64,
+    pub actions: i32,
     pub selected: bool,
     pub traits: Vec<String>,
     pub description: String,

@@ -204,6 +204,22 @@ section {
 	font-size: 0.7rem;
 }
 
+.feat-title-row {
+	* {
+		margin: unset;
+	}
+	align-items: center;
+}
+
+.action-icon {
+	font-family: 'Pathfinder-Icons';
+}
+
+.selected-tactic {
+	border: 0.15rem solid rgb(173, 23, 43);
+	padding: 0.25rem;
+}
+
 @media screen and (min-height: 700px) {
 	body {
 		font-size: 1.1rem;
