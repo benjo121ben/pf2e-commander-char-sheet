@@ -272,7 +272,6 @@ impl CalculatedStat {
 impl PartialEq for CalculatedStat {
     fn eq(&self, other: &Self) -> bool {
         let val = self.p_type == other.p_type && self.attribute == other.attribute && self.name == other.name && self.proficiency == other.proficiency;
-        log!("calc called {val}");
         val
     }
 }

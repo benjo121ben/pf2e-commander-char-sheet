@@ -122,7 +122,6 @@ impl PartialEq for Character {
             self.class == other.class && 
             self.proficiencies == other.proficiencies && 
             self.feats == other.feats;
-        log!("PartialEq Char {val}");
         val
     }
 }

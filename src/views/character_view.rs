@@ -30,7 +30,6 @@ pub fn CharacterView(
     });
     create_effect(move |prev| {
         let _getUp = read_ketra.with(|c| c.name.clone());
-        log!("pushed");
         match prev {
             Some(_) => {
                 upload_ketra.dispatch(0);
