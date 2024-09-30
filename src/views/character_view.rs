@@ -128,18 +128,19 @@ pub fn ProficiencySidebar(
                 <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Save]/>
             </div>
             <div class="flex-col">
-                <h5>Attack</h5>
-                <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Weapon]/>
-            </div>
-            <div class="flex-col">
                 <h5>Skills</h5>
                 <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Skill, ProficiencyType::Lore]/>
             </div>
-            
-            <div class="flex-col">
-                <h5>Armor</h5>
-                <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Armor]/>
-            </div>
+            <Show when=move || show_edit_stats.get()>
+                <div class="flex-col">
+                    <h5>Attack</h5>
+                    <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Weapon]/>
+                </div>
+                <div class="flex-col">
+                    <h5>Armor</h5>
+                    <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Armor]/>
+                </div>
+            </Show>
             <button on:click=move |_| show_edit_stats.update(|b| *b=!*b) style="justify-content:center">Edit</button>
         </section>
     }
