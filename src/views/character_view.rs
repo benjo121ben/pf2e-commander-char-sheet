@@ -2,6 +2,8 @@ use std::collections::HashMap;
 
 use crate::char_data::character::*;
 use crate::char_data::conditions::Condition;
+use crate::char_data::gear::Gear;
+use crate::char_data::gear::GearType;
 use crate::char_data::stats::ProficiencyType;
 use crate::server_side::server_functions::*;
 use super::stats_views::*;
@@ -98,6 +100,9 @@ pub fn CharacterView(
             <section class="flex-col right-side-col">
                 <TacticsView/>
                 <FeatView/>
+                <WeaponView item={Gear{ name: "test".to_string(), g_type: GearType::Weapon, traits: vec![], proficiency: Some("Simple".to_string()), invested: None, description: "testDesc".to_string(), damage: Some(8)}
+                    
+                }/>
             </section>
         </div>
         <div class="flex-row">

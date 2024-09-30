@@ -22,7 +22,7 @@ pub fn read_char_from_file<P: AsRef<Path>>(path: P) -> Result<Character, Box<dyn
             }
         },
         Err(error) => {
-            let errorstring = String::from(format!("There was an issue locating the path, this might be due to accessing rights. Cannot confirm or deny existence:\n{error}"));
+            let errorstring = format!("There was an issue locating the path, this might be due to accessing rights. Cannot confirm or deny existence:\n{error}");
             log!("{errorstring}");
             return Err(Box::from(error));
         },
@@ -43,13 +43,13 @@ pub fn read_conditions_from_file<P: AsRef<Path>>(path: P) -> Result<Vec<Conditio
                 return Ok(conditions);
             }
             else {
-                let errorstring = String::from(format!("Filepath does not exist: Cannot build Conditions"));
+                let errorstring = format!("Filepath does not exist: Cannot build Conditions");
                 log!("{errorstring}");
                 return Err(Box::from(errorstring));
             }
         },
         Err(error) => {
-            let errorstring = String::from(format!("There was an issue locating the path, this might be due to accessing rights. Cannot confirm or deny existence:\n{error}"));
+            let errorstring = format!("There was an issue locating the path, this might be due to accessing rights. Cannot confirm or deny existence:\n{error}");
             log!("{errorstring}");
             return Err(Box::from(error));
         },
@@ -70,13 +70,13 @@ pub fn read_traits_from_file<P: AsRef<Path>>(path: P) -> Result<HashMap<String, 
                 return Ok(conditions);
             }
             else {
-                let errorstring = String::from(format!("Filepath does not exist: Cannot build Traits"));
+                let errorstring = format!("Filepath does not exist: Cannot build Traits");
                 log!("{errorstring}");
                 return Err(Box::from(errorstring));
             }
         },
         Err(error) => {
-            let errorstring = String::from(format!("There was an issue locating the path, this might be due to accessing rights. Cannot confirm or deny existence:\n{error}"));
+            let errorstring = format!("There was an issue locating the path, this might be due to accessing rights. Cannot confirm or deny existence:\n{error}");
             log!("{errorstring}");
             return Err(Box::from(error));
         },

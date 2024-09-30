@@ -85,7 +85,7 @@ pub fn HpView() -> impl IntoView {
     let hp_view = move || {
         let hp = get_hp_info().get_hp();
         let maxhp = get_hp_info().get_max_hp();
-        format!("{hp}/{maxhp}").to_string()
+        format!("{hp}/{maxhp}")
     };
     let flip_temp_switch = {
         move || temp_hp_switch.update(|active| *active = !*active)

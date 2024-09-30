@@ -1,30 +1,43 @@
 use serde::{Deserialize, Serialize};
 use leptos::logging::log;
-use super::{conditions::Condition, feats::Feat, proficiency::ProficiencyLevel, stats::{Attributes, CalculatedStat, ProficiencyType}, hp::HpInfo, tactics::Tactic};
+use super::{conditions::Condition, feats::Feat, gear::Gear, hp::HpInfo, proficiency::ProficiencyLevel, stats::{Attributes, CalculatedStat, ProficiencyType}, tactics::Tactic};
 
 #[derive(Debug, Clone, Serialize, Deserialize, Eq)]
 pub struct Character {
     pub name: String,
+
     pub hp_info: HpInfo, 
+
     pub level: i32,
+
     pub attributes: Attributes,
+
     #[serde(default)]
     pub shield_raised: bool,
+
     #[serde(default)]
     pub text: String,
+
     #[serde(default)]
     pub background: String,
+
     #[serde(default)]
     pub class: String,
+
     #[serde(default)]
     pub proficiencies: Vec<CalculatedStat>,
+
     #[serde(default)]
     pub feats: Vec<Feat>,
+
     #[serde(default)]
     pub conditions: Vec<Condition>,
 
     #[serde(default)]
-    pub tactics: Vec<Tactic>
+    pub tactics: Vec<Tactic>,
+
+    #[serde(default)]
+    pub gear_list: Vec<Gear>
 }
 
 impl Character {
@@ -41,7 +54,8 @@ impl Character {
             proficiencies: CalculatedStat::default_array(),
             feats: vec![],
             conditions: vec![],
-            tactics: vec![]
+            tactics: vec![],
+            gear_list: vec![]
         }
     }
 }
@@ -140,7 +154,8 @@ impl From<SimpleCharacter> for Character{
             proficiencies: vec![],
             feats: simp_char.feats,
             conditions: simp_char.conditions,
-            tactics: simp_char.tactics
+            tactics: simp_char.tactics,
+            gear_list: simp_char.gear_list
         };
 
         for skill_tuple in simp_char.proficiencies {
@@ -166,7 +181,8 @@ impl From<&SimpleCharacter> for Character{
             proficiencies: vec![],
             feats: simp_char.feats.clone(),
             conditions: simp_char.conditions.clone(),
-            tactics: simp_char.tactics.clone()
+            tactics: simp_char.tactics.clone(),
+            gear_list: simp_char.gear_list.clone()
         };
 
         for skill_tuple in simp_char.proficiencies.clone() {
@@ -182,25 +198,39 @@ impl From<&SimpleCharacter> for Character{
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SimpleCharacter {
     pub name: String,
+
     pub hp_info: HpInfo, 
+
     pub level: i32,
+
     pub attributes: Vec<i32>,
+
     #[serde(default)]
     pub text: String,
+
     #[serde(default)]
     pub shield_raised: bool,
+
     #[serde(default)]
     pub background: String,
+
     #[serde(default)]
     pub class: String,
+
     #[serde(default)]
     pub proficiencies: Vec<(String, ProficiencyType, ProficiencyLevel)>,
+
     #[serde(default)]
     pub feats: Vec<Feat>,
+
     #[serde(default)]
     pub conditions: Vec<Condition>,
+
     #[serde(default)]
-    pub tactics: Vec<Tactic>
+    pub tactics: Vec<Tactic>,
+
+    #[serde(default)]
+    pub gear_list: Vec<Gear>
 }
 
 
@@ -219,7 +249,8 @@ impl From<Character> for SimpleCharacter{
             proficiencies: vec![],
             feats: ref_char.feats.clone(),
             conditions: ref_char.conditions.clone(),
-            tactics: ref_char.tactics.clone()
+            tactics: ref_char.tactics.clone(),
+            gear_list: ref_char.gear_list.clone()
         };
 
         ret_val.proficiencies.extend(ref_char.proficiencies.into_iter().map(|s: CalculatedStat| return (s.name, s.p_type, s.proficiency)));
@@ -241,7 +272,8 @@ impl From<&Character> for SimpleCharacter{
             proficiencies: vec![],
             feats: ref_char.feats.clone(),
             conditions: ref_char.conditions.clone(),
-            tactics: ref_char.tactics.clone()
+            tactics: ref_char.tactics.clone(),
+            gear_list: ref_char.gear_list.clone()
         };
 
         ret_val.proficiencies.extend(ref_char.proficiencies.clone().into_iter().map(|s: CalculatedStat| return (s.name, s.p_type, s.proficiency)));

@@ -178,10 +178,11 @@ hr {
 }
 
 .center-text-area {
+	@extend .bright-bg;
 	min-height: 20rem; 
 	background:unset;
-	border: 2px solid rgb(114, 49, 17);
 	flex-grow: 2;
+	border: unset;
 	resize: none;
 }
 
@@ -236,8 +237,13 @@ hr {
 	border: 2px solid rgb(253, 251, 248);
 	color: white;
 }
+
 .selected-tactic hr {
 	color: white;
+}
+
+.error {
+	color: red;
 }
 
 @media screen and (min-height: 700px) {

@@ -295,5 +295,16 @@
       ],
       "description": "You signal an aggressive formation designed to exploit enemies’ vulnerabilities. Signal all squadmates affected by your commander’s banner; each can Step as a free action. If any of your allies end this movement adjacent to an opponent, that opponent is off-guard to melee attacks from you and all other squadmates who responded to Pincer Attack until the start of your next turn."
     }
+  ],
+  "gear_list": [
+    {
+      "name": "test",
+      "g_type": "Weapon",
+      "traits": [],
+      "proficiency": "Simple",
+      "invested": null,
+      "description": "testDesc",
+      "damage": 8
+    }
   ]
 }
