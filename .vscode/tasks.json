@@ -4,8 +4,21 @@
 		{
 			"type": "shell",
 			"command": "cargo leptos watch",
-			"group": {"isDefault": true, "kind": "build"},
+			"group": {"isDefault": false, "kind": "build"},
 			"label": "rust: deploy website and server"
+		},
+		{
+			"type": "shell",
+			"command": "cargo leptos build --release",
+			"group": {"isDefault": false, "kind": "build"},
+			"label": "Rust: Build webiste for Windows"
+		},
+		{
+			"type": "shell",
+			"command": "cargo leptos build --release --bin-cargo-args=\"--target=armv7-unknown-linux-gnueabihf\"",
+			"group": {"isDefault": false, "kind": "build"},
+			"label": "Rust: Build webiste for Linux"
 		}
+
 	]
 }
