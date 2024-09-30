@@ -23,9 +23,19 @@ pub fn WeaponView() -> impl IntoView {
 pub fn TacticsView() -> impl IntoView {
     let character_write = use_context::<WriteSignal<Character>>().expect("TacticsView: Character should be set at this point");
     let character_data = use_context::<ReadSignal<Character>>().expect("TacticsView: Character should be set at this point");
+    let max_tactics = 2;
+    let count_tactics = {
+        move || character_data.with(|c| {
+            c.tactics.iter().filter(|tactic| tactic.selected).count()
+        })
+    };
+    let tactics_header = move || {
+        let count = count_tactics();
+        String::from(format!("Tactics [{count} / {max_tactics}]"))
+    };
     view! {
         <div>
-            <h4>Tactics</h4>
+            <h4>{tactics_header}</h4>
             <div class="flex-col no-grow" style="gap:10px">
                 <For
                     each=move ||character_data.with(|k| k.tactics.clone())
@@ -33,18 +43,24 @@ pub fn TacticsView() -> impl IntoView {
                     children=move |tactic| {
                         let tac_name = tactic.name.clone();
                         let collapse = create_rw_signal(false);
-                        let update_selected_on_tactic = {
-                            let tac_name2 = tactic.name.clone();
-                            move |_| character_write.update(|c|{
-                                let mut_ref: &mut Tactic = c.tactics.iter_mut().find(|val| val.name == tac_name2).unwrap(); 
-                                mut_ref.selected = !mut_ref.selected
-                            })
-                        };
                         let get_selected_on_tactic = {
                             let tac_name2 = tactic.name.clone();
                             move || character_data.with(|c|{
                                 c.tactics.iter().find(|val| val.name == tac_name2).unwrap().selected
                             })
+                        };
+                        let update_selected_on_tactic = {
+                            let tac_name2 = tactic.name.clone();
+                            let get_selected_on_tactic_clone = get_selected_on_tactic.clone();
+                            move |_| {
+                                if count_tactics() >= max_tactics && !get_selected_on_tactic_clone() {
+                                    return;
+                                }
+                                character_write.update(|c|{
+                                    let mut_ref: &mut Tactic = c.tactics.iter_mut().find(|val| val.name == tac_name2).unwrap(); 
+                                    mut_ref.selected = !mut_ref.selected
+                                });
+                            }
                         };
                         view! {
                             <div class="flex-col smaller-gap align-flex-start bright-bg" 

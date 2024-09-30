@@ -226,8 +226,8 @@ section {
 }
 
 .selected-tactic {
-	border: 0.15rem solid rgb(173, 23, 43);
-	padding: 0.25rem;
+	background-color: brown;
+	color: white;
 }
 
 @media screen and (min-height: 700px) {
