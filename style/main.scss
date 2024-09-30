@@ -137,12 +137,10 @@ section {
 	}
 	:nth-child(3n + 2) {
 		text-align: center;
-		justify-self: center;
 		align-content: center;
 	}
 	:nth-child(3n + 3) {
 		text-align: center;
-		justify-self: center;
 		align-content: center;
 	}
 }
@@ -154,8 +152,8 @@ section {
 .proficiency-letter {
 	background-color: gray;
 	color: white;
-	padding-left: 0.2em;
-	padding-right: 0.2em;
+	padding-left: 0.2rem;
+	padding-right: 0.2rem;
 }
 
 .proficiency-letter-trained {
