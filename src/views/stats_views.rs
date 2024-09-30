@@ -79,11 +79,14 @@ pub fn HpView() -> impl IntoView {
     let write_char = use_context::<WriteSignal<Character>>().expect("MainstatsView expects a character to be set");
     let reset_input = create_rw_signal(false);
     let temp_hp_switch = create_rw_signal(false);
-    let hp_view = move || read_char.with(|c| {
-        let hp = c.hp_info.get_hp();
-        let maxhp = c.hp_info.get_max_hp();
-        format!("{hp}/{maxhp}").to_string()
+    let get_hp_info = move || read_char.with(|c| {
+        c.hp_info.clone()
     });
+    let hp_view = move || {
+        let hp = get_hp_info().get_hp();
+        let maxhp = get_hp_info().get_max_hp();
+        format!("{hp}/{maxhp}").to_string()
+    };
     let flip_temp_switch = {
         move || temp_hp_switch.update(|active| *active = !*active)
     };
@@ -309,7 +312,7 @@ pub fn FeatView() -> impl IntoView {
                 children=move |feat| {
                     let collapse = create_rw_signal(false);
                     view!{
-                        <div class="flex-col smaller-gap bright-bg" on:click=move |_| collapse.update(|c| *c = !*c)>
+                        <div class="flex-col bright-bg" on:click=move |_| collapse.update(|c| *c = !*c)>
                             <div class="flex-row feat-title-row ">
                                 <h4>{move || feat.name.clone()}</h4>
                                 <Show when=move || feat.actions != 0>
@@ -318,7 +321,8 @@ pub fn FeatView() -> impl IntoView {
                             </div>
                             <Show when=move || collapse.get()>
                                 <TraitView trait_names=feat.traits.clone()/>
-                                <p class="tiny-text">{let desc = feat.description.clone(); move || desc.clone()}</p>
+                                <hr/>
+                                <p class="tiny-text" inner_html={let desc = feat.description.clone(); move || desc.clone()}></p>
                             </Show>
                         </div>
                     }

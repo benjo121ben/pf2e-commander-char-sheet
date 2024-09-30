@@ -7,6 +7,7 @@
 body {
 	font-family: sans-serif;
 	text-align: left;
+	color: rgb(25, 25, 41);
 }
 
 body > * {
@@ -44,6 +45,11 @@ section {
 	border-radius: 0.7rem;
 	background-color: rgb(235, 209, 198);
 	padding: 0.6rem;
+}
+
+hr {
+	width: 100%;
+	margin: unset;
 }
 
 .flex-row {
@@ -129,7 +135,7 @@ section {
 .skill-grid  {
 	display:grid;
 	grid-template-columns: 6fr 0.5fr 0.5fr;
-	row-gap: 2px;
+	row-gap: 0.2rem;
 	column-gap: 0.5rem;
 	* {
 		flex-basis: 0;
@@ -191,9 +197,6 @@ section {
 	font-size: 0.8rem;
 }
 
-.smaller-gap {
-	gap: 0.05rem
-}
 
 .trait{
 	padding: 0.2rem;
@@ -225,6 +228,15 @@ section {
 
 .selected-tactic {
 	background-color: brown;
+	color: white;
+}
+
+.selected-tactic .trait {
+	background-color: rgb(43, 16, 11);
+	border: 2px solid rgb(253, 251, 248);
+	color: white;
+}
+.selected-tactic hr {
 	color: white;
 }
 

@@ -63,7 +63,7 @@ pub fn TacticsView() -> impl IntoView {
                             }
                         };
                         view! {
-                            <div class="flex-col smaller-gap align-flex-start bright-bg" 
+                            <div class="flex-col align-flex-start bright-bg" 
                                 on:click=move |_| collapse.update(|c| *c = !*c)
                                 on:contextmenu=update_selected_on_tactic
                                 class:selected-tactic=get_selected_on_tactic
@@ -78,6 +78,7 @@ pub fn TacticsView() -> impl IntoView {
                                 </div>
                                 <Show when=move || collapse.get()>
                                     <TraitView trait_names=tactic.traits.clone()/>
+                                    <hr/>
                                     <div class="tiny-text" inner_html={let desc = tactic.description.clone(); move || desc.clone()}></div>
                                 </Show>
                             </div>
