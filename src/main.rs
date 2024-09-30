@@ -2,17 +2,21 @@
 #[tokio::main]
 async fn main() {
     use axum::Router;
+    use std::env;
     use leptos::*;
+    use leptos::logging::log;
     use leptos_axum::{generate_route_list, LeptosRoutes};
     use pf2e_char_sheet::app::*;
     use pf2e_char_sheet::fileserv::file_and_error_handler;
 
+    env::set_var("RUST_BACKTRACE", "1");
+    env::args().into_iter().for_each(|f| log!("{f}"));
     // Setting get_configuration(None) means we'll be using cargo-leptos's env values
     // For deployment these variables are:
     // <https://github.com/leptos-rs/start-axum#executing-a-server-on-a-remote-machine-without-the-toolchain>
     // Alternately a file can be specified such as Some("Cargo.toml")
     // The file would need to be included with the executable when moved to deployment
-    let conf = get_configuration(None).await.unwrap();
+    let conf = get_configuration(Some("./Cargo.toml")).await.expect("Expecting Cargo.toml to be there");
     let leptos_options = conf.leptos_options;
     let addr = leptos_options.site_addr;
     let routes = generate_route_list(App);
