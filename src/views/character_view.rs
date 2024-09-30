@@ -83,8 +83,6 @@ pub fn CharacterView(
         <div class="flex-row space-between">
             <ProficiencySidebar/>
             <section class="flex-col center-col-layout">
-                <TacticsView/>
-
                 <textarea 
                     class="center-text-area" 
                     id="test"
@@ -99,6 +97,7 @@ pub fn CharacterView(
                 />
             </section>
             <section class="flex-col right-side-col">
+                <TacticsView/>
                 <FeatView/>
             </section>
         </div>

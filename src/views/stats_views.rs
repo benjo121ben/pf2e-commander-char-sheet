@@ -77,52 +77,70 @@ pub fn MainStatsView() -> impl IntoView {
 pub fn HpView() -> impl IntoView {
     let read_char= use_context::<ReadSignal<Character>>().expect("MainstatsView expects a character to be set");
     let write_char = use_context::<WriteSignal<Character>>().expect("MainstatsView expects a character to be set");
-    let reset_input = create_rw_signal(true);
+    let reset_input = create_rw_signal(false);
+    let temp_hp_switch = create_rw_signal(false);
     let hp_view = move || read_char.with(|c| {
         let hp = c.hp_info.get_hp();
         let maxhp = c.hp_info.get_max_hp();
         format!("{hp}/{maxhp}").to_string()
     });
+    let flip_temp_switch = {
+        log!("Changed");
+        move || temp_hp_switch.update(|active| *active = !*active)
+    };
     view! {
-        <div class="flex-row">
-            <label name="maxhp" id="maxhp"
-                on:click=move |_| write_char.update(|c| c.hp_info.change_hp(1))
-                on:contextmenu=move |_| write_char.update(|c| c.hp_info.change_hp(-1))
-            >
-                {move || hp_view()}
-            </label>
-            <label style="color: blue" name="temphp" id="temphp">
-                {move || read_char.with(|c| c.hp_info.get_temp())}
-            </label>
-            <label name="label_temphp" id="label_temphp" class="scaling-text">
-                set temp
-            </label>
+        <div class="flex-col align-stretch">
+            <div class="flex-row">
+                <label name="hp_view" id="hp_view"
+                    on:click=move |_| write_char.update(|c| c.hp_info.change_hp(1))
+                    on:contextmenu=move |_| write_char.update(|c| c.hp_info.change_hp(-1))
+                >
+                    {move || hp_view()}
+                </label>
+                {move || 
+                    if temp_hp_switch.get() {
+                        view! {
+                            <input 
+                                type="number" 
+                                name="temphp_inp" 
+                                id="temphp_inp" 
+                                class="hp-input" 
+                                prop:value="" 
+                                on:contextmenu=move |_| flip_temp_switch()
+                                on:change=move |event: Event| {
+                                    write_char.update(|c|{
+                                        let val: i32 = event_target_value(&event).parse().unwrap();
+                                        c.hp_info.set_temp(val);
+                                    });
+                                    temp_hp_switch.update(|active| *active = !*active);
+                                }
+                            />
+                        }.into_view()
+                    }
+                    else {
+                        view! {
+                            <label style="color: blue" name="temphp" id="temphp"
+                                on:contextmenu=move |_| flip_temp_switch()
+                            >
+                                {move || read_char.with(|c| c.hp_info.get_temp())}
+                            </label>
+                        }.into_view()
+                    }
+                }
+            </div>
             <input 
                 type="number" 
-                name="temphp_inp" 
-                id="temphp_inp" 
-                class="hp-input" 
-                prop:value=move || {read_char.with(|c| c.hp_info.get_temp())} 
-                on:change=move |event: Event| write_char.update(|c|{
-                    let val: i32 = event_target_value(&event).parse().unwrap();
-                    c.hp_info.set_temp(val);
-                })
-            />
-
-            <label name="label_hp" id="label_hp" class="scaling-text">
-                change hp
-            </label>
-            <input 
-                type="number" 
-                name="hp_inp" 
                 id="hp_inp" 
                 class="hp-input"
+                placeholder="HP Change"
                 prop:value=move || {let _ = reset_input(); return String::from("")} 
-                on:change=move |event: Event| write_char.update(|c|{
-                    let val: i32 = event_target_value(&event).parse().unwrap();
-                    c.hp_info.change_hp(val);
+                on:change=move |event: Event|{ 
+                    write_char.update(|c|{
+                        let val: i32 = event_target_value(&event).parse().unwrap();
+                        c.hp_info.change_hp(val);
+                    });
                     reset_input.update(|f| *f=!*f);
-                })
+                }
             />
         </div>
     }
@@ -285,7 +303,7 @@ pub fn FeatView() -> impl IntoView {
     let read_character = use_context::<ReadSignal<Character>>().expect("Feat view expects character to be set");
     view!{
         <div class="flex-col">
-            <h3>Feats</h3>
+            <h4>Feats</h4>
             <For
                 each={move || read_character.with(|c| c.feats.clone())}
                 key={move |feat| feat.name.clone()}

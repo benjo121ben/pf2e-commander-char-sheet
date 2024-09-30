@@ -19,6 +19,16 @@ button {
 	align-items: center;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
 
 
 h2, h3 {
@@ -176,7 +186,7 @@ section {
 }
 
 .hp-input {
-	max-width: 50px;
+	max-width: 5rem;
 }
 
 .scaling-text {
