@@ -55,8 +55,7 @@ pub fn WeaponView(
     }
 
     let get_view = move || character_data.with(|c| {
-        let name_clone = item.name.clone();
-        let weapon_Item = c.gear_list.iter().find(|i| i.name == name_clone.clone()).cloned();
+        let weapon_Item = c.gear_list.iter().find(|i| i.name == item.name.clone()).cloned();
         match weapon_Item {
             Some(weapon) => {
                 let prof_copy = weapon.proficiency.unwrap().clone();
@@ -66,9 +65,7 @@ pub fn WeaponView(
                         let attack_bonus = prof.calculate_stat(c);
                         let bonus_progression_proficiency = 1; //TODO here automatic bonus progression
                         let prefix =String::from(
-                            if attack_bonus + bonus_progression_proficiency > 0 {
-                                "+"
-                            } else {""}
+                            if attack_bonus + bonus_progression_proficiency > 0 {"+"} else {""}
                         );
                         let dice_amount = 1; //TODO here automatic bonus progression
                         let dice_size = weapon.damage.unwrap();
@@ -76,7 +73,7 @@ pub fn WeaponView(
                         let total_bonus = format!("{0}{1} {2}", prefix, attack_bonus + bonus_progression_proficiency, damage); //TODO str bonus
                         view!{
                             <div class="flex-row">
-                                <h4>{move|| weapon.name.clone()}</h4>
+                                <h4>{let name_clone = weapon.name.clone(); move|| name_clone.clone()}</h4>
                                 <p>{
                                     move || total_bonus.clone()
                                 }</p>
@@ -90,7 +87,7 @@ pub fn WeaponView(
                 }
             },
             None => {
-                let second_clone = name_clone.clone();
+                let second_clone = item.name.clone();
                 view!{
                     <p class="error">{format!("WeaponView: Could not find a weapon with name: {second_clone}. weird synchro error")}</p>
                 }.into_view()

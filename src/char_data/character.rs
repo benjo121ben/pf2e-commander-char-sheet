@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use leptos::logging::log;
 use super::{conditions::Condition, feats::Feat, gear::Gear, hp::HpInfo, proficiency::ProficiencyLevel, stats::{Attributes, CalculatedStat, ProficiencyType}, tactics::Tactic};
 
-#[derive(Debug, Clone, Serialize, Deserialize, Eq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Character {
     pub name: String,
 
@@ -127,18 +127,6 @@ impl Character {
     }
 }
 
-impl PartialEq for Character {
-    fn eq(&self, other: &Self) -> bool {
-        let val = self.name == other.name && 
-            self.level == other.level && 
-            self.attributes == other.attributes && 
-            self.background == other.background && 
-            self.class == other.class && 
-            self.proficiencies == other.proficiencies && 
-            self.feats == other.feats;
-        val
-    }
-}
 
 impl From<SimpleCharacter> for Character{
     fn from(simp_char: SimpleCharacter) -> Self {
