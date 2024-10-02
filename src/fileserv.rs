@@ -27,7 +27,7 @@ pub async fn file_and_error_handler(
 
     let res = get_static_file(Request::from_parts(static_parts, Body::empty()), &root)
         .await
-        .unwrap();
+        .expect("fileserv.rs expected something, idk");
 
     if res.status() == StatusCode::OK {
         res.into_response()

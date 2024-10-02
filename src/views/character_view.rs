@@ -5,6 +5,7 @@ use crate::char_data::conditions::Condition;
 use crate::char_data::gear::Gear;
 use crate::char_data::gear::GearType;
 use crate::char_data::stats::ProficiencyType;
+use crate::error_template::SheetError;
 use crate::server_side::server_functions::*;
 use super::stats_views::*;
 use super::equip_views::*;
@@ -20,14 +21,14 @@ pub fn CharacterView(
 ) -> impl IntoView {
     //log!("Char on init {char:#?}");
     let (read_ketra, write_ketra) = create_signal(char);
-    let (read_save_error, write_save_error) = create_signal(String::from(""));
+    let sheet_error = create_rw_signal(SheetError::new(""));
     let upload_ketra = create_action( move |_:&i32| async move {
         let ketra = read_ketra.get_untracked();
-        write_save_error.set("".to_string());
+        sheet_error.set(SheetError::new(""));
         let ret_val = set_char(ketra).await;
         match ret_val {
             Ok(_) => {},
-            Err(err) => {log!("Error saving "); write_save_error.set(err.to_string())},
+            Err(err) => {log!("Error saving "); sheet_error.set(SheetError::new(&err.to_string()))},
         }
     });
     create_effect(move |prev| {
@@ -42,6 +43,7 @@ pub fn CharacterView(
         
     });
     provide_context(read_ketra);
+    provide_context(sheet_error);
     provide_context(write_ketra);
     provide_context(conditions.clone());
     provide_context(trait_data.clone());
@@ -77,9 +79,9 @@ pub fn CharacterView(
             </section>
         </div>
         <Show
-            when=move || read_save_error() != String::from("")
+            when=move || sheet_error.get().msg != String::from("")
         >
-            <p style="color: red;">{move || read_save_error()}</p>
+            <p style="color: red;">{move || sheet_error.get().msg.clone()}</p>
         </Show>
         <div class="flex-row space-between">
             <ProficiencySidebar/>

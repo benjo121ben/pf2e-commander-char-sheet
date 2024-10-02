@@ -2,6 +2,21 @@ use http::status::StatusCode;
 use leptos::*;
 use thiserror::Error;
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct SheetError{
+    pub msg: String
+}
+
+impl SheetError {
+    pub fn new(value: &str) -> Self {
+        Self{msg: value.to_string()}
+    }
+
+    pub fn zero() -> Self {
+        Self{msg: "".to_string()}
+    }
+}
+
 #[derive(Clone, Debug, Error)]
 pub enum AppError {
     #[error("Not Found")]

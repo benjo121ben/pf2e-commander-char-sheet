@@ -1,10 +1,8 @@
 use crate::char_data::character::*;
 use crate::char_data::gear::{Gear, GearType};
-use crate::char_data::proficiency::ProficiencyLevel;
 use crate::char_data::tactics::Tactic;
 use crate::views::action_view::ActionView;
 use super::stats_views::TraitView;
-use ev::Event;
 use leptos::*;
 use leptos::logging::log;
 
@@ -42,59 +40,79 @@ pub fn WeaponView(
     item: Gear
 ) -> impl IntoView {
     let character_data = use_context::<ReadSignal<Character>>().expect("WeaponView: Character should be set at this point");
+    let debug_name_clone = item.name.clone();
+    let mut err_text = String::from("");
+
     if item.g_type != GearType::Weapon {
-        panic!("WeaponView: This item is not a weapon");
+        err_text = format!("WeaponView: This item is not a weapon: {debug_name_clone}");
     }
-
     if item.damage.is_none() {
-        panic!("WeaponView: This item does not have a damage die");
+        err_text = format!("WeaponView: This item does not have a damage die: {debug_name_clone}");
     }
-
     if item.proficiency.is_none() {
-        panic!("WeaponView: This item does not have a proficiency");
+        err_text = format!("WeaponView: This item does not have a proficiency: {debug_name_clone}");
     }
 
-    let get_view = move || character_data.with(|c| {
-        let weapon_Item = c.gear_list.iter().find(|i| i.name == item.name.clone()).cloned();
+    if &err_text != "" {
+        log!("Logged error {err_text}");
+        return err_text.into_view();
+    }
+
+    let get_weapon = move || {
+        let weapon_Item = character_data.with(|c| c.gear_list.iter().find(|i| i.name == item.name.clone()).cloned());
         match weapon_Item {
             Some(weapon) => {
-                let prof_copy = weapon.proficiency.unwrap().clone();
-                let stat_opt = c.get_prof_obj_from_name(&prof_copy);
-                match stat_opt {
-                    Some(prof) => {
-                        let attack_bonus = prof.calculate_stat(c);
-                        let bonus_progression_proficiency = 1; //TODO here automatic bonus progression
-                        let prefix =String::from(
-                            if attack_bonus + bonus_progression_proficiency > 0 {"+"} else {""}
-                        );
-                        let dice_amount = 1; //TODO here automatic bonus progression
-                        let dice_size = weapon.damage.unwrap();
-                        let damage = format!("{dice_amount}d{dice_size}");
-                        let total_bonus = format!("{0}{1} {2}", prefix, attack_bonus + bonus_progression_proficiency, damage); //TODO str bonus
-                        view!{
-                            <div class="flex-row">
-                                <h4>{let name_clone = weapon.name.clone(); move|| name_clone.clone()}</h4>
-                                <p>{
-                                    move || total_bonus.clone()
-                                }</p>
-                                <p inner_html={move|| weapon.description.clone()}/>
-                            </div>
-                        }.into_view()
-                    },
-                    None => view!{
-                        <p class="error">{let prof_name = prof_copy.clone(); format!("WeaponView: Could not find a proficiency with name {prof_name}")}</p>
-                    }.into_view(),
-                }
+                Ok(weapon)
             },
             None => {
                 let second_clone = item.name.clone();
-                view!{
-                    <p class="error">{format!("WeaponView: Could not find a weapon with name: {second_clone}. weird synchro error")}</p>
-                }.into_view()
+                Err(format!("WeaponView: Could not find a weapon with name: {second_clone}. weird synchro error"))
             }
         }
-    });
-    view! {{get_view}}
+    };
+
+    let get_proficicency = move |weapon: &Gear| {
+        let prof_copy = weapon.proficiency.clone().expect("WeaponView: There should be a weapon proficiency");
+        let stat_opt = character_data.with(|c| c.get_prof_obj_from_name(&prof_copy));
+        match stat_opt {
+            Some(prof) => Ok(prof),
+            None => {let name_copy = prof_copy.clone(); Err(format!("WeaponView: Could not find a proficiency with name {name_copy}"))}
+        }
+    };
+
+    let get_weapon_view = move || -> Result<View, String> {
+        let weapon = get_weapon()?;
+        let stat = get_proficicency(&weapon)?;
+        let attack_bonus = character_data.with(|c|stat.calculate_stat(c));
+        let bonus_progression_proficiency = 1; //TODO here automatic bonus progression
+        let prefix =String::from(
+            if attack_bonus + bonus_progression_proficiency > 0 {"+"} else {""}
+        );
+        let dice_amount = 1; //TODO here automatic bonus progression
+        let dice_size = weapon.damage.expect("WeaponView: There should be a weapon damage");
+        let damage = format!("{dice_amount}d{dice_size}");
+        let total_bonus = format!("{0}{1} {2}", prefix, attack_bonus + bonus_progression_proficiency, damage); //TODO str bonus
+        Ok(view!{
+            <div class="flex-row">
+                <h4>{let name_clone = weapon.name.clone(); move|| name_clone.clone()}</h4>
+                <p>{
+                    move || total_bonus.clone()
+                }</p>
+                <p inner_html={move|| weapon.description.clone()}/>
+            </div>
+        }.into_view())
+    };
+
+    view!{   
+        {move || match get_weapon_view() {
+            Ok(w_view) => w_view,
+            Err(error_str) => {
+                view!{
+                    <p class="error">{error_str}</p>
+                }.into_view()
+            }
+        }}    
+    }.into_view()
 }
 
 #[component]
@@ -124,7 +142,7 @@ pub fn TacticsView() -> impl IntoView {
                         let get_selected_on_tactic = {
                             let tac_name2 = tactic.name.clone();
                             move || character_data.with(|c|{
-                                c.tactics.iter().find(|val| val.name == tac_name2).unwrap().selected
+                                c.tactics.iter().find(|val| val.name == tac_name2).expect("TacticView: get_selected - There should be a tactic of the same name").selected
                             })
                         };
                         let update_selected_on_tactic = {
@@ -135,7 +153,7 @@ pub fn TacticsView() -> impl IntoView {
                                     return;
                                 }
                                 character_write.update(|c|{
-                                    let mut_ref: &mut Tactic = c.tactics.iter_mut().find(|val| val.name == tac_name2).unwrap(); 
+                                    let mut_ref: &mut Tactic = c.tactics.iter_mut().find(|val| val.name == tac_name2).expect("TacticView: update_selected_on_tactic - There should be a tactic of the same name"); 
                                     mut_ref.selected = !mut_ref.selected
                                 });
                             }

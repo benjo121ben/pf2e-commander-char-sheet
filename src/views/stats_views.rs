@@ -16,9 +16,8 @@ pub fn MainStatsView() -> impl IntoView {
     let unlocked = create_rw_signal(false);
     let read_char= use_context::<ReadSignal<Character>>().expect("MainstatsView expects a character to be set");
     let write_char = use_context::<WriteSignal<Character>>().expect("MainstatsView expects a character to be set");
-    let update_stat = move |id: String, offset: i32| write_char
-    .update(|f| {
-        f.attributes.set_stat(&id, f.attributes.get_stat(&id).unwrap().value + offset);
+    let update_stat = move |id: String, offset: i32| write_char.update(|f| {
+        f.attributes.set_stat(&id, f.attributes.get_stat(&id).expect("MainStatsView - update_stat: There should be an attribute of the same name in the char").value + offset);
         f.hp_info.calculate_max_hp(f.level, f.attributes.get_stat("con").expect("There should be a con stat").value);
     });
     view! {
@@ -38,7 +37,7 @@ pub fn MainStatsView() -> impl IntoView {
                     let id_for_right_click = id.clone();
                     let val = create_memo(move |_| {
                         let id_clone = id.clone();
-                        read_char.with(move |cha_obj| cha_obj.attributes.get_stat_val(&id_clone).unwrap())
+                        read_char.with(move |cha_obj| cha_obj.attributes.get_stat_val(&id_clone).expect("MainStatsView - View: There should be an attribute of the same name in the char"))
                     });
                     view! { 
                         <div 
@@ -111,8 +110,10 @@ pub fn HpView() -> impl IntoView {
                                 on:contextmenu=move |_| flip_temp_switch()
                                 on:change=move |event: Event| {
                                     write_char.update(|c|{
-                                        let val: i32 = event_target_value(&event).parse().unwrap();
-                                        c.hp_info.set_temp(val);
+                                        match event_target_value(&event).parse::<i32>() {
+                                            Ok(number) => c.hp_info.set_temp(number),
+                                            Err(err) => {},
+                                        }
                                     });
                                     temp_hp_switch.update(|active| *active = !*active);
                                 }
@@ -138,8 +139,10 @@ pub fn HpView() -> impl IntoView {
                 prop:value=move || {let _ = reset_input(); return String::from("")} 
                 on:change=move |event: Event|{ 
                     write_char.update(|c|{
-                        let val: i32 = event_target_value(&event).parse().unwrap();
-                        c.hp_info.change_hp(val);
+                        match event_target_value(&event).parse::<i32>() {
+                            Ok(number) => c.hp_info.change_hp(number),
+                            Err(err) => {},
+                        }
                     });
                     reset_input.update(|f| *f=!*f);
                 }
