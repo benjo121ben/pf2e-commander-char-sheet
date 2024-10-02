@@ -37,9 +37,9 @@ pub fn BaseView(
         match prev {
             Some(_) => {
                 upload_ketra.dispatch(0);
-                return Some(());
+                return Some(0);
             },
-            None => Some(())
+            None => Some(0)
         }
         
     });
