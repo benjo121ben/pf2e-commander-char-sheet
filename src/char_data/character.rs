@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use leptos::logging::log;
 use super::{conditions::Condition, feats::Feat, gear::Gear, hp::HpInfo, proficiency::ProficiencyLevel, stats::{Attributes, CalculatedStat, ProficiencyType}, tactics::Tactic};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]

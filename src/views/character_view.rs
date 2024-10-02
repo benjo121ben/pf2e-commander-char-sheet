@@ -137,12 +137,8 @@ pub fn ProficiencySidebar(
     let show_edit_stats = create_rw_signal(false);
     view! {
         <section class="flex-col flex-wrap" style="flex-grow: 0; flex-shrink: 0">
-            <b>
-                <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::ClassDC]/>
-            </b>
-            <b>
-                <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Perception]/>
-            </b>
+            <b><SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::ClassDC]/></b>
+            <b><SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Perception]/></b>
             <div class="flex-col">
                 <h5>Saves</h5>
                 <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Save]/>
