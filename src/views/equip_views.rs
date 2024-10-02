@@ -2,13 +2,14 @@ use crate::char_data::character::*;
 use crate::char_data::gear::{Gear, GearType};
 use crate::char_data::tactics::Tactic;
 use crate::views::action_view::ActionView;
+use crate::views::view_helpers::*;
 use super::stats_views::TraitView;
 use leptos::*;
 use leptos::logging::log;
 
 #[component]
 pub fn EquipView() -> impl IntoView {
-    let character_data = use_context::<ReadSignal<Character>>().expect("WeaponView: Character should be set at this point");
+    let (character_data, _) = get_base_context("EquipView");
     view! {
         <For
             each=move ||character_data.with(|k| k.gear_list.clone())
@@ -39,7 +40,7 @@ pub fn EquipView() -> impl IntoView {
 pub fn WeaponView(
     item: Gear
 ) -> impl IntoView {
-    let character_data = use_context::<ReadSignal<Character>>().expect("WeaponView: Character should be set at this point");
+    let (character_data, _) = get_base_context("WeaponView");
     let debug_name_clone = item.name.clone();
     let mut err_text = String::from("");
 
@@ -117,8 +118,7 @@ pub fn WeaponView(
 
 #[component]
 pub fn TacticsView() -> impl IntoView {
-    let character_write = use_context::<WriteSignal<Character>>().expect("TacticsView: Character should be set at this point");
-    let character_data = use_context::<ReadSignal<Character>>().expect("TacticsView: Character should be set at this point");
+    let (character_data, character_write) = get_base_context("TacticsView");
     let max_tactics = 2;
     let count_tactics = {
         move || character_data.with(|c| {

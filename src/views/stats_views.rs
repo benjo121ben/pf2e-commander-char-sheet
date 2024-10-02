@@ -3,7 +3,8 @@ use std::collections::HashMap;
 use crate::char_data::character::*;
 use crate::char_data::proficiency::ProficiencyLevel;
 use crate::char_data::stats::ProficiencyType;
-use crate::views::action_view::ActionView;
+use super::action_view::ActionView;
+use super::view_helpers::get_base_context;
 use leptos::ev::Event;
 use leptos::*;
 use leptos::logging::log;
@@ -14,8 +15,7 @@ use leptos::logging::log;
 #[component]
 pub fn MainStatsView() -> impl IntoView {
     let unlocked = create_rw_signal(false);
-    let read_char= use_context::<ReadSignal<Character>>().expect("MainstatsView expects a character to be set");
-    let write_char = use_context::<WriteSignal<Character>>().expect("MainstatsView expects a character to be set");
+    let (read_char, write_char) = get_base_context("MainStatsView");
     let update_stat = move |id: String, offset: i32| write_char.update(|f| {
         f.attributes.set_stat(&id, f.attributes.get_stat(&id).expect("MainStatsView - update_stat: There should be an attribute of the same name in the char").value + offset);
         f.hp_info.calculate_max_hp(f.level, f.attributes.get_stat("con").expect("There should be a con stat").value);
@@ -74,8 +74,7 @@ pub fn MainStatsView() -> impl IntoView {
 
 #[component]
 pub fn HpView() -> impl IntoView {
-    let read_char= use_context::<ReadSignal<Character>>().expect("MainstatsView expects a character to be set");
-    let write_char = use_context::<WriteSignal<Character>>().expect("MainstatsView expects a character to be set");
+    let (read_char, write_char) = get_base_context("HpView");
     let reset_input = create_rw_signal(false);
     let temp_hp_switch = create_rw_signal(false);
     let get_hp_info = move || read_char.with(|c| {
@@ -157,14 +156,13 @@ pub fn HpView() -> impl IntoView {
 pub fn EditProfListView(
     types: Vec<ProficiencyType> 
 ) -> impl IntoView {
-    let read_character= use_context::<ReadSignal<Character>>().expect("Edit skill List expects a character to be set");
-    let write_character = use_context::<WriteSignal<Character>>().expect("Edit skill List expects a character to be set");
+    let (read_char, write_char) = get_base_context("EditProfListView");
     view! {
         <div class="skill-grid skill-grid-edit">
             <For
                 each=move || {
                     let types_clone = types.clone();
-                    read_character.with(
+                    read_char.with(
                         |k| k.proficiencies.clone().into_iter().filter(move |s| types_clone.contains(&s.p_type.clone()))
                     )
                 }
@@ -173,10 +171,10 @@ pub fn EditProfListView(
                     let name = skill.name.clone();
                     let name2 = skill.name.clone();
                     let skill_prof = skill.proficiency.clone();
-                    let skill_value = create_memo({move |_| read_character.with(|c| c.get_prof_obj_from_name(&(name.clone())).expect("should be able to find proficiency").calculate_stat(&c))});
+                    let skill_value = create_memo({move |_| read_char.with(|c| c.get_prof_obj_from_name(&(name.clone())).expect("should be able to find proficiency").calculate_stat(&c))});
                     let options = vec![ProficiencyLevel::Untrained, ProficiencyLevel::Trained, ProficiencyLevel::Expert, ProficiencyLevel::Master, ProficiencyLevel::Legendary];
                     let change_proficiency = move |event: Event| {
-                        write_character.update(|character| {
+                        write_char.update(|character| {
                             let val: String = event_target_value(&event);
                             let indx = character.get_prof_indx_from_name(&skill.name);
                             let panic_name = skill.name.clone();
@@ -215,7 +213,7 @@ pub fn EditProfListView(
 pub fn ProficiencyListView(
     types: Vec<ProficiencyType> 
 ) -> impl IntoView {
-    let character_data = use_context::<ReadSignal<Character>>().expect("ProfView: Character should be set at this point");
+    let (character_data, _) = get_base_context("ProficiencyListView");
     view! {
         <div class="skill-grid">
             <For
@@ -277,8 +275,8 @@ pub fn SwitchProfView(
 
 #[component]
 pub fn DefenseView() -> impl IntoView {
-    let read_character = use_context::<ReadSignal<Character>>().expect("Defense view expects character to be set");
-    let write_character = use_context::<WriteSignal<Character>>().expect("Defense view expects character to be set");
+    let (read_character, write_character) = get_base_context("DefenseView");
+
     let shield_raised = move || read_character.with(|c| c.shield_raised);
     let calc_ac = move || read_character.with(|c| c.calculate_ac());
     let switch_shield_pos = move |_| write_character.update(|c| c.shield_raised=!c.shield_raised);
@@ -305,7 +303,8 @@ pub fn DefenseView() -> impl IntoView {
 
 #[component]
 pub fn FeatView() -> impl IntoView {
-    let read_character = use_context::<ReadSignal<Character>>().expect("Feat view expects character to be set");
+    let (read_character, _) = get_base_context("FeatView");
+
     view!{
         <div class="flex-col">
             <h4>Feats</h4>

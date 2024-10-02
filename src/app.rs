@@ -1,7 +1,7 @@
 use leptos::*;
 use leptos_meta::*;
 
-use crate::views::character_view::CharacterView;
+use crate::views::character_view::BaseView;
 use crate::server_side::server_functions::{get_char, get_conditions, get_traits};
 
 
@@ -29,7 +29,7 @@ pub fn App() -> impl IntoView {
                                         Ok(trait_data) => {
                                             ketra_source.get().map(|ketra| {
                                                 match ketra {
-                                                    Ok(ketra_char_data) => view! { <CharacterView char=ketra_char_data conditions=conditions trait_data=trait_data/> },
+                                                    Ok(ketra_char_data) => view! { <BaseView char=ketra_char_data conditions=conditions trait_data=trait_data/> },
                                                     Err(error) => {
                                                         let err = error.clone();
                                                         view! {

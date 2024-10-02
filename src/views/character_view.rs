@@ -7,6 +7,7 @@ use crate::char_data::gear::GearType;
 use crate::char_data::stats::ProficiencyType;
 use crate::error_template::SheetError;
 use crate::server_side::server_functions::*;
+use super::view_helpers::*;
 use super::stats_views::*;
 use super::equip_views::*;
 
@@ -14,7 +15,7 @@ use leptos::*;
 use leptos::logging::log;
 
 #[component]
-pub fn CharacterView(
+pub fn BaseView(
     char: Character,
     conditions: Vec<Condition>,
     trait_data: HashMap<String, String>
@@ -47,37 +48,18 @@ pub fn CharacterView(
     provide_context(write_ketra);
     provide_context(conditions.clone());
     provide_context(trait_data.clone());
+    view!{
+        <CharView/>
+    }
+}
+
+#[component]
+pub fn CharView() -> impl IntoView {
+    let (read_ketra, write_ketra) = get_base_context("CharView");
+    let sheet_error = get_sheet_error_context("CharView");
     view! {
         <h2>{move || read_ketra.with(|k| k.name.clone())}</h2>
-        <div id="top_div" class="flex-row flex-wrap no-grow-children">
-            <section>
-                <div class="flex-row align-center no-grow-children">   
-                    <button
-                        on:click=move |_| {write_ketra.update(move |c| {
-                            c.level += 1;
-                            c.hp_info.calculate_max_hp(c.level, c.attributes.get_stat("con").expect("There should be a con stat").value);
-                        })}
-                        on:contextmenu=move |_| {write_ketra.update(move |c| {
-                            c.level -= 1;
-                            c.hp_info.calculate_max_hp(c.level, c.attributes.get_stat("con").expect("There should be a con stat").value);
-                        })}
-                    >
-                        Level {move || read_ketra.with(|k| k.level)}
-                    </button>
-                    <div>SIZE<br/>Medium</div>
-                    <div>SPEED<br/>30ft.</div>
-                </div>
-            </section>
-            <section class="align-center">
-                <DefenseView/>
-            </section>
-            <section class="align-center">
-                <MainStatsView/>
-            </section>
-            <section class="align-center" id="hp_section">
-                <HpView/>
-            </section>
-        </div>
+        <TopCharViewSection/>
         <Show
             when=move || sheet_error.get().msg != String::from("")
         >
@@ -109,6 +91,42 @@ pub fn CharacterView(
         </div>
         <div class="flex-row">
         
+        </div>
+    }
+}
+
+#[component]
+pub fn TopCharViewSection() -> impl IntoView {
+    let (read_ketra, write_ketra) = get_base_context("TopCharView");
+    view!{
+        <div id="top_div" class="flex-row flex-wrap no-grow-children">
+            <section>
+                <div class="flex-row align-center no-grow-children">   
+                    <button
+                        on:click=move |_| {write_ketra.update(move |c| {
+                            c.level += 1;
+                            c.hp_info.calculate_max_hp(c.level, c.attributes.get_stat("con").expect("There should be a con stat").value);
+                        })}
+                        on:contextmenu=move |_| {write_ketra.update(move |c| {
+                            c.level -= 1;
+                            c.hp_info.calculate_max_hp(c.level, c.attributes.get_stat("con").expect("There should be a con stat").value);
+                        })}
+                    >
+                        Level {move || read_ketra.with(|k| k.level)}
+                    </button>
+                    <div>SIZE<br/>Medium</div>
+                    <div>SPEED<br/>30ft.</div>
+                </div>
+            </section>
+            <section class="align-center">
+                <DefenseView/>
+            </section>
+            <section class="align-center">
+                <MainStatsView/>
+            </section>
+            <section class="align-center" id="hp_section">
+                <HpView/>
+            </section>
         </div>
     }
 }
