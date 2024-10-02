@@ -78,8 +78,12 @@ end2end-dir = "end2end"
 
 
 # ENABLE FOR LINUX BUILD
-# bin-target-triple="armv7-unknown-linux-gnueabihf"
-# LEPTOS_BIN_CARGO_COMMAND="cross cargo leptos build --release"
+bin-target-triple="armv7-unknown-linux-gnueabihf"
+LEPTOS_BIN_CARGO_COMMAND="cross cargo leptos build --release"
+
+## run this command in git command line ## LEPTOS_BIN_TARGET_TRIPLE=armv7-unknown-linux-gnueabihf LEPTOS_BIN_CARGO_COMMAND=cross cargo leptos build --release
+##
+
 
 #  The browserlist query used for optimizing the CSS.
 browserquery = "defaults"
