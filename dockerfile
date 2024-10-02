@@ -6,7 +6,7 @@ FROM rustlang/rust:nightly-bullseye as builder
 
 # Install cargo-binstall, which makes it easier to install other
 # cargo extensions like cargo-leptos
-RUN wget https://github.com/cargo-bins/cargo-binstall/releases/latest/download/cargo-binstall-x86_64-unknown-linux-musl.tgz
+RUN wget https://github.com/cargo-bins/cargo-binstall/releases/latest/download/cargo-binstall-armv7-unknown-linux-musleabihf.tgz
 RUN tar -xvf cargo-binstall-x86_64-unknown-linux-musl.tgz
 RUN cp cargo-binstall /usr/local/cargo/bin
 
