@@ -76,9 +76,6 @@ reload-port = 3001
 end2end-cmd = "npx playwright test"
 end2end-dir = "end2end"
 
-# bin-cargo-command="cross" 
-# bin-target-triple="aarch64-unknown-linux-gnu"
-
 #  The browserlist query used for optimizing the CSS.
 browserquery = "defaults"
 
