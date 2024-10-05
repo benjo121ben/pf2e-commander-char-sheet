@@ -10,12 +10,22 @@ use super::read_json::read_conditions_from_file;
 
 #[server(GetChar, "/api")]
 pub async fn get_char() -> Result<Character, ServerFnError> {
-    let read_char_result = read_char_from_file("resources/char.json");
+    let read_char_result = read_char_from_file("saves/char.json");
     match read_char_result {
         Ok(read_char) => return Ok(read_char),
         Err(error) => return Err(ServerFnError::new(error.to_string())),
     }
 }
+
+#[server(SetChar, "/api")]
+pub async fn set_char(char: Character) -> Result<i32, ServerFnError> {
+    let result = write_char_to_file("saves/char.json", &char);
+    match result {
+        Ok(_) => Ok(0),
+        Err(error) => Err(ServerFnError::new(error)),
+    }
+}
+
 
 #[server(GetConditions, "/api")]
 pub async fn get_conditions() -> Result<Vec<Condition>, ServerFnError> {
@@ -35,11 +45,3 @@ pub async fn get_traits() -> Result<HashMap<String, String>, ServerFnError> {
     }
 }
 
-#[server(SetChar, "/api")]
-pub async fn set_char(char: Character) -> Result<i32, ServerFnError> {
-    let result = write_char_to_file("resources/char.json", &char);
-    match result {
-        Ok(_) => Ok(0),
-        Err(error) => Err(ServerFnError::new(error)),
-    }
-}
