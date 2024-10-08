@@ -4,13 +4,11 @@ async fn main() {
     use axum::Router;
     use std::env;
     use leptos::*;
-    use leptos::logging::log;
     use leptos_axum::{generate_route_list, LeptosRoutes};
     use pf2e_char_sheet::app::*;
     use pf2e_char_sheet::fileserv::file_and_error_handler;
 
     env::set_var("RUST_BACKTRACE", "1");
-    env::args().into_iter().for_each(|f| log!("{f}"));
     // Setting get_configuration(None) means we'll be using cargo-leptos's env values
     // For deployment these variables are:
     // <https://github.com/leptos-rs/start-axum#executing-a-server-on-a-remote-machine-without-the-toolchain>

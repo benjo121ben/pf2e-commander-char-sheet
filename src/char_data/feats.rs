@@ -1,7 +1,5 @@
 use serde::{Deserialize, Serialize};
 
-use super::traits::Trait;
-
 #[derive(Debug, Clone, Serialize, Deserialize, Eq, PartialEq)]
 pub enum FeatType{
     General,

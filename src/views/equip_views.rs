@@ -1,4 +1,3 @@
-use crate::char_data::character::*;
 use crate::char_data::gear::{Gear, GearType};
 use crate::char_data::tactics::Tactic;
 use crate::views::action_view::ActionView;

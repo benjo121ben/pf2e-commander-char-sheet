@@ -57,3 +57,39 @@ impl HpInfo {
         }
     }
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct ShieldInfo {
+    max_hp: i32,
+    current_hp: i32,
+    pub hardness:i32,
+    pub raised: bool
+}
+
+impl ShieldInfo {
+    pub fn new(max_hp: i32, current_hp: i32, hardness: i32, raised: bool) -> Self{
+        Self {
+            max_hp,
+            current_hp,
+            hardness, raised
+        }
+    }
+
+    pub fn get_max_hp(self: &Self) -> i32{
+        return self.max_hp;
+    }
+
+    pub fn get_hp(self: &Self) -> i32{
+        return self.current_hp;
+    }
+
+    pub fn change_hp(self: &mut Self, value: i32, ignore_hardness: bool) {
+        let mut change = value;
+        if !ignore_hardness && self.hardness > 0 && change < 0 {
+            change = std::cmp::min(self.hardness + change, 0);
+        }
+        if change != 0 {
+            self.current_hp = std::cmp::max(std::cmp::min(self.current_hp + change, self.max_hp),0);
+        }
+    }
+}

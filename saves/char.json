@@ -7,6 +7,12 @@
     "current_hp": 24,
     "temp_hp": 0
   },
+  "shield_info": {
+    "max_hp": 20,
+    "current_hp": 18,
+    "hardness": 5,
+    "raised": false
+  },
   "level": 2,
   "attributes": [
     3,
@@ -17,7 +23,6 @@
     1
   ],
   "text": "Pferd Litta\nNorik Luke\nVaris Andi\nVinny Joseph\n\nMein Wappen hat eine blaue burgmauer mit rotem himmel, im vordergrund liegt eine Spindel mit weißem Garn. An der Spitze ein einziger Tropfen Blut.\n\nBin auf dem Weg von Maelgoth\nVilly findet broken shit irgendeiner gottheit (Brancala), hat eine vision einer Schlacht\n\nTreffe einen alten mann mit weißem bart als ich unterkunft unter einem Stein suche. Er nennt sich Fiz, ist ein sehr exzentrischer Magier, fragt mich nach meinen Zielen. Er ist hier und dort und überall. Verschwindet als ich mich umdrehe.",
-  "shield_raised": false,
   "background": "Squire",
   "class": "Commander",
   "proficiencies": [

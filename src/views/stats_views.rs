@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 
-use crate::char_data::character::*;
 use crate::char_data::proficiency::ProficiencyLevel;
 use crate::char_data::stats::ProficiencyType;
 use super::action_view::ActionView;
@@ -111,7 +110,7 @@ pub fn HpView() -> impl IntoView {
                                     write_char.update(|c|{
                                         match event_target_value(&event).parse::<i32>() {
                                             Ok(number) => c.hp_info.set_temp(number),
-                                            Err(err) => {},
+                                            Err(err) => {log!("HpView/tempHP error getting target value: {err}")},
                                         }
                                     });
                                     temp_hp_switch.update(|active| *active = !*active);
@@ -140,7 +139,67 @@ pub fn HpView() -> impl IntoView {
                     write_char.update(|c|{
                         match event_target_value(&event).parse::<i32>() {
                             Ok(number) => c.hp_info.change_hp(number),
-                            Err(err) => {},
+                            Err(err) => {log!("HpView/hpInput error getting target value: {err}")},
+                        }
+                    });
+                    reset_input.update(|f| *f=!*f);
+                }
+            />
+        </div>
+    }
+
+}
+
+#[component]
+pub fn ShieldView() -> impl IntoView {
+    let (read_char, write_char) = get_base_context("ShieldView");
+    let reset_input = create_rw_signal(false);
+    let get_shield_info = move || read_char.with(|c| {
+        c.shield_info.clone()
+    });
+    let shield_view = move || {
+        let hp = get_shield_info().get_hp();
+        let maxhp = get_shield_info().get_max_hp();
+        format!("{hp}/{maxhp}")
+    };
+    let check_broken = move || {
+        let info = get_shield_info();
+        info.get_hp() <= info.get_max_hp()/2
+    };
+    let update_health = move |val: i32, ignore: bool| {
+        write_char.update(|c| c.shield_info.change_hp(val, ignore));
+    };
+    let update_hardness = move |val: i32| {
+        write_char.update(|c| c.shield_info.hardness += val);
+    };
+    view! {
+        <div class="flex-col align-stretch">
+            <div class="flex-row">
+                <label name="hp_view" id="hp_view"
+                    class:broken=move || check_broken()
+                    on:click=move |_| update_health(1,true)
+                    on:contextmenu=move |_| update_health(-1,true)
+                >
+                    {move || shield_view()}
+                </label>
+                <label style="color: green" name="hardness" id="hardness"
+                    on:click=move |_| update_hardness(1)
+                    on:contextmenu=move |_| update_hardness(-1)
+                >
+                    {move || get_shield_info().hardness}
+                </label>
+            </div>
+            <input 
+                type="number" 
+                id="sh_inp" 
+                class="hp-input"
+                placeholder="SH Change"
+                prop:value=move || {let _ = reset_input(); return String::from("")} 
+                on:change=move |event: Event|{ 
+                    write_char.update(|c|{
+                        match event_target_value(&event).parse::<i32>() {
+                            Ok(number) => c.shield_info.change_hp(number, false),
+                            Err(err) => {log!("ShieldView error getting target value: {err}")},
                         }
                     });
                     reset_input.update(|f| *f=!*f);
@@ -277,9 +336,9 @@ pub fn SwitchProfView(
 pub fn DefenseView() -> impl IntoView {
     let (read_character, write_character) = get_base_context("DefenseView");
 
-    let shield_raised = move || read_character.with(|c| c.shield_raised);
+    let shield_raised = move || read_character.with(|c| c.shield_info.raised);
     let calc_ac = move || read_character.with(|c| c.calculate_ac());
-    let switch_shield_pos = move |_| write_character.update(|c| c.shield_raised=!c.shield_raised);
+    let switch_shield_pos = move |_| write_character.update(|c| c.shield_info.raised=!c.shield_info.raised);
 
     view!{
         <div class="flex-col" style="align-items: stretch">

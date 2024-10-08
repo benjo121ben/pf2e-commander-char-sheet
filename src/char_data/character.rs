@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use super::{conditions::Condition, feats::Feat, gear::Gear, hp::HpInfo, proficiency::ProficiencyLevel, stats::{Attributes, CalculatedStat, ProficiencyType}, tactics::Tactic};
+use super::{conditions::Condition, feats::Feat, gear::Gear, hp::{HpInfo, ShieldInfo}, proficiency::ProficiencyLevel, stats::{Attributes, CalculatedStat, ProficiencyType}, tactics::Tactic};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Character {
@@ -7,12 +7,11 @@ pub struct Character {
 
     pub hp_info: HpInfo, 
 
+    pub shield_info: ShieldInfo,
+
     pub level: i32,
 
     pub attributes: Attributes,
-
-    #[serde(default)]
-    pub shield_raised: bool,
 
     #[serde(default)]
     pub text: String,
@@ -44,10 +43,10 @@ impl Character {
         Character {
             name: String::from(""),
             hp_info: HpInfo::new(0,0,1, 0),
+            shield_info: ShieldInfo::new(20,18,5, false),
             level: 1,
             text: String::from(""),
             attributes: Attributes::zero(),
-            shield_raised: false, 
             background: String::from("Squire"),
             class: String::from("Commander"),
             proficiencies: CalculatedStat::default_array(),
@@ -121,7 +120,7 @@ impl Character {
         let dex_cap = 1;
         let item_bonus = 4;
         let prof_bonus = calc_stat.proficiency.get_bonus(self.level);
-        let raised_bonus = if self.shield_raised {2} else {0};
+        let raised_bonus = if self.shield_info.raised {2} else {0};
         10 + std::cmp::min(self.attributes.get_stat("dex").expect("Defense expects a dex attribute to be set").value, dex_cap) + prof_bonus + item_bonus + raised_bonus
     }
 }
@@ -132,10 +131,10 @@ impl From<SimpleCharacter> for Character{
         let mut ret_val = Character {
             name: simp_char.name,
             hp_info: simp_char.hp_info,
+            shield_info: simp_char.shield_info,
             level: simp_char.level,
             text: simp_char.text,
             attributes: Attributes::from(&simp_char.attributes),
-            shield_raised: simp_char.shield_raised,
             background: simp_char.background,
             class: simp_char.class,
             proficiencies: vec![],
@@ -159,10 +158,10 @@ impl From<&SimpleCharacter> for Character{
         let mut ret_val = Character {
             name: simp_char.name.clone(),
             hp_info: simp_char.hp_info.clone(),
+            shield_info: simp_char.shield_info.clone(),
             level: simp_char.level,
             text: simp_char.text.clone(),
             attributes: Attributes::from(&((*simp_char).attributes)),
-            shield_raised: simp_char.shield_raised,
             background: simp_char.background.clone(),
             class: simp_char.class.clone(),
             proficiencies: vec![],
@@ -188,15 +187,14 @@ pub struct SimpleCharacter {
 
     pub hp_info: HpInfo, 
 
+    pub shield_info: ShieldInfo,
+
     pub level: i32,
 
     pub attributes: Vec<i32>,
 
     #[serde(default)]
     pub text: String,
-
-    #[serde(default)]
-    pub shield_raised: bool,
 
     #[serde(default)]
     pub background: String,
@@ -227,10 +225,10 @@ impl From<Character> for SimpleCharacter{
         let mut ret_val = SimpleCharacter {
             name: ref_char.name.clone(),
             hp_info: ref_char.hp_info.clone(),
+            shield_info: ref_char.shield_info.clone(),
             level: ref_char.level,
             text: ref_char.text,
             attributes: ref_char.attributes.as_number_vec(),
-            shield_raised: ref_char.shield_raised,
             background: ref_char.background.clone(),
             class: ref_char.class.clone(),
             proficiencies: vec![],
@@ -250,10 +248,10 @@ impl From<&Character> for SimpleCharacter{
         let mut ret_val = SimpleCharacter {
             name: ref_char.name.clone(),
             hp_info: ref_char.hp_info.clone(),
+            shield_info: ref_char.shield_info.clone(),
             level: ref_char.level,
             text: ref_char.text.clone(),
             attributes: ref_char.attributes.as_number_vec(),
-            shield_raised: ref_char.shield_raised,
             background: ref_char.background.clone(),
             class: ref_char.class.clone(),
             proficiencies: vec![],

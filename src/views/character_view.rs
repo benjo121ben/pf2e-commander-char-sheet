@@ -127,6 +127,9 @@ pub fn TopCharViewSection() -> impl IntoView {
             <section class="align-center" id="hp_section">
                 <HpView/>
             </section>
+            <section class="align-center" id="shield_section">
+                <ShieldView/>
+            </section>
         </div>
     }
 }
