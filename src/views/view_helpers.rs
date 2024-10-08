@@ -14,3 +14,7 @@ pub fn get_sheet_error_context(view_name: &str) -> RwSignal<SheetError> {
     let name = String::from(view_name);
     use_context::<RwSignal<SheetError>>().expect(&format!("{name}: Expect error rw to be set"))
 }
+
+pub fn get_prefix(val:i32) -> String {
+    if val > 0 {"+"} else {""}.to_string()
+}

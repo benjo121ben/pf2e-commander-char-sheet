@@ -116,28 +116,28 @@ impl Attributes {
         }
     }
 
-    pub fn get_stat(&self, id: &str) -> std::option::Option::<Attribute> {
+    pub fn get_stat(&self, id: &str) -> Result<Attribute, String> {
         if id == "key" {
-            return Some(self.intelligence.clone())
+            return Ok(self.intelligence.clone())
         }
         for s in self.as_vec() {
             if s.get_id() == id {
-                return std::option::Option::Some(s.clone());
+                return Ok(s.clone());
             }
         }
-        return None;
+        return Err(format!("Could not find Attribute with id:{id}"));
     }
 
-    pub fn get_stat_val(&self, id: &str) -> std::option::Option::<i32> {
+    pub fn get_stat_val(&self, id: &str) -> Result<i32, String> {
         if id == "key" {
-            return Some(self.intelligence.value)
+            return Ok(self.intelligence.value)
         }
         for s in self.as_vec() {
             if s.get_id() == id {
-                return Some(s.value);
+                return Ok(s.value);
             }
         }
-        return None;
+        return Err(format!("Attributes Could not find value for attribute id: {id}"));
     }
 }
 
@@ -263,8 +263,8 @@ impl CalculatedStat {
         let char_attributes = &character.attributes;
         let base_val = char_attributes.get_stat(&attribute_name);
         match base_val {
-            Some(val) => val.value + self.proficiency.get_bonus(character.level),
-            None => {log!("There was an error getting attribute: {attribute_name}"); return -99},
+            Ok(val) => val.value + self.proficiency.get_bonus(character.level),
+            Err(err) => {log!("{err}"); return -99},
         }
     }
 }

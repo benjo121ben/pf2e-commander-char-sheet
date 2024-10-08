@@ -121,7 +121,7 @@ impl Character {
         let item_bonus = 4;
         let prof_bonus = calc_stat.proficiency.get_bonus(self.level);
         let raised_bonus = if self.shield_info.raised {2} else {0};
-        10 + std::cmp::min(self.attributes.get_stat("dex").expect("Defense expects a dex attribute to be set").value, dex_cap) + prof_bonus + item_bonus + raised_bonus
+        10 + std::cmp::min(self.attributes.get_stat_val("dex").expect("Defense expects a dex attribute to be set"), dex_cap) + prof_bonus + item_bonus + raised_bonus
     }
 }
 

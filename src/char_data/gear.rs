@@ -11,7 +11,19 @@ pub struct Gear {
     pub proficiency: Option<String>,
     pub invested: Option<bool>,
     pub description: String,
-    pub damage: Option<i32>,
+    pub weap_info: Option<WeaponInfo>
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct WeaponInfo {
+    pub damage: i32,
+    pub w_type: WeaponType
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum WeaponType {
+    Melee,
+    Ranged
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

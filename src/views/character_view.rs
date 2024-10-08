@@ -2,8 +2,6 @@ use std::collections::HashMap;
 
 use crate::char_data::character::*;
 use crate::char_data::conditions::Condition;
-use crate::char_data::gear::Gear;
-use crate::char_data::gear::GearType;
 use crate::char_data::stats::ProficiencyType;
 use crate::error_template::SheetError;
 use crate::server_side::server_functions::*;
@@ -81,12 +79,12 @@ pub fn CharView() -> impl IntoView {
                     prop:value={move || read_ketra.with(|c| c.text.clone())}
                 />
             </section>
+            <section class="flex-col equip-section">
+                <EquipView/>
+            </section>
             <section class="flex-col right-side-col">
                 <TacticsView/>
                 <FeatView/>
-                <WeaponView item={Gear{ name: "test".to_string(), g_type: GearType::Weapon, traits: vec![], proficiency: Some("Simple".to_string()), invested: None, description: "testDesc".to_string(), damage: Some(8)}
-                    
-                }/>
             </section>
         </div>
         <div class="flex-row">
@@ -105,11 +103,11 @@ pub fn TopCharViewSection() -> impl IntoView {
                     <button
                         on:click=move |_| {write_ketra.update(move |c| {
                             c.level += 1;
-                            c.hp_info.calculate_max_hp(c.level, c.attributes.get_stat("con").expect("There should be a con stat").value);
+                            c.hp_info.calculate_max_hp(c.level, c.attributes.get_stat_val("con").expect("There should be a con stat"));
                         })}
                         on:contextmenu=move |_| {write_ketra.update(move |c| {
                             c.level -= 1;
-                            c.hp_info.calculate_max_hp(c.level, c.attributes.get_stat("con").expect("There should be a con stat").value);
+                            c.hp_info.calculate_max_hp(c.level, c.attributes.get_stat_val("con").expect("There should be a con stat"));
                         })}
                     >
                         Level {move || read_ketra.with(|k| k.level)}

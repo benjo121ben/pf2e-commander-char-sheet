@@ -16,8 +16,8 @@ pub fn MainStatsView() -> impl IntoView {
     let unlocked = create_rw_signal(false);
     let (read_char, write_char) = get_base_context("MainStatsView");
     let update_stat = move |id: String, offset: i32| write_char.update(|f| {
-        f.attributes.set_stat(&id, f.attributes.get_stat(&id).expect("MainStatsView - update_stat: There should be an attribute of the same name in the char").value + offset);
-        f.hp_info.calculate_max_hp(f.level, f.attributes.get_stat("con").expect("There should be a con stat").value);
+        f.attributes.set_stat(&id, f.attributes.get_stat_val(&id).expect("MainStatsView - update_stat: There should be an attribute of the same name in the char") + offset);
+        f.hp_info.calculate_max_hp(f.level, f.attributes.get_stat_val("con").expect("There should be a con stat"));
     });
     view! {
         <div style="display: flex; flex-direction: row; gap: 10px">

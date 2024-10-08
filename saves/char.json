@@ -309,7 +309,10 @@
       "proficiency": "Simple",
       "invested": null,
       "description": "testDesc",
-      "damage": 8
+      "weap_info": {
+        "damage": 8,
+        "w_type": "Melee"
+      }
     }
   ]
 }

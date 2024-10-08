@@ -1,4 +1,4 @@
-use crate::char_data::gear::{Gear, GearType};
+use crate::char_data::gear::{Gear, GearType, WeaponType};
 use crate::char_data::tactics::Tactic;
 use crate::views::action_view::ActionView;
 use crate::views::view_helpers::*;
@@ -15,6 +15,9 @@ pub fn EquipView() -> impl IntoView {
             key=|gear_item| gear_item.name.clone()
             children=move |gear_item| {
                 let item_name = gear_item.name.clone();
+                if gear_item.g_type == GearType::Weapon {
+                    return view! {<WeaponView item=gear_item/>}.into_view();
+                } 
                 let collapse = create_rw_signal(false);
                 view! {
                     <div class="flex-col align-flex-start bright-bg" 
@@ -29,7 +32,7 @@ pub fn EquipView() -> impl IntoView {
                             <div class="tiny-text" inner_html={let desc = gear_item.description.clone(); move || desc.clone()}></div>
                         </Show>
                     </div>
-                }
+                }.into_view()
             }
         />
     }
@@ -46,8 +49,8 @@ pub fn WeaponView(
     if item.g_type != GearType::Weapon {
         err_text = format!("WeaponView: This item is not a weapon: {debug_name_clone}");
     }
-    if item.damage.is_none() {
-        err_text = format!("WeaponView: This item does not have a damage die: {debug_name_clone}");
+    if item.weap_info.is_none() {
+        err_text = format!("WeaponView: This item does not have Weapon Info: {debug_name_clone}");
     }
     if item.proficiency.is_none() {
         err_text = format!("WeaponView: This item does not have a proficiency: {debug_name_clone}");
@@ -82,18 +85,26 @@ pub fn WeaponView(
 
     let get_weapon_view = move || -> Result<View, String> {
         let weapon = get_weapon()?;
-        let stat = get_proficicency(&weapon)?;
+        let mut stat = get_proficicency(&weapon)?;
+        let weap_info = weapon.weap_info.expect("WeaponView: We expect weapon_data by now. It was checked before");
+        let is_melee = weap_info.w_type == WeaponType::Melee;
+        stat.attribute = if is_melee {"str"} else {"dex"}.to_string();
         let attack_bonus = character_data.with(|c|stat.calculate_stat(c));
         let bonus_progression_proficiency = 1; //TODO here automatic bonus progression
-        let prefix =String::from(
+        let prefix = String::from(
             if attack_bonus + bonus_progression_proficiency > 0 {"+"} else {""}
         );
         let dice_amount = 1; //TODO here automatic bonus progression
-        let dice_size = weapon.damage.expect("WeaponView: There should be a weapon damage");
-        let damage = format!("{dice_amount}d{dice_size}");
+        let dice_size = weap_info.damage;
+        let stat_bonus_dmg = if weap_info.w_type == WeaponType::Melee {
+            let val = character_data.with(|c| c.attributes.get_stat_val("str"))?;
+            let prefix = get_prefix(val);
+            format!("{prefix} {val}")
+        } else {"".to_string()};
+        let damage = format!("{dice_amount}d{dice_size}{stat_bonus_dmg}");
         let total_bonus = format!("{0}{1} {2}", prefix, attack_bonus + bonus_progression_proficiency, damage); //TODO str bonus
         Ok(view!{
-            <div class="flex-row">
+            <div class="flex-row bright-bg">
                 <h4>{let name_clone = weapon.name.clone(); move|| name_clone.clone()}</h4>
                 <p>{
                     move || total_bonus.clone()
