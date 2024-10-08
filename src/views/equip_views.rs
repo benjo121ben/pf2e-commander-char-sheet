@@ -99,17 +99,21 @@ pub fn WeaponView(
         let stat_bonus_dmg = if weap_info.w_type == WeaponType::Melee {
             let val = character_data.with(|c| c.attributes.get_stat_val("str"))?;
             let prefix = get_prefix(val);
-            format!("{prefix} {val}")
+            format!(" {prefix}{val}")
         } else {"".to_string()};
-        let damage = format!("{dice_amount}d{dice_size}{stat_bonus_dmg}");
-        let total_bonus = format!("{0}{1} {2}", prefix, attack_bonus + bonus_progression_proficiency, damage); //TODO str bonus
+        let dam_type = weap_info.d_type;
+        let full_damage_text = format!("{dice_amount}d{dice_size}{stat_bonus_dmg}{dam_type}");
+        let total_bonus = format!("{0}{1} {2}", prefix, attack_bonus + bonus_progression_proficiency, full_damage_text); //TODO str bonus
         Ok(view!{
-            <div class="flex-row bright-bg">
-                <h4>{let name_clone = weapon.name.clone(); move|| name_clone.clone()}</h4>
-                <p>{
-                    move || total_bonus.clone()
-                }</p>
-                <p inner_html={move|| weapon.description.clone()}/>
+            <div class="flex-col bright-bg">
+                <div class="flex-row">
+                    <h4>{let name_clone = weapon.name.clone(); move|| name_clone.clone()}</h4>
+                    <p>{
+                        move || total_bonus.clone()
+                    }</p>
+                    <p inner_html={move|| weapon.description.clone()}/>
+                </div>
+                <TraitView trait_names=weapon.traits.clone()/>
             </div>
         }.into_view())
     };

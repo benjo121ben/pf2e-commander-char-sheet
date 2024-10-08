@@ -17,7 +17,8 @@ pub struct Gear {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct WeaponInfo {
     pub damage: i32,
-    pub w_type: WeaponType
+    pub w_type: WeaponType,
+    pub d_type: String
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

@@ -303,15 +303,68 @@
   ],
   "gear_list": [
     {
-      "name": "test",
+      "name": "Flail",
       "g_type": "Weapon",
-      "traits": [],
-      "proficiency": "Simple",
+      "traits": ["Disarm", "Sweep", "Trip"],
+      "proficiency": "Martial",
       "invested": null,
-      "description": "testDesc",
+      "description": "",
+      "weap_info": {
+        "damage": 6,
+        "w_type": "Melee",
+        "d_type": "B"
+      }
+    },
+    {
+      "name": "Lance",
+      "g_type": "Weapon",
+      "traits": ["Deadly d8", "Jousting d6", "Reach"],
+      "proficiency": "Martial",
+      "invested": null,
+      "description": "",
       "weap_info": {
         "damage": 8,
-        "w_type": "Melee"
+        "w_type": "Melee",
+        "d_type": "P"
+      }
+    },
+    {
+      "name": "Longsword",
+      "g_type": "Weapon",
+      "traits": ["Versatile P"],
+      "proficiency": "Martial",
+      "invested": null,
+      "description": "",
+      "weap_info": {
+        "damage": 8,
+        "w_type": "Melee",
+        "d_type": "S"
+      }
+    },
+    {
+      "name": "Sling",
+      "g_type": "Weapon",
+      "traits": ["Propulsive"],
+      "proficiency": "Simple",
+      "invested": null,
+      "description": "",
+      "weap_info": {
+        "damage": 6,
+        "w_type": "Ranged",
+        "d_type": "B"
+      }
+    },
+    {
+      "name": "Shield Spikes",
+      "g_type": "Weapon",
+      "traits": ["Attached to shield"],
+      "proficiency": "Martial",
+      "invested": null,
+      "description": "",
+      "weap_info": {
+        "damage": 6,
+        "w_type": "Melee",
+        "d_type": "P"
       }
     }
   ]
