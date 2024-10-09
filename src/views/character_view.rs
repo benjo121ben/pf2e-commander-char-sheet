@@ -55,8 +55,18 @@ pub fn BaseView(
 pub fn CharView() -> impl IntoView {
     let (read_ketra, write_ketra) = get_base_context("CharView");
     let sheet_error = get_sheet_error_context("CharView");
+    let send_debug = create_action( move |_:&i32| async move {
+        sheet_error.set(SheetError::new(""));
+        let ret_val = ping_server().await;
+        match ret_val {
+            Ok(val) => {log!("Arrived successfully "); sheet_error.set(SheetError::new(&format!("{val}")))},
+            Err(err) => {log!("Error saving "); sheet_error.set(SheetError::new(&err.to_string()))},
+        }
+    });
     view! {
-        <h2>{move || read_ketra.with(|k| k.name.clone())}</h2>
+        <h2
+            on:click=move|_|send_debug.dispatch(0)
+        >{move || read_ketra.with(|k| k.name.clone())}</h2>
         <TopCharViewSection/>
         <Show
             when=move || sheet_error.get().msg != String::from("")

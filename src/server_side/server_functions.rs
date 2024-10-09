@@ -45,3 +45,8 @@ pub async fn get_traits() -> Result<HashMap<String, String>, ServerFnError> {
     }
 }
 
+
+#[server(PingServer, "/api")]
+pub async fn ping_server() -> Result<i32, ServerFnError> {
+    Ok(0)
+}
