@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use serde::{Deserialize, Serialize};
 use super::{conditions::Condition, feats::Feat, gear::Gear, hp::{HpInfo, ShieldInfo}, proficiency::ProficiencyLevel, stats::{Attributes, CalculatedStat, ProficiencyType}, tactics::Tactic};
 
@@ -6,6 +8,8 @@ pub struct Character {
     pub name: String,
 
     pub hp_info: HpInfo, 
+
+    pub horse_hp_info: HpInfo, 
 
     pub shield_info: ShieldInfo,
 
@@ -35,7 +39,52 @@ pub struct Character {
     pub tactics: Vec<Tactic>,
 
     #[serde(default)]
-    pub gear_list: Vec<Gear>
+    pub gear_list: Vec<Gear>,
+
+    #[serde(default)]
+    pub override_prof: HashMap<String, String>
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SimpleCharacter {
+    pub name: String,
+
+    pub hp_info: HpInfo,  
+
+    pub horse_hp_info: HpInfo, 
+
+    pub shield_info: ShieldInfo,
+
+    pub level: i32,
+
+    pub attributes: Vec<i32>,
+
+    #[serde(default)]
+    pub text: String,
+
+    #[serde(default)]
+    pub background: String,
+
+    #[serde(default)]
+    pub class: String,
+
+    #[serde(default)]
+    pub proficiencies: Vec<(String, ProficiencyType, ProficiencyLevel)>,
+
+    #[serde(default)]
+    pub feats: Vec<Feat>,
+
+    #[serde(default)]
+    pub conditions: Vec<Condition>,
+
+    #[serde(default)]
+    pub tactics: Vec<Tactic>,
+
+    #[serde(default)]
+    pub gear_list: Vec<Gear>,
+
+    #[serde(default)]
+    pub override_prof: HashMap<String, String>
 }
 
 impl Character {
@@ -43,6 +92,7 @@ impl Character {
         Character {
             name: String::from(""),
             hp_info: HpInfo::new(0,0,1, 0),
+            horse_hp_info: HpInfo::new(0,0,1, 0),
             shield_info: ShieldInfo::new(20,18,5, false),
             level: 1,
             text: String::from(""),
@@ -53,7 +103,8 @@ impl Character {
             feats: vec![],
             conditions: vec![],
             tactics: vec![],
-            gear_list: vec![]
+            gear_list: vec![],
+            override_prof: HashMap::new()
         }
     }
 }
@@ -131,6 +182,7 @@ impl From<SimpleCharacter> for Character{
         let mut ret_val = Character {
             name: simp_char.name,
             hp_info: simp_char.hp_info,
+            horse_hp_info: simp_char.horse_hp_info,
             shield_info: simp_char.shield_info,
             level: simp_char.level,
             text: simp_char.text,
@@ -141,7 +193,8 @@ impl From<SimpleCharacter> for Character{
             feats: simp_char.feats,
             conditions: simp_char.conditions,
             tactics: simp_char.tactics,
-            gear_list: simp_char.gear_list
+            gear_list: simp_char.gear_list,
+            override_prof: simp_char.override_prof
         };
 
         for skill_tuple in simp_char.proficiencies {
@@ -158,6 +211,7 @@ impl From<&SimpleCharacter> for Character{
         let mut ret_val = Character {
             name: simp_char.name.clone(),
             hp_info: simp_char.hp_info.clone(),
+            horse_hp_info: simp_char.horse_hp_info.clone(),
             shield_info: simp_char.shield_info.clone(),
             level: simp_char.level,
             text: simp_char.text.clone(),
@@ -168,7 +222,8 @@ impl From<&SimpleCharacter> for Character{
             feats: simp_char.feats.clone(),
             conditions: simp_char.conditions.clone(),
             tactics: simp_char.tactics.clone(),
-            gear_list: simp_char.gear_list.clone()
+            gear_list: simp_char.gear_list.clone(),
+            override_prof: simp_char.override_prof.clone()
         };
 
         for skill_tuple in simp_char.proficiencies.clone() {
@@ -180,51 +235,12 @@ impl From<&SimpleCharacter> for Character{
     }
 }
 
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SimpleCharacter {
-    pub name: String,
-
-    pub hp_info: HpInfo, 
-
-    pub shield_info: ShieldInfo,
-
-    pub level: i32,
-
-    pub attributes: Vec<i32>,
-
-    #[serde(default)]
-    pub text: String,
-
-    #[serde(default)]
-    pub background: String,
-
-    #[serde(default)]
-    pub class: String,
-
-    #[serde(default)]
-    pub proficiencies: Vec<(String, ProficiencyType, ProficiencyLevel)>,
-
-    #[serde(default)]
-    pub feats: Vec<Feat>,
-
-    #[serde(default)]
-    pub conditions: Vec<Condition>,
-
-    #[serde(default)]
-    pub tactics: Vec<Tactic>,
-
-    #[serde(default)]
-    pub gear_list: Vec<Gear>
-}
-
-
-
 impl From<Character> for SimpleCharacter{
     fn from(ref_char: Character) -> Self {
         let mut ret_val = SimpleCharacter {
             name: ref_char.name.clone(),
             hp_info: ref_char.hp_info.clone(),
+            horse_hp_info: ref_char.horse_hp_info.clone(),
             shield_info: ref_char.shield_info.clone(),
             level: ref_char.level,
             text: ref_char.text,
@@ -235,7 +251,8 @@ impl From<Character> for SimpleCharacter{
             feats: ref_char.feats.clone(),
             conditions: ref_char.conditions.clone(),
             tactics: ref_char.tactics.clone(),
-            gear_list: ref_char.gear_list.clone()
+            gear_list: ref_char.gear_list.clone(),
+            override_prof: ref_char.override_prof.clone()
         };
 
         ret_val.proficiencies.extend(ref_char.proficiencies.into_iter().map(|s: CalculatedStat| return (s.name, s.p_type, s.proficiency)));
@@ -248,6 +265,7 @@ impl From<&Character> for SimpleCharacter{
         let mut ret_val = SimpleCharacter {
             name: ref_char.name.clone(),
             hp_info: ref_char.hp_info.clone(),
+            horse_hp_info: ref_char.horse_hp_info.clone(),
             shield_info: ref_char.shield_info.clone(),
             level: ref_char.level,
             text: ref_char.text.clone(),
@@ -258,7 +276,8 @@ impl From<&Character> for SimpleCharacter{
             feats: ref_char.feats.clone(),
             conditions: ref_char.conditions.clone(),
             tactics: ref_char.tactics.clone(),
-            gear_list: ref_char.gear_list.clone()
+            gear_list: ref_char.gear_list.clone(),
+            override_prof: ref_char.override_prof.clone()
         };
 
         ret_val.proficiencies.extend(ref_char.proficiencies.clone().into_iter().map(|s: CalculatedStat| return (s.name, s.p_type, s.proficiency)));

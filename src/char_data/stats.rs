@@ -261,7 +261,11 @@ impl CalculatedStat {
     pub fn calculate_stat(self: &Self, character: &Character) -> i32 {
         let attribute_name = self.attribute.clone();
         let char_attributes = &character.attributes;
-        let base_val = char_attributes.get_stat(&attribute_name);
+        let mut base_val: Result<Attribute, String> = char_attributes.get_stat(&attribute_name);
+        match character.override_prof.get(&self.name) {
+            Some(val) => {base_val = char_attributes.get_stat(&val);},
+            None => {},
+        }
         match base_val {
             Ok(val) => val.value + self.proficiency.get_bonus(character.level),
             Err(err) => {log!("{err}"); return -99},

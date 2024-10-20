@@ -7,6 +7,13 @@
     "current_hp": 26,
     "temp_hp": 0
   },
+  "horse_hp_info": {
+    "ancestry_hp": 8,
+    "class_hp": 6,
+    "max_hp": 24,
+    "current_hp": 24,
+    "temp_hp": 0
+  },
   "shield_info": {
     "max_hp": 20,
     "current_hp": 20,
@@ -22,7 +29,7 @@
     0,
     1
   ],
-  "text": "1 Hero Point\nPferd Litta\nNorik Luke                                         \nVaris Andi\nVilly Joseph\n\nGear:\n- Leder rüstung mit wappen der lizardpeople\n\n\nMein Wappen hat eine blaue burgmauer mit rotem himmel, im vordergrund liegt eine Spindel mit weißem Garn. An der Spitze ein einziger Tropfen Blut.\n\nBin auf dem Weg von Maelgoth\nVilly findet broken shit irgendeiner gottheit (Brancala), hat eine vision einer Schlacht\n\nTreffe einen alten mann mit weißem bart als ich unterkunft unter einem Stein suche. Er nennt sich Fiz, ist ein sehr exzentrischer Magier, fragt mich nach meinen Zielen. Er ist hier und dort und überall. Verschwindet als ich mich umdrehe.\n\nSession 2\nDie Opfer der Attacke waren Solamnic knights, sie hatten einen brief unterzeichnet von Mikhaela. Sie sollten die Angriffe von Lizardpeople untersuchen.\n3 monde: Solinari, Lunitari, Nuitari.\nSternzeichen von Tarkhisis und Paladine sind vom Himmel verschwunden\nBecklin, meine Tante, Burgbesitzerin in Vogler.\nGorgeous george und Fancy not george sind die hummer an der Wand von Vinny's taverne.\n\nTan -> hat begonnen Gnomschleuder auf dem Schlossturm von Vogler zu bauen\nKingfisher Festival -> ehrt einer Schlacht in der Nähe des Dorfes\nKutgel Iron-irgendwas -> teil der festivitäten, nachstellung der Schlacht\nBaccharis Uth Estide\nDarrett -> Page von Beklin, steht in ihrer Schuld, wurde als waise aufgenommen\n\nSchlacht war wichtig im Kampf gegen Istar. Lord Uth Vogler hat das Dorf an dem Ort der SChlacht begründet.\n\nSprachen: Common, Dwarven, Elven, Khur, Kharolian",
+  "text": "1 Hero Point\nPferd Litta\nNorik Luke                                         \nVaris Andi\nVilly Joseph\n\nGear:\n- Leder rüstung mit wappen der lizardpeople\n\n\nMein Wappen hat eine blaue burgmauer mit rotem himmel, im vordergrund liegt eine Spindel mit weißem Garn. An der Spitze ein einziger Tropfen Blut.\n\nBin auf dem Weg von Maelgoth\nVilly findet broken shit irgendeiner gottheit (Brancala), hat eine vision einer Schlacht\n\nTreffe einen alten mann mit weißem bart als ich unterkunft unter einem Stein suche. Er nennt sich Fiz, ist ein sehr exzentrischer Magier, fragt mich nach meinen Zielen. Er ist hier und dort und überall. Verschwindet als ich mich umdrehe.\n\nSession 2\nDie Opfer der Attacke waren Solamnic knights, sie hatten einen brief unterzeichnet von Mikhaela. Sie sollten die Angriffe von Lizardpeople untersuchen.\n3 monde: Solinari, Lunitari, Nuitari.\nSternzeichen von Tarkhisis und Paladine sind vom Himmel verschwunden\nBecklin, meine Tante, Burgbesitzerin in Vogler.\nGorgeous george und Fancy not george sind die hummer an der Wand von Vinny's taverne.\n\nTan -> hat begonnen Gnomschleuder auf dem Schlossturm von Vogler zu bauen\nKingfisher Festival -> ehrt einer Schlacht in der Nähe des Dorfes\nKutgel Iron-irgendwas -> teil der festivitäten, nachstellung der Schlacht\nBaccharis Uth Estide\nDarrett -> Page von Beklin, steht in ihrer Schuld, wurde als waise aufgenommen\n\nSchlacht war wichtig im Kampf gegen Istar. Lord Uth Vogler hat das Dorf an dem Ort der SChlacht begründet.",
   "background": "Squire",
   "class": "Commander",
   "proficiencies": [
@@ -179,18 +186,6 @@
   ],
   "feats": [
     {
-      "name": "Fleet",
-      "actions": 0,
-      "feat_types": [
-        "General"
-      ],
-      "traits": [
-        "General"
-      ],
-      "description": "Add 5 feet to speed",
-      "char_additions": []
-    },
-    {
       "name": "Combat Assessment",
       "actions": 1,
       "feat_types": [
@@ -252,6 +247,30 @@
         "General"
       ],
       "description": "Your study of magic allows you to instinctively sense its presence. You can cast 1st-rank Detect Magic at will as an arcane innate spell. If you're a master in Arcana, the spell is heightened to 3rd rank; if you're legendary, it is heightened to 4th rank.",
+      "char_additions": []
+    },
+    {
+      "name": "Fleet",
+      "actions": 0,
+      "feat_types": [
+        "General"
+      ],
+      "traits": [
+        "General"
+      ],
+      "description": "Add 5 feet to speed",
+      "char_additions": []
+    },
+    {
+      "name": "Languages",
+      "actions": 0,
+      "feat_types": [
+        "General"
+      ],
+      "traits": [
+        "General"
+      ],
+      "description": "Common, Dwarven, Elven, Khur, Kharolian",
       "char_additions": []
     }
   ],
@@ -381,5 +400,8 @@
         "d_type": "P"
       }
     }
-  ]
+  ],
+  "override_prof": {
+    "Medicine": "int"
+  }
 }

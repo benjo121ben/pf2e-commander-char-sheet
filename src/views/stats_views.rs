@@ -72,13 +72,30 @@ pub fn MainStatsView() -> impl IntoView {
 
 
 #[component]
-pub fn HpView() -> impl IntoView {
+pub fn HpView(
+    horse: bool
+) -> impl IntoView {
     let (read_char, write_char) = get_base_context("HpView");
     let reset_input = create_rw_signal(false);
     let temp_hp_switch = create_rw_signal(false);
     let get_hp_info = move || read_char.with(|c| {
-        c.hp_info.clone()
+        if horse {
+            c.horse_hp_info.clone()
+        } 
+        else {
+            c.hp_info.clone()
+        }
     });
+    let change_hp = move |val: i32| {
+        write_char.update(|c| {
+            if horse {
+                c.horse_hp_info.change_hp(val)
+            }
+            else {
+                c.hp_info.change_hp(val)
+            }
+        });
+    }; 
     let hp_view = move || {
         let hp = get_hp_info().get_hp();
         let maxhp = get_hp_info().get_max_hp();
@@ -91,8 +108,8 @@ pub fn HpView() -> impl IntoView {
         <div class="flex-col align-stretch">
             <div class="flex-row">
                 <label name="hp_view" id="hp_view"
-                    on:click=move |_| write_char.update(|c| c.hp_info.change_hp(1))
-                    on:contextmenu=move |_| write_char.update(|c| c.hp_info.change_hp(-1))
+                    on:click=move |_| change_hp(1)
+                    on:contextmenu=move |_| change_hp(-1)
                 >
                     {move || hp_view()}
                 </label>
@@ -109,7 +126,10 @@ pub fn HpView() -> impl IntoView {
                                 on:change=move |event: Event| {
                                     write_char.update(|c|{
                                         match event_target_value(&event).parse::<i32>() {
-                                            Ok(number) => c.hp_info.set_temp(number),
+                                            Ok(number) => {
+                                                if horse {c.horse_hp_info.set_temp(number)}
+                                                else {c.hp_info.set_temp(number)}
+                                            },
                                             Err(err) => {log!("HpView/tempHP error getting target value: {err}")},
                                         }
                                     });
@@ -123,7 +143,7 @@ pub fn HpView() -> impl IntoView {
                             <label style="color: blue" name="temphp" id="temphp"
                                 on:contextmenu=move |_| flip_temp_switch()
                             >
-                                {move || read_char.with(|c| c.hp_info.get_temp())}
+                                {move || get_hp_info().get_temp()}
                             </label>
                         }.into_view()
                     }
@@ -133,15 +153,13 @@ pub fn HpView() -> impl IntoView {
                 type="number" 
                 id="hp_inp" 
                 class="hp-input"
-                placeholder="HP Change"
+                placeholder={move || if horse {"Horse"}else{"HP Change"}}
                 prop:value=move || {let _ = reset_input.get(); return String::from("")} 
                 on:change=move |event: Event|{ 
-                    write_char.update(|c|{
-                        match event_target_value(&event).parse::<i32>() {
-                            Ok(number) => c.hp_info.change_hp(number),
-                            Err(err) => {log!("HpView/hpInput error getting target value: {err}")},
-                        }
-                    });
+                    match event_target_value(&event).parse::<i32>() {
+                        Ok(number) => change_hp(number),
+                        Err(err) => {log!("HpView/hpInput error getting target value: {err}")},
+                    }
                     reset_input.update(|f| *f=!*f);
                 }
             />

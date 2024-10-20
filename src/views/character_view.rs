@@ -2,6 +2,8 @@ use std::collections::HashMap;
 
 use crate::char_data::character::*;
 use crate::char_data::conditions::Condition;
+use crate::char_data::proficiency::ProficiencyLevel;
+use crate::char_data::stats::CalculatedStat;
 use crate::char_data::stats::ProficiencyType;
 use crate::error_template::SheetError;
 use crate::server_side::server_functions::*;
@@ -48,6 +50,7 @@ pub fn BaseView(
     provide_context(trait_data.clone());
     view!{
         <CharView/>
+        <HorseSection/>
     }
 }
 
@@ -97,9 +100,6 @@ pub fn CharView() -> impl IntoView {
                 <FeatView/>
             </section>
         </div>
-        <div class="flex-row">
-        
-        </div>
     }
 }
 
@@ -114,10 +114,12 @@ pub fn TopCharViewSection() -> impl IntoView {
                         on:click=move |_| {write_ketra.update(move |c| {
                             c.level += 1;
                             c.hp_info.calculate_max_hp(c.level, c.attributes.get_stat_val("con").expect("There should be a con stat"));
+                            c.horse_hp_info.calculate_max_hp(c.level, 2);
                         })}
                         on:contextmenu=move |_| {write_ketra.update(move |c| {
                             c.level -= 1;
                             c.hp_info.calculate_max_hp(c.level, c.attributes.get_stat_val("con").expect("There should be a con stat"));
+                            c.horse_hp_info.calculate_max_hp(c.level, 2);
                         })}
                     >
                         Level {move || read_ketra.with(|k| k.level)}
@@ -133,7 +135,7 @@ pub fn TopCharViewSection() -> impl IntoView {
                 <MainStatsView/>
             </section>
             <section class="align-center" id="hp_section">
-                <HpView/>
+                <HpView horse=false/>
             </section>
             <section class="align-center" id="shield_section">
                 <ShieldView/>
@@ -170,6 +172,37 @@ pub fn ProficiencySidebar(
             </Show>
             <button on:click=move |_| show_edit_stats.update(|b| *b=!*b) style="justify-content:center">Edit</button>
         </section>
+    }
+}
+
+#[component]
+pub fn HorseSection(
+) -> impl IntoView {
+    let (read_c, _) = get_base_context("HorseSection");
+    let get_bonus = move || {
+        let level = read_c.with(|c| c.level);
+        ProficiencyLevel::Trained.get_bonus(level)
+    };
+    let get_att = move || {
+        get_bonus() + 3
+    };
+    let get_ac = move || {
+        get_bonus() + 2 + 10
+    };
+    view! {
+        <div class="flex-row">
+            <section class="align-center">
+                <HpView horse=true/>
+            </section>
+            <section class="align-center">
+                <label>AC: {get_ac}</label>
+            </section>
+            <section class="align-center">
+                <label>Attack: {get_att}</label>
+            </section>
+        </div>
+        <img src="horse.png" style="display:flex"/>
+        <img src="support.png" style="display:flex"/>
     }
 }
 
