@@ -3,15 +3,15 @@
   "hp_info": {
     "ancestry_hp": 8,
     "class_hp": 8,
-    "max_hp": 26,
-    "current_hp": 26,
+    "max_hp": 35,
+    "current_hp": 35,
     "temp_hp": 0
   },
   "horse_hp_info": {
     "ancestry_hp": 8,
     "class_hp": 6,
-    "max_hp": 24,
-    "current_hp": 24,
+    "max_hp": 32,
+    "current_hp": 32,
     "temp_hp": 0
   },
   "shield_info": {
@@ -20,7 +20,7 @@
     "hardness": 5,
     "raised": false
   },
-  "level": 2,
+  "level": 3,
   "attributes": [
     3,
     1,
@@ -29,7 +29,7 @@
     0,
     1
   ],
-  "text": "1 Hero Point\nPferd Litta\nNorik Luke                                         \nVaris Andi\nVilly Joseph\n\nGear:\n- Leder rüstung mit wappen der lizardpeople\n\n\nMein Wappen hat eine blaue burgmauer mit rotem himmel, im vordergrund liegt eine Spindel mit weißem Garn. An der Spitze ein einziger Tropfen Blut.\n\nBin auf dem Weg von Maelgoth\nVilly findet broken shit irgendeiner gottheit (Brancala), hat eine vision einer Schlacht\n\nTreffe einen alten mann mit weißem bart als ich unterkunft unter einem Stein suche. Er nennt sich Fiz, ist ein sehr exzentrischer Magier, fragt mich nach meinen Zielen. Er ist hier und dort und überall. Verschwindet als ich mich umdrehe.\n\nSession 2\nDie Opfer der Attacke waren Solamnic knights, sie hatten einen brief unterzeichnet von Mikhaela. Sie sollten die Angriffe von Lizardpeople untersuchen.\n3 monde: Solinari, Lunitari, Nuitari.\nSternzeichen von Tarkhisis und Paladine sind vom Himmel verschwunden\nBecklin, meine Tante, Burgbesitzerin in Vogler.\nGorgeous george und Fancy not george sind die hummer an der Wand von Vinny's taverne.\n\nTan -> hat begonnen Gnomschleuder auf dem Schlossturm von Vogler zu bauen\nKingfisher Festival -> ehrt einer Schlacht in der Nähe des Dorfes\nKutgel Iron-irgendwas -> teil der festivitäten, nachstellung der Schlacht\nBaccharis Uth Estide\nDarrett -> Page von Beklin, steht in ihrer Schuld, wurde als waise aufgenommen\n\nSchlacht war wichtig im Kampf gegen Istar. Lord Uth Vogler hat das Dorf an dem Ort der SChlacht begründet.",
+  "text": "0 Hero Point\nPferd Litta\nNorik Luke                                         \nVaris Andi\nVinny Joseph\n\n+1 Warfare Lore\n\nGear:\n- Leder rüstung mit wappen der lizardpeople\n- Medicine Kit\n\n\nMein Wappen hat eine blaue burgmauer mit rotem himmel, im vordergrund liegt eine Spindel mit weißem Garn. An der Spitze ein einziger Tropfen Blut.\n\nSession 3\nTarkhisis Warband sitzt wenige Stunden von Vogler entfernt",
   "background": "Squire",
   "class": "Commander",
   "proficiencies": [
@@ -71,7 +71,7 @@
     [
       "Intimidation",
       "Skill",
-      "Trained"
+      "Expert"
     ],
     [
       "Medicine",
@@ -136,7 +136,7 @@
     [
       "Warfare Lore",
       "Lore",
-      "Trained"
+      "Expert"
     ],
     [
       "Unarmored",
@@ -237,6 +237,18 @@
       "char_additions": []
     },
     {
+      "name": "Warfare Expertise",
+      "actions": 0,
+      "feat_types": [
+        "General"
+      ],
+      "traits": [
+        "Commander"
+      ],
+      "description": "Your knowledge of war and strategy grows and guides your decisions in battle. You gain expert proficiency in Warfare Lore. You can use Warfare Lore to Recall Knowledge about most creatures regardless of type, but typically only to determine whether they can be reasoned with, their most notable offensive abilities, and whether one of their saving throws is particularly weak. The GM can decide to allow additional questions to be answered when Recalling Knowledge with Warfare Lore as appropriate to the situation. In addition, as long as you are observing at least one opponent when initiative is rolled, you can use Warfare Lore for your initiative roll.",
+      "char_additions": []
+    },
+    {
       "name": "Arcane Sense",
       "actions": 0,
       "feat_types": [
@@ -259,6 +271,18 @@
         "General"
       ],
       "description": "Add 5 feet to speed",
+      "char_additions": []
+    },
+    {
+      "name": "Incredible Initiative",
+      "actions": 0,
+      "feat_types": [
+        "General"
+      ],
+      "traits": [
+        "General"
+      ],
+      "description": "You react more quickly than others can. You gain a +2 circumstance bonus to initiative rolls.",
       "char_additions": []
     },
     {
