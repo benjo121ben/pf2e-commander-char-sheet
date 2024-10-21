@@ -1,5 +1,6 @@
 {
   "name": "Ketrania Valenzia Adriaste Uth Viharin VII",
+  "level": 3,
   "hp_info": {
     "ancestry_hp": 8,
     "class_hp": 8,
@@ -7,20 +8,6 @@
     "current_hp": 35,
     "temp_hp": 0
   },
-  "horse_hp_info": {
-    "ancestry_hp": 8,
-    "class_hp": 6,
-    "max_hp": 32,
-    "current_hp": 32,
-    "temp_hp": 0
-  },
-  "shield_info": {
-    "max_hp": 20,
-    "current_hp": 20,
-    "hardness": 5,
-    "raised": false
-  },
-  "level": 3,
   "attributes": [
     3,
     1,
@@ -29,9 +16,54 @@
     0,
     1
   ],
-  "text": "0 Hero Point\nPferd Litta\nNorik Luke                                         \nVaris Andi\nVinny Joseph\n\n+1 Warfare Lore\n\nGear:\n- Leder rüstung mit wappen der lizardpeople\n- Medicine Kit\n\n\nMein Wappen hat eine blaue burgmauer mit rotem himmel, im vordergrund liegt eine Spindel mit weißem Garn. An der Spitze ein einziger Tropfen Blut.\n\nSession 3\nTarkhisis Warband sitzt wenige Stunden von Vogler entfernt",
+  "text": "1 Hero Point\nPferd Litta\nNorik Luke                                         \nVaris Andi\nVinny Joseph\n\nGear:\n- Leder rüstung mit wappen der lizardpeople\n- Medicine Kit\n\n\nMein Wappen hat eine blaue burgmauer mit rotem himmel, im vordergrund liegt eine Spindel mit weißem Garn. An der Spitze ein einziger Tropfen Blut.\n\nSession 3\nTarkhisis Warband sitzt wenige Stunden von Vogler entfernt",
   "background": "Squire",
   "class": "Commander",
+  "tactics": [
+    {
+      "name": "FORM UP!",
+      "actions": 1,
+      "selected": true,
+      "traits": [
+        "Commander",
+        "Tactic"
+      ],
+      "description": "You signal your team to move into position together. Signal all squadmates affected by your commander’s banner; each can immediately Stride as a reaction, though each must end their movement inside your banner’s aura."
+    },
+    {
+      "name": "Defensive Retreat",
+      "actions": 2,
+      "selected": false,
+      "traits": [
+        "Commander",
+        "Tactic",
+        "Banner"
+      ],
+      "description": "You call for a careful retreat. Signal all squadmates who can hear or see your signal; each can immediately Step up to three times as a free action. Each Step must take them farther away from at least one hostile creature they are observing, and can only take them closer to a hostile creature if doing so is the only way for them to move towards safety (such as if they’re surrounded)."
+    },
+    {
+      "name": "End it",
+      "actions": 2,
+      "selected": false,
+      "traits": [
+        "Commander",
+        "Tactic",
+        "Incapacitation",
+        "Banner"
+      ],
+      "description": "<b>Requirements</b> You and your allies currently outnumber enemies on the battlefield and you or a squadmate have reduced an enemy to 0 Hit Points since the start of your last turn.<br/> At your proclamation that victory is already at hand, your allies march forward with an authoritative stomp, scattering your enemies in terror. Signal all squadmates affected by your commander’s banner; you and each ally can Step directly toward a hostile creature they are observing as a free action. Any hostile creatures within 10 feet of you or a squadmate after this movement must attempt a Will save against your class DC; on a failure they become fleeing for 1 round and on a critical failure they become fleeing for 1 round and frightened 2. This is an emotion, fear, and mental effect."
+    },
+    {
+      "name": "Pincer Attack",
+      "actions": 1,
+      "selected": true,
+      "traits": [
+        "Commander",
+        "Tactic"
+      ],
+      "description": "You signal an aggressive formation designed to exploit enemies’ vulnerabilities. Signal all squadmates affected by your commander’s banner; each can Step as a free action. If any of your allies end this movement adjacent to an opponent, that opponent is off-guard to melee attacks from you and all other squadmates who responded to Pincer Attack until the start of your next turn."
+    }
+  ],
   "proficiencies": [
     [
       "Acrobatics",
@@ -185,165 +217,17 @@
     ]
   ],
   "feats": [
-    {
-      "name": "Combat Assessment",
-      "actions": 1,
-      "feat_types": [
-        "Class"
-      ],
-      "traits": [
-        "Fighter",
-        "Commander"
-      ],
-      "description": "You make a telegraphed attack to learn about your foe. Make a melee Strike. On a hit, you can immediately attempt a check to Recall Knowledge about the target. On a critical hit, you gain a +2 circumstance bonus to the check to Recall Knowledge. The target is temporarily immune to Combat Assessment for 1 day.",
-      "char_additions": []
-    },
-    {
-      "name": "Combat Medic",
-      "actions": 0,
-      "feat_types": [
-        "Class"
-      ],
-      "traits": [
-        "Fighter"
-      ],
-      "description": "Requirements You can prepare at least two tactics. You’re trained in battlefield triage and wound treatment. You are trained in Medicine and can use your Intelligence modifier in place of your Wisdom modifier for Medicine checks. You gain the Battle Medicine feat (Player Core 253).",
-      "char_additions": []
-    },
-    {
-      "name": "Cavalier Dedication",
-      "actions": 0,
-      "feat_types": [
-        "General"
-      ],
-      "traits": [
-        "Archetype",
-        "Dedication"
-      ],
-      "description": "Prerequisites trained in Nature or Society You gain a young animal companion (Player Core 206) that serves as your mount. You can choose from animal companions with the mount special ability, as well as any additional options from your pledge (see Cavalier Pledges sidebar, page 193), as determined by your GM. You must choose an animal companion that’s at least one size larger than you, but if the animal usually starts as Small, you can begin with a Medium version of that animal (changing no statistics other than its size). Special If you have pledged yourself to a cause, you can take a second dedication feat closely tied to that cause even if you haven’t taken two additional cavalier feats. For instance, if you pledged yourself to fight crime with a group of vigilantes, you could take the vigilante dedication without first completing the cavalier archetype. The GM determines what archetypes, if any, are valid choices.",
-      "char_additions": []
-    },
-    {
-      "name": "Armor Assist",
-      "actions": 0,
-      "feat_types": [
-        "General"
-      ],
-      "traits": [
-        "General",
-        "Skill"
-      ],
-      "description": "After your service aiding armored combatants, you are practiced in helping yourself and others don heavy gear.<br/>You can attempt an Athletics or Warfare Lore check with a DC determined by the GM (but usually 15 for common armor, DC 20 for uncommon armor, and DC 25 for rare armor) to halve the time you take to don armor.<br/>You can halve an ally's time to don armor by working with them to don the armor and succeeding at an Athletics or Warfare Lore check against the same DC.",
-      "char_additions": []
-    },
-    {
-      "name": "Warfare Expertise",
-      "actions": 0,
-      "feat_types": [
-        "General"
-      ],
-      "traits": [
-        "Commander"
-      ],
-      "description": "Your knowledge of war and strategy grows and guides your decisions in battle. You gain expert proficiency in Warfare Lore. You can use Warfare Lore to Recall Knowledge about most creatures regardless of type, but typically only to determine whether they can be reasoned with, their most notable offensive abilities, and whether one of their saving throws is particularly weak. The GM can decide to allow additional questions to be answered when Recalling Knowledge with Warfare Lore as appropriate to the situation. In addition, as long as you are observing at least one opponent when initiative is rolled, you can use Warfare Lore for your initiative roll.",
-      "char_additions": []
-    },
-    {
-      "name": "Arcane Sense",
-      "actions": 0,
-      "feat_types": [
-        "Skill"
-      ],
-      "traits": [
-        "Skill",
-        "General"
-      ],
-      "description": "Your study of magic allows you to instinctively sense its presence. You can cast 1st-rank Detect Magic at will as an arcane innate spell. If you're a master in Arcana, the spell is heightened to 3rd rank; if you're legendary, it is heightened to 4th rank.",
-      "char_additions": []
-    },
-    {
-      "name": "Fleet",
-      "actions": 0,
-      "feat_types": [
-        "General"
-      ],
-      "traits": [
-        "General"
-      ],
-      "description": "Add 5 feet to speed",
-      "char_additions": []
-    },
-    {
-      "name": "Incredible Initiative",
-      "actions": 0,
-      "feat_types": [
-        "General"
-      ],
-      "traits": [
-        "General"
-      ],
-      "description": "You react more quickly than others can. You gain a +2 circumstance bonus to initiative rolls.",
-      "char_additions": []
-    },
-    {
-      "name": "Languages",
-      "actions": 0,
-      "feat_types": [
-        "General"
-      ],
-      "traits": [
-        "General"
-      ],
-      "description": "Common, Dwarven, Elven, Khur, Kharolian",
-      "char_additions": []
-    }
+    "Combat Assessment",
+    "Combat Medic",
+    "Warfare Expertise",
+    "Arcane Sense",
+    "Cavalier Dedication",
+    "Armor Assist",
+    "Incredible Initiative",
+    "Fleet",
+    "Languages"
   ],
   "conditions": [],
-  "tactics": [
-    {
-      "name": "FORM UP!",
-      "actions": 1,
-      "selected": true,
-      "traits": [
-        "Commander",
-        "Tactic"
-      ],
-      "description": "You signal your team to move into position together. Signal all squadmates affected by your commander’s banner; each can immediately Stride as a reaction, though each must end their movement inside your banner’s aura."
-    },
-    {
-      "name": "Defensive Retreat",
-      "actions": 2,
-      "selected": false,
-      "traits": [
-        "Commander",
-        "Tactic",
-        "Banner"
-      ],
-      "description": "You call for a careful retreat. Signal all squadmates who can hear or see your signal; each can immediately Step up to three times as a free action. Each Step must take them farther away from at least one hostile creature they are observing, and can only take them closer to a hostile creature if doing so is the only way for them to move towards safety (such as if they’re surrounded)."
-    },
-    {
-      "name": "End it",
-      "actions": 2,
-      "selected": false,
-      "traits": [
-        "Commander",
-        "Tactic",
-        "Incapacitation",
-        "Banner"
-      ],
-      "description": "<b>Requirements</b> You and your allies currently outnumber enemies on the battlefield and you or a squadmate have reduced an enemy to 0 Hit Points since the start of your last turn.<br/> At your proclamation that victory is already at hand, your allies march forward with an authoritative stomp, scattering your enemies in terror. Signal all squadmates affected by your commander’s banner; you and each ally can Step directly toward a hostile creature they are observing as a free action. Any hostile creatures within 10 feet of you or a squadmate after this movement must attempt a Will save against your class DC; on a failure they become fleeing for 1 round and on a critical failure they become fleeing for 1 round and frightened 2. This is an emotion, fear, and mental effect."
-    },
-    {
-      "name": "Pincer Attack",
-      "actions": 1,
-      "selected": true,
-      "traits": [
-        "Commander",
-        "Tactic"
-      ],
-      "description": "You signal an aggressive formation designed to exploit enemies’ vulnerabilities. Signal all squadmates affected by your commander’s banner; each can Step as a free action. If any of your allies end this movement adjacent to an opponent, that opponent is off-guard to melee attacks from you and all other squadmates who responded to Pincer Attack until the start of your next turn."
-    }
-  ],
   "gear_list": [
     {
       "name": "Flail",
@@ -425,7 +309,29 @@
       }
     }
   ],
+  "shield_info": {
+    "max_hp": 20,
+    "current_hp": 20,
+    "hardness": 5,
+    "raised": false
+  },
+  "horse_hp_info": {
+    "ancestry_hp": 8,
+    "class_hp": 6,
+    "max_hp": 32,
+    "current_hp": 32,
+    "temp_hp": 0
+  },
   "override_prof": {
     "Medicine": "int"
-  }
+  },
+  "abp_data": {
+    "attack_pot": 1,
+    "skill_pot": {
+      "Warfare Lore": 1
+    },
+    "def_pot": 0,
+    "attack_dice": 1
+  },
+  "flags": {}
 }

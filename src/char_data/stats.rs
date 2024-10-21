@@ -262,12 +262,16 @@ impl CalculatedStat {
         let attribute_name = self.attribute.clone();
         let char_attributes = &character.attributes;
         let mut base_val: Result<Attribute, String> = char_attributes.get_stat(&attribute_name);
+        let skill_auto_bonus_prog = match character.abp_data.skill_pot.get(&self.name) {
+            Some(value) => *value,
+            None => 0,
+        };
         match character.override_prof.get(&self.name) {
             Some(val) => {base_val = char_attributes.get_stat(&val);},
             None => {},
         }
         match base_val {
-            Ok(val) => val.value + self.proficiency.get_bonus(character.level),
+            Ok(val) => val.value + skill_auto_bonus_prog + self.proficiency.get_bonus(character.level),
             Err(err) => {log!("{err}"); return -99},
         }
     }

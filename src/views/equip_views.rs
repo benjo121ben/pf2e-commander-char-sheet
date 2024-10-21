@@ -90,20 +90,24 @@ pub fn WeaponView(
         let is_melee = weap_info.w_type == WeaponType::Melee;
         stat.attribute = if is_melee {"str"} else {"dex"}.to_string();
         let attack_bonus = character_data.with(|c|stat.calculate_stat(c));
-        let bonus_progression_proficiency = 1; //TODO here automatic bonus progression
+        let bonus_progression_proficiency = character_data.with(|c|c.abp_data.attack_pot);
         let prefix = String::from(
             if attack_bonus + bonus_progression_proficiency > 0 {"+"} else {""}
         );
-        let dice_amount = 1; //TODO here automatic bonus progression
+        let dice_amount = character_data.with(|c|c.abp_data.attack_dice);
         let dice_size = weap_info.damage;
-        let stat_bonus_dmg = if weap_info.w_type == WeaponType::Melee {
-            let val = character_data.with(|c| c.attributes.get_stat_val("str"))?;
+        let stat_bonus_dmg = if weap_info.w_type == WeaponType::Melee || weapon.traits.iter().any(|t|t=="Propulsive") {
+            let mut val = character_data.with(|c| c.attributes.get_stat_val("str"))?;
+            if weapon.traits.iter().any(|t|t=="Propulsive") {
+                val /= 2;
+            }
             let prefix = get_prefix(val);
             format!(" {prefix}{val}")
-        } else {"".to_string()};
+        }
+        else {"".to_string()};
         let dam_type = weap_info.d_type;
         let full_damage_text = format!("{dice_amount}d{dice_size}{stat_bonus_dmg}{dam_type}");
-        let total_bonus = format!("{0}{1} {2}", prefix, attack_bonus + bonus_progression_proficiency, full_damage_text); //TODO str bonus
+        let total_bonus = format!("{0}{1} {2}", prefix, attack_bonus + bonus_progression_proficiency, full_damage_text);
         Ok(view!{
             <div class="flex-col bright-bg">
                 <div class="flex-row">

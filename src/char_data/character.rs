@@ -1,61 +1,63 @@
 use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
-use super::{conditions::Condition, feats::Feat, gear::Gear, hp::{HpInfo, ShieldInfo}, proficiency::ProficiencyLevel, stats::{Attributes, CalculatedStat, ProficiencyType}, tactics::Tactic};
+use super::{auto_bonus_prog::AbpData, conditions::Condition, gear::Gear, hp::{HpInfo, ShieldInfo}, proficiency::ProficiencyLevel, stats::{Attributes, CalculatedStat, ProficiencyType}, tactics::Tactic};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Character {
     pub name: String,
 
     pub hp_info: HpInfo, 
-
-    pub horse_hp_info: HpInfo, 
-
+    
     pub shield_info: ShieldInfo,
-
+    
     pub level: i32,
-
+    
     pub attributes: Attributes,
-
+    
     #[serde(default)]
     pub text: String,
-
+    
     #[serde(default)]
     pub background: String,
-
+    
     #[serde(default)]
     pub class: String,
-
+    
     #[serde(default)]
     pub proficiencies: Vec<CalculatedStat>,
-
-    #[serde(default)]
-    pub feats: Vec<Feat>,
-
-    #[serde(default)]
-    pub conditions: Vec<Condition>,
 
     #[serde(default)]
     pub tactics: Vec<Tactic>,
 
     #[serde(default)]
-    pub gear_list: Vec<Gear>,
-
+    pub feats: Vec<String>,
+    
     #[serde(default)]
-    pub override_prof: HashMap<String, String>
+    pub conditions: Vec<Condition>,
+    
+    #[serde(default)]
+    pub gear_list: Vec<Gear>,
+    
+    pub horse_hp_info: HpInfo, 
+    
+    #[serde(default)]
+    pub override_prof: HashMap<String, String>,
+    
+    #[serde(default)]
+    pub abp_data: AbpData,
+    
+    #[serde(default)]
+    pub flags: HashMap<String, bool>
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SimpleCharacter {
     pub name: String,
-
-    pub hp_info: HpInfo,  
-
-    pub horse_hp_info: HpInfo, 
-
-    pub shield_info: ShieldInfo,
-
+    
     pub level: i32,
+
+    pub hp_info: HpInfo,
 
     pub attributes: Vec<i32>,
 
@@ -69,22 +71,32 @@ pub struct SimpleCharacter {
     pub class: String,
 
     #[serde(default)]
+    pub tactics: Vec<Tactic>,
+
+    #[serde(default)]
     pub proficiencies: Vec<(String, ProficiencyType, ProficiencyLevel)>,
 
     #[serde(default)]
-    pub feats: Vec<Feat>,
+    pub feats: Vec<String>,
 
     #[serde(default)]
     pub conditions: Vec<Condition>,
 
     #[serde(default)]
-    pub tactics: Vec<Tactic>,
+    pub gear_list: Vec<Gear>,   
+
+    pub shield_info: ShieldInfo,
+
+    pub horse_hp_info: HpInfo,
 
     #[serde(default)]
-    pub gear_list: Vec<Gear>,
+    pub override_prof: HashMap<String, String>,
 
     #[serde(default)]
-    pub override_prof: HashMap<String, String>
+    pub abp_data: AbpData,
+
+    #[serde(default)]
+    pub flags: HashMap<String, bool>
 }
 
 impl Character {
@@ -104,7 +116,9 @@ impl Character {
             conditions: vec![],
             tactics: vec![],
             gear_list: vec![],
-            override_prof: HashMap::new()
+            override_prof: HashMap::new(),
+            abp_data: AbpData::default(),
+            flags: HashMap::new(),
         }
     }
 }
@@ -194,7 +208,9 @@ impl From<SimpleCharacter> for Character{
             conditions: simp_char.conditions,
             tactics: simp_char.tactics,
             gear_list: simp_char.gear_list,
-            override_prof: simp_char.override_prof
+            override_prof: simp_char.override_prof,
+            abp_data: simp_char.abp_data,
+            flags: simp_char.flags
         };
 
         for skill_tuple in simp_char.proficiencies {
@@ -223,7 +239,9 @@ impl From<&SimpleCharacter> for Character{
             conditions: simp_char.conditions.clone(),
             tactics: simp_char.tactics.clone(),
             gear_list: simp_char.gear_list.clone(),
-            override_prof: simp_char.override_prof.clone()
+            override_prof: simp_char.override_prof.clone(),
+            abp_data: simp_char.abp_data.clone(),
+            flags: simp_char.flags.clone()
         };
 
         for skill_tuple in simp_char.proficiencies.clone() {
@@ -252,7 +270,9 @@ impl From<Character> for SimpleCharacter{
             conditions: ref_char.conditions.clone(),
             tactics: ref_char.tactics.clone(),
             gear_list: ref_char.gear_list.clone(),
-            override_prof: ref_char.override_prof.clone()
+            override_prof: ref_char.override_prof.clone(),
+            abp_data: ref_char.abp_data.clone(),
+            flags: ref_char.flags.clone()
         };
 
         ret_val.proficiencies.extend(ref_char.proficiencies.into_iter().map(|s: CalculatedStat| return (s.name, s.p_type, s.proficiency)));
@@ -277,7 +297,9 @@ impl From<&Character> for SimpleCharacter{
             conditions: ref_char.conditions.clone(),
             tactics: ref_char.tactics.clone(),
             gear_list: ref_char.gear_list.clone(),
-            override_prof: ref_char.override_prof.clone()
+            override_prof: ref_char.override_prof.clone(),
+            abp_data: ref_char.abp_data.clone(),
+            flags: ref_char.flags.clone()
         };
 
         ret_val.proficiencies.extend(ref_char.proficiencies.clone().into_iter().map(|s: CalculatedStat| return (s.name, s.p_type, s.proficiency)));

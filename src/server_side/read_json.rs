@@ -1,8 +1,10 @@
 use leptos::logging::log;
+use serde::de::DeserializeOwned;
+use std::hash::Hash;
 use std::{collections::HashMap, error::Error};
 use std::fs::read_to_string;
 use std::path::Path;
-use crate::char_data::{character::{Character, SimpleCharacter}, conditions::Condition};
+use crate::char_data::character::{Character, SimpleCharacter};
 
 
 pub fn read_char_from_file<P: AsRef<Path>>(path: P) -> Result<Character, Box<dyn Error>> {
@@ -31,7 +33,7 @@ pub fn read_char_from_file<P: AsRef<Path>>(path: P) -> Result<Character, Box<dyn
 
 }
 
-pub fn read_conditions_from_file<P: AsRef<Path>>(path: P) -> Result<Vec<Condition>, Box<dyn Error>> {
+pub fn read_vector_from_file<T: DeserializeOwned, P: AsRef<Path>>(path: P, debug_name: &str) -> Result<Vec<T>, Box<dyn Error>> {
 
     // Open the file in read-only mode with buffer.
     let check_file_path_result = std::fs::exists(&path);
@@ -39,11 +41,11 @@ pub fn read_conditions_from_file<P: AsRef<Path>>(path: P) -> Result<Vec<Conditio
         Ok(exists) => {
             if exists {
                 let file_str = read_to_string(&path)?;
-                let conditions: Vec<Condition> = serde_json::from_str(&file_str)?;
-                return Ok(conditions);
+                let objects: Vec<T> = serde_json::from_str(&file_str)?;
+                return Ok(objects);
             }
             else {
-                let errorstring = format!("Filepath does not exist: Cannot build Conditions");
+                let errorstring = format!("Filepath does not exist: Cannot build {debug_name}");
                 log!("{errorstring}");
                 return Err(Box::from(errorstring));
             }
@@ -58,7 +60,7 @@ pub fn read_conditions_from_file<P: AsRef<Path>>(path: P) -> Result<Vec<Conditio
 
 }
 
-pub fn read_traits_from_file<P: AsRef<Path>>(path: P) -> Result<HashMap<String, String>, Box<dyn Error>> {
+pub fn read_map_from_file<T: DeserializeOwned + Eq + Hash, D: DeserializeOwned + Eq + Hash, P: AsRef<Path>>(path: P, debug_name: &str) -> Result<HashMap<T, D>, Box<dyn Error>> {
 
     // Open the file in read-only mode with buffer.
     let check_file_path_result = std::fs::exists(&path);
@@ -66,11 +68,11 @@ pub fn read_traits_from_file<P: AsRef<Path>>(path: P) -> Result<HashMap<String, 
         Ok(exists) => {
             if exists {
                 let file_str = read_to_string(&path)?;
-                let conditions: HashMap<String, String> = serde_json::from_str(&file_str)?;
-                return Ok(conditions);
+                let objects: HashMap<T, D> = serde_json::from_str(&file_str)?;
+                return Ok(objects);
             }
             else {
-                let errorstring = format!("Filepath does not exist: Cannot build Traits");
+                let errorstring = format!("Filepath does not exist: Cannot build {debug_name}");
                 log!("{errorstring}");
                 return Err(Box::from(errorstring));
             }

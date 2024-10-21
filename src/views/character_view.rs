@@ -2,8 +2,8 @@ use std::collections::HashMap;
 
 use crate::char_data::character::*;
 use crate::char_data::conditions::Condition;
+use crate::char_data::feats::Feat;
 use crate::char_data::proficiency::ProficiencyLevel;
-use crate::char_data::stats::CalculatedStat;
 use crate::char_data::stats::ProficiencyType;
 use crate::error_template::SheetError;
 use crate::server_side::server_functions::*;
@@ -17,6 +17,7 @@ use leptos::logging::log;
 #[component]
 pub fn BaseView(
     char: Character,
+    feats: Vec<Feat>,
     conditions: Vec<Condition>,
     trait_data: HashMap<String, String>
 ) -> impl IntoView {
@@ -48,6 +49,8 @@ pub fn BaseView(
     provide_context(write_ketra);
     provide_context(conditions.clone());
     provide_context(trait_data.clone());
+    let feat_map: HashMap<String, Feat> = feats.into_iter().map(|feat: Feat| (feat.name.clone(), feat)).collect();
+    provide_context(feat_map);
     view!{
         <CharView/>
         <HorseSection/>

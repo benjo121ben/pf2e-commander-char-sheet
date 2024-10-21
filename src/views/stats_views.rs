@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+use crate::char_data::feats::Feat;
 use crate::char_data::proficiency::ProficiencyLevel;
 use crate::char_data::stats::ProficiencyType;
 use super::action_view::ActionView;
@@ -380,13 +381,27 @@ pub fn DefenseView() -> impl IntoView {
 
 #[component]
 pub fn FeatView() -> impl IntoView {
+    let full_feat_map = use_context::<HashMap<String, Feat>>().expect("FeatView: Expected full feat list to be set");
     let (read_character, _) = get_base_context("FeatView");
-
+    
+    let get_feat_list = move || {
+        let mut ret_list = vec![];
+        let mut missing_feats = vec![];
+        read_character.with(|c| {
+            c.feats.iter().for_each(|feat_name|{
+                match full_feat_map.get(feat_name) {
+                    Some(feat) => ret_list.push(feat.clone()),
+                    None => missing_feats.push(feat_name.clone()),
+                }
+            });
+        });
+        ret_list
+    };
     view!{
         <div class="flex-col">
             <h4>Feats</h4>
             <For
-                each={move || read_character.with(|c| c.feats.clone())}
+                each={move || get_feat_list()}
                 key={move |feat| feat.name.clone()}
                 children=move |feat| {
                     let collapse = create_rw_signal(false);
