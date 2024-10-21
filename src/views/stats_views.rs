@@ -430,15 +430,28 @@ pub fn FeatView() -> impl IntoView {
 pub fn TraitView(
     trait_names: Vec<String>
 ) -> impl IntoView {
-    let traitList = use_context::<HashMap<String, String>>().expect("Trait Hashmap should be set by now");
+    let traitMap = use_context::<HashMap<String, String>>().expect("Trait Hashmap should be set by now");
     view!{
         <div class="flex-row">{
             trait_names.into_iter().map(|t| {
-                let hash_val = traitList.get(&t).clone();
-                let tooltip = match hash_val {
-                    Some(description) => String::from(description),
-                    None => {log!("No tooltip was set for {0}", t); String::from("No tooltip") },
+                let tooltip = if t.is_empty() {
+                    log!("An empty trait was set somewhere"); String::from("No tooltip") 
+                }
+                else {
+                    let found_val = traitMap.get(&t).clone();
+                    match found_val {
+                        Some(description) => String::from(description),
+                        None => {
+                            //some traits vary after the first word, so we reattempt after a splice
+                            let first_word = traitMap.get(t.split_whitespace().next().expect("TraitView: there should be at least one word in this trait by now"));
+                            match first_word {
+                                Some(description) => String::from(description),
+                                None => {log!("No tooltip was set for {0}", t); String::from("No tooltip") }
+                            }
+                        },
+                    }
                 };
+                
                 view!{
                     <div class="trait tiny-text" title=tooltip>{t}</div>
                 }
