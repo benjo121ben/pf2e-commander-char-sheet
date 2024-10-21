@@ -9,6 +9,7 @@ pkg
 # node e2e test tools and outputs
 node_modules/
 test-results/
+pf2e_app/
 end2end/playwright-report/
 playwright/.cache/
 *.tar.gz
