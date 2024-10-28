@@ -18,3 +18,11 @@ pub fn get_sheet_error_context(view_name: &str) -> RwSignal<SheetError> {
 pub fn get_prefix(val:i32) -> String {
     if val > 0 {"+ "} else {""}.to_string()
 }
+
+pub fn check_character_flag(character: &Character, flag: &str) -> bool{
+    match character.flags.get(flag) {
+        Some(flag_v) => *flag_v,
+        None => false,
+    }
+    
+}
