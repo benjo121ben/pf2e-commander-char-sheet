@@ -2,6 +2,11 @@
 
 If you're just interested in running the release, download the zip, unzip and create a saves folder inside the app folder. An example for how the character data should look like is in the dev_saves folder.
 A lot of stuff still needs to be manually added to the json and cannot yet be edited in the browser.
+
+If you want to add new data, check the resource folder:
+Feats need to be added in the Feats.json
+Trait tooltips can be added in the Traits.json
+
 # how to get this code running
 
 you can either: 
