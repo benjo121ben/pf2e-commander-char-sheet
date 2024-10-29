@@ -2,7 +2,7 @@
     {
         "name": "Blinded",
         "description": "You can't see. All normal terrain is difficult terrain to you. You can't detect anything using vision. You automatically critically fail Perception checks that require you to be able to see, and if vision is your only precise sense, you take a –4 status penalty to Perception checks. You are immune to visual effects.",
-        "override": [
+        "override_other": [
             "Dazzled"
         ]
     },
@@ -30,13 +30,13 @@
     {
         "name": "Deafened",
         "description": "You can't hear. You automatically critically fail Perception checks that require you to be able to hear. You take a –2 status penalty to Perception checks for initiative and checks that involve sound but also rely on other senses. If you perform an action that has the auditory trait, you must succeed at a DC 5 flat check or the action is lost; attempt the check after spending the action but before any effects are applied. You are immune to auditory effects while deafened.",
-        "penalty": [
+        "bonus_penalty": [
             {
                 "selector": [
                     "perception"
                 ],
                 "amount": {
-                    "calc_type": "fixed",
+                    "calc_type": "Fixed",
                     "value": 2
                 }
             }
@@ -52,11 +52,11 @@
         "name": "Drained",
         "has_value": true,
         "description": "Your health and vitality have been depleted as you've lost blood, life force, or some other essence. Drained always includes a value. You take a status penalty equal to your drained value on Constitution-based checks, such as Fortitude saves. You also lose a number of Hit Points equal to your level (minimum 1) times the drained value, and your maximum Hit Points are reduced by the same amount. For example, if you become drained 3 and you're a 3rd-level character, you lose 9 Hit Points and reduce your maximum Hit Points by 9. Losing these Hit Points doesn't count as taking damage.<br>Each time you get a full night's rest, your drained value decreases by 1. This increases your maximum Hit Points, but you don't immediately recover the lost Hit Points.",
-        "penalty": [
+        "bonus_penalty": [
             {
                 "selector": ["hp", "maxhp"],
                 "amount": {
-                    "calc_type": "calculated",
+                    "calc_type": "Calculated",
                     "penalty_type": "untyped"
                 }
             },
@@ -82,11 +82,11 @@
     {
         "name": "Encumbered",
         "description": "You are carrying more weight than you can manage. While you're encumbered, you're clumsy 1 and take a 10-foot penalty to all your Speeds. As with all penalties to your Speed, this can't reduce your Speed below 5 feet.",
-        "penalty": [
+        "bonus_penalty": [
             {
                 "selector": ["speed"],
                 "amount": {
-                    "calc_type": "fixed",
+                    "calc_type": "Fixed",
                     "penalty_type": "untyped",
                     "value": 10
                 }
@@ -103,7 +103,7 @@
         "name": "Enfeebled",
         "has_value": true,
         "description": "You're physically weakened. Enfeebled always includes a value. When you are enfeebled, you take a status penalty equal to the condition value to Strength-based rolls and DCs, including Strength-based melee attack rolls, Strength-based damage rolls, and Athletics checks.",
-        "penalty": [
+        "bonus_penalty": [
             {
                 "selector": ["str"]
             }
@@ -112,7 +112,7 @@
     {
         "name": "Fascinated",
         "description": "You're compelled to focus your attention on something, distracting you from whatever else is going on around you. You take a –2 status penalty to Perception and skill checks, and you can't use concentrate actions unless they (or their intended consequences) are related to the subject of your fascination, as determined by the GM. For instance, you might be able to Seek and Recall Knowledge about the subject, but you likely couldn't cast a spell targeting a different creature. This condition ends if a creature uses hostile actions against you or any of your allies.",
-        "penalty": [
+        "bonus_penalty": [
             {
                 "selector": ["skill", "perception"]
             }
@@ -121,11 +121,11 @@
     {
         "name": "Fatigued",
         "description": "You're tired and can't summon much energy. You take a –1 status penalty to AC and saving throws. You can't use exploration activities performed while traveling, such as those on pages 438–439.<br>You recover from fatigue after a full night's rest.",
-        "penalty": [
+        "bonus_penalty": [
             {
                 "selector": ["ac", "fortitude", "reflex", "will"],
                 "amount": {
-                    "calc_type": "fixed",
+                    "calc_type": "Fixed",
                     "value": 1
                 }
             }
@@ -140,7 +140,7 @@
         "name": "Frightened",
         "has_value": true,
         "description": "You're gripped by fear and struggle to control your nerves. The frightened condition always includes a value. You take a status penalty equal to this value to all your checks and DCs. Unless specified otherwise, at the end of each of your turns, the value of your frightened condition decreases by 1.",
-        "penalty": [
+        "bonus_penalty": [
             {
                 "selector": ["check", "dc"]
             }
@@ -180,11 +180,11 @@
     {
         "name": "Off-Guard",
         "description": "You're distracted or otherwise unable to focus your full attention on defense. You take a –2 circumstance penalty to AC. Some effects give you the off-guard condition only to certain creatures or against certain attacks. Others—especially conditions—can make you off-guard against everything. If a rule doesn't specify that the condition applies only to certain circumstances, it applies to all of them, such as “The target is off-guard.”",
-        "penalty": [
+        "bonus_penalty": [
             {
                 "selector": ["ac"],
                 "amount": {
-                    "calc_type": "fixed",
+                    "calc_type": "Fixed",
                     "penalty_type": "circumstance",
                     "value": 2
                 }
@@ -207,11 +207,11 @@
     {
         "name": "Prone",
         "description": "You're lying on the ground. You are off-guard and take a –2 circumstance penalty to attack rolls. The only move actions you can use while you're prone are Crawl and Stand. Standing up ends the prone condition. You can Take Cover while prone to hunker down and gain greater cover against ranged attacks, even if you don't have an object to get behind, which grants you a +4 circumstance bonus to AC against ranged attacks (but you remain off-guard).<br>If you would be knocked prone while you're Climbing or Flying, you fall. You can't be knocked prone when Swimming.",
-        "penalty": [
+        "bonus_penalty": [
             {
                 "selector": ["attack"],
                 "amount": {
-                    "calc_type": "fixed",
+                    "calc_type": "Fixed",
                     "value": 2
                 }
             }
@@ -229,7 +229,7 @@
     {
         "name": "Restrained",
         "description": "You're tied up and can barely move, or a creature has you pinned. You have the off-guard and immobilized conditions, and you can't use any attack or manipulate actions except to attempt to Escape or Force Open your bonds. Restrained overrides grabbed.",
-        "penalty": [
+        "bonus_penalty": [
             {
                 "selector": ["str"]
             }
@@ -242,7 +242,7 @@
                 "name": "Immobilized"
             }
         ],
-        "override": [
+        "override_other": [
             "Grabbed"
         ]
     },
@@ -250,7 +250,7 @@
         "name": "Sickened",
         "has_value": true,
         "description": "You feel ill. Sickened always includes a value. You take a status penalty equal to this value on all your checks and DCs. You can't willingly ingest anything—including elixirs and potions—while sickened.<br>You can spend a single action retching in an attempt to recover, which lets you immediately attempt a Fortitude save against the DC of the effect that made you sickened. On a success, you reduce your sickened value by 1 (or by 2 on a critical success).",
-        "penalty": [
+        "bonus_penalty": [
             {
                 "selector": ["check", "dC"]
             }
@@ -265,7 +265,7 @@
         "name": "Stunned",
         "has_value": true,
         "description": "You've become senseless. You can't act. Stunned usually includes a value, which indicates how many total actions you lose, possibly over multiple turns, from being stunned. Each time you regain actions, reduce the number you regain by your stunned value, then reduce your stunned value by the number of actions you lost. For example, if you were stunned 4, you would lose all 3 of your actions on your turn, reducing you to stunned 1; on your next turn, you would lose 1 more action, and then be able to use your remaining 2 actions normally. Stunned might also have a duration instead, such as “stunned for 1 minute,” causing you to lose all your actions for the duration.<br>Stunned overrides slowed. If the duration of your stunned condition ends while you are slowed, you count the actions lost to the stunned condition toward those lost to being slowed. So, if you were stunned 1 and slowed 2 at the beginning of your turn, you would lose 1 action from stunned, and then lose only 1 additional action by being slowed, so you would still have 1 action remaining to use that turn.",
-        "override":[
+        "override_other":[
             "Slowed"
         ]
     },
@@ -273,7 +273,7 @@
         "name": "Stupefied",
         "has_value": true,
         "description": "Your thoughts and instincts are clouded. Stupefied always includes a value. You take a status penalty equal to this value on Intelligence-, Wisdom-, and Charisma-based checks and DCs, including Will saving throws, spell attack modifiers, spell DCs, and skill checks that use these attribute modifiers. Any time you attempt to Cast a Spell while stupefied, the spell is disrupted unless you succeed at a flat check with a DC equal to 5 + your stupefied value.",
-        "penalty": [
+        "bonus_penalty": [
             {
                 "selector": ["int", "wis", "cha"]
             }
@@ -282,7 +282,7 @@
     {
         "name": "Unconcious",
         "description": "You're sleeping or have been knocked out. You can't act. You take a –4 status penalty to AC, Perception, and Reflex saves, and you have the blinded and off-guard conditions. When you gain this condition, you fall prone and drop items you're holding unless the effect states otherwise or the GM determines you're positioned so you wouldn't.<br>If you're unconscious because you're dying, you can't wake up while you have 0 Hit Points. If you are restored to 1 Hit Point or more, you lose the dying and unconscious conditions and can act normally on your next turn.<br>If you are unconscious and at 0 Hit Points, but not dying, you return to 1 Hit Point and awaken after sufficient time passes. The GM determines how long you remain unconscious, from a minimum of 10 minutes to several hours. If you are healed, you lose the unconscious condition and can act normally on your next turn.<br>If you're unconscious and have more than 1 Hit Point (typically because you are asleep or unconscious due to an effect), you wake up in one of the following ways.<br><ul><li>You take damage, though if the damage reduces you to 0 Hit Points, you remain unconscious and gain the dying condition as normal.</li><li>You receive healing, other than the natural healing you get from resting.</li><li>Someone shakes you awake with an Interact action.</li><li>Loud noise around you might wake you. At the start of your turn, you automatically attempt a Perception check against the noise's DC (or the lowest DC if there is more than one noise), waking up if you succeed. If creatures are attempting to stay quiet around you, this Perception check uses their Stealth DCs. Some effects make you sleep so deeply that they don't allow you this Perception check.</li><li>If you are simply asleep, the GM decides you wake up either because you have had a restful night's sleep or something disrupted that rest.</li></ul>",
-        "penalty": [
+        "bonus_penalty": [
             {
                 "selector": ["ac", "perception", "reflex"]
             }
