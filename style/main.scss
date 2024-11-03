@@ -137,15 +137,12 @@ hr {
 	grid-template-columns: 6fr 0.5fr 0.5fr;
 	row-gap: 0.2rem;
 	column-gap: 0.5rem;
-	* {
-		flex-basis: 0;
-		flex-grow: 0;
-	}
 	:nth-child(3n + 2) {
 		text-align: center;
 		align-content: center;
 	}
 	:nth-child(3n + 3) {
+		min-width: 22px;
 		text-align: center;
 		align-content: center;
 	}

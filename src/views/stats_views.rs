@@ -319,7 +319,7 @@ pub fn ProficiencyListView(
                         move || get_prof() != String::from("U")
                     };
                     view! {
-                        <div style="display:flex; flex: 1 0 0">{move || name_clone.clone()}</div>
+                        <div>{move || name_clone.clone()}</div>
                         <div class="proficiency-letter" class:proficiency-letter-trained=is_proficient>{get_skill_prof}</div>
                         <div>{get_skill_val}</div>
                     }.into_view()
