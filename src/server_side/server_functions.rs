@@ -8,7 +8,7 @@ use std::collections::HashMap;
 
 use super::read_json::read_map_from_file;
 
-#[server(GetChar, "/api")]
+#[server(GetChar, "/api", "GetJson", "get_char")]
 pub async fn get_char() -> Result<Character, ServerFnError> {
     let read_char_result = read_char_from_file("saves/char.json");
     match read_char_result {
@@ -17,7 +17,7 @@ pub async fn get_char() -> Result<Character, ServerFnError> {
     }
 }
 
-#[server(SetChar, "/api")]
+#[server(SetChar, "/api", "Url", "set_char")]
 pub async fn set_char(char: Character) -> Result<i32, ServerFnError> {
     let result = write_char_to_file("saves/char.json", &char);
     match result {

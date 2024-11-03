@@ -64,9 +64,9 @@ pub fn App() -> impl IntoView {
         }
     };
     view! {
-        <Stylesheet id="leptos" href="/pkg/pf2e-char-sheet.css" />
+        <Stylesheet id="pf2echar_style" href="/pkg/pf2e-char-sheet.css" />
         // sets the document title
-        <Title text="Welcome to Leptos" />
+        <Title text="Pf2e char sheet" />
         <body oncontextmenu="return false;" style="height:inherit">
             <Suspense fallback=move || {
                 view! { <p>"Loading ...."</p> }
