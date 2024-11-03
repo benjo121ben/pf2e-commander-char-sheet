@@ -6,7 +6,10 @@
 
 @font-face {
 	font-family: "Pathfinder-Icons";
-	src: local("Pathfinder-Icons");
+	src: 
+		local("Pathfinder-Icons"), 
+		local("Pathfinder-Icons-Regular"),
+		url("Pathfinder-Icons.tff")
 }
 
 body {
