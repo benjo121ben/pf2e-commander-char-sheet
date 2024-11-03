@@ -71,7 +71,7 @@ pub async fn start11() -> Result<i32, ServerFnError> {
 
         // Execute the command
         // This will download a file called ncbi_dataset.zip in the current directory
-        command.output();
+        let _ = command.output();
     }
     Ok(0)
 }
@@ -87,7 +87,7 @@ pub async fn start12() -> Result<i32, ServerFnError> {
 
         // Execute the command
         // This will download a file called ncbi_dataset.zip in the current directory
-        command.output();
+        let _ = command.output();
     }
     Ok(0)
 }
