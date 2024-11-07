@@ -57,7 +57,7 @@
                 "selector": ["hp", "maxhp"],
                 "amount": {
                     "calc_type": "Calculated",
-                    "penalty_type": "untyped"
+                    "penalty_type": "Untyped"
                 }
             },
             {
@@ -87,7 +87,7 @@
                 "selector": ["speed"],
                 "amount": {
                     "calc_type": "Fixed",
-                    "penalty_type": "untyped",
+                    "penalty_type": "Untyped",
                     "value": 10
                 }
             }
@@ -185,7 +185,7 @@
                 "selector": ["ac"],
                 "amount": {
                     "calc_type": "Fixed",
-                    "penalty_type": "circumstance",
+                    "penalty_type": "Circumstance",
                     "value": 2
                 }
             }

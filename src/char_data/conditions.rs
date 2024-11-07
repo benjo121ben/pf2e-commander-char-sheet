@@ -1,6 +1,6 @@
 use serde::{Serialize, Deserialize};
 
-use super::bonus_penalty::BonusPenalty;
+use super::bonus_penalty::{BonusPenalty, BonusPenaltyAmount};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Condition {
@@ -15,7 +15,7 @@ pub struct Condition {
     pub forced_conditions: Vec<ForcedCondition>,
 
     #[serde(default)]
-    pub bonus_penalty: Vec<BonusPenalty>,
+    pub bonus_penalty: Vec<ConditionBonusPenalty>,
 
     #[serde(default)]
     pub has_value: bool,
@@ -33,4 +33,10 @@ pub struct Condition {
 pub struct ForcedCondition {
     pub name: String,
     pub value: Option<i32>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ConditionBonusPenalty {
+    pub selector: Vec<String>,
+    pub amount: Option<BonusPenaltyAmount>,
 }
