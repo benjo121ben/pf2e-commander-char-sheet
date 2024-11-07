@@ -103,7 +103,7 @@
     [
       "Intimidation",
       "Skill",
-      "Expert"
+      "Trained"
     ],
     [
       "Medicine",
@@ -113,7 +113,7 @@
     [
       "Nature",
       "Skill",
-      "Trained"
+      "Expert"
     ],
     [
       "Occultism",
@@ -333,5 +333,7 @@
     "def_pot": 0,
     "attack_dice": 1
   },
-  "flags": {}
+  "flags": {
+    "incred_init": true
+  }
 }

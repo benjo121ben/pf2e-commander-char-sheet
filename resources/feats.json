@@ -54,11 +54,9 @@
       "name": "Warfare Expertise",
       "actions": 0,
       "feat_types": [
-        "General"
+        "Ability"
       ],
-      "traits": [
-        "Commander"
-      ],
+      "traits": [],
       "description": "Your knowledge of war and strategy grows and guides your decisions in battle. You gain expert proficiency in Warfare Lore. You can use Warfare Lore to Recall Knowledge about most creatures regardless of type, but typically only to determine whether they can be reasoned with, their most notable offensive abilities, and whether one of their saving throws is particularly weak. The GM can decide to allow additional questions to be answered when Recalling Knowledge with Warfare Lore as appropriate to the situation. In addition, as long as you are observing at least one opponent when initiative is rolled, you can use Warfare Lore for your initiative roll.",
       "char_additions": []
     },
@@ -109,6 +107,31 @@
         "General"
       ],
       "description": "Common, Dwarven, Elven, Khur, Kharolian",
+      "char_additions": []
+    },
+    {
+      "name": "Quick Mount",
+      "actions": 1,
+      "feat_types": [
+        "Skill"
+      ],
+      "traits": [
+        "Skill",
+        "Archetype"
+      ],
+      "description": "You and your mount can spring into action at a moment's notice. You Mount the creature and Command an Animal to issue it an order of your choice.",
+      "char_additions": []
+    },
+    {
+      "name": "Impressive Mount",
+      "actions": 0,
+      "feat_types": [
+        "Archetype"
+      ],
+      "traits": [
+        "Archetype"
+      ],
+      "description": "You've trained your mount to become a powerful force on the battlefield. The mount you gained through the Cavalier Dedication feat becomes a mature animal companion, granting it additional capabilities. During an encounter, even if you don't use the Command an Animal action, your animal companion can still use 1 action on your turn to Stride or Strike.",
       "char_additions": []
     }
   ]

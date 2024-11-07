@@ -150,11 +150,25 @@ pub fn TopCharViewSection() -> impl IntoView {
 #[component]
 pub fn ProficiencySidebar(
 ) -> impl IntoView {
+    let (read_char, _): (ReadSignal<Character>, WriteSignal<Character>) = get_base_context("ProficiencySidebar");
     let show_edit_stats = create_rw_signal(false);
+    let has_incr_init = move || {
+        read_char.with(|c| {
+            check_character_flag(c, "incred_init")
+        })
+    };
     view! {
         <section class="flex-col flex-wrap" style="flex-grow: 0; flex-shrink: 0">
             <b><SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::ClassDC]/></b>
             <b><SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Perception]/></b>
+            <Show when=has_incr_init>
+                <div class="skill-grid">
+                    <div style="display:flex; flex: 1 0 0">initiative</div>
+                    <div></div>
+                    <div>+2</div>
+                
+                </div>
+            </Show>
             <div class="flex-col">
                 <h5>Saves</h5>
                 <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Save]/>
@@ -206,6 +220,7 @@ pub fn HorseSection(
         </div>
         <img src="horse.png" style="display:flex"/>
         <img src="support.png" style="display:flex"/>
+        <img src="mature_horse.png" style="display:flex"/>
     }
 }
 

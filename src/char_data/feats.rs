@@ -4,8 +4,10 @@ use serde::{Deserialize, Serialize};
 pub enum FeatType{
     General,
     Ancestry,
+    Archetype,
     Skill,
-    Class
+    Class,
+    Ability
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Eq, PartialEq)]
