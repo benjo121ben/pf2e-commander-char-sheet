@@ -25,11 +25,11 @@ async fn main() {
         .fallback(file_and_error_handler)
         .with_state(leptos_options);
 
-    let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
+    let listener = tokio::net::TcpListener::bind(&addr).await.expect("main.rs expected listener");
     logging::log!("listening on http://{}", &addr);
     axum::serve(listener, app.into_make_service())
         .await
-        .unwrap();
+        .expect("main.rs expected service");
 }
 
 #[cfg(not(feature = "ssr"))]

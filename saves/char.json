@@ -227,7 +227,23 @@
     "Fleet",
     "Languages"
   ],
-  "conditions": [],
+  "conditions": [
+    {
+      "level": null,
+      "name": "Blinded",
+      "active": false
+    },
+    {
+      "level": 1,
+      "name": "Enfeebled",
+      "active": true
+    },
+    {
+      "level": null,
+      "name": "Unconcious",
+      "active": true
+    }
+  ],
   "gear_list": [
     {
       "name": "Flail",

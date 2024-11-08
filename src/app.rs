@@ -24,7 +24,7 @@ pub fn map_resource_ok_to_view<T: Debug>(res: Result<T, View>, name: &str) -> Vi
         format!("{name} ok").into_view()
     }
     else {
-        res.unwrap_err()
+        res.expect_err("app.rs mapresource ok to view expected error")
     }
 }
 

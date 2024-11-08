@@ -1,12 +1,13 @@
 use std::collections::HashMap;
 
 use crate::char_data::character::*;
-use crate::char_data::conditions::Condition;
+use crate::char_data::conditions::ConditionData;
 use crate::char_data::feats::Feat;
 use crate::char_data::proficiency::ProficiencyLevel;
 use crate::char_data::stats::ProficiencyType;
 use crate::error_template::SheetError;
 use crate::server_side::server_functions::*;
+use crate::views::condition_view::ConditionSection;
 use super::view_helpers::*;
 use super::stats_views::*;
 use super::equip_views::*;
@@ -18,12 +19,12 @@ use leptos::logging::log;
 pub fn BaseView(
     char: Character,
     feats: Vec<Feat>,
-    conditions: Vec<Condition>,
+    conditions: Vec<ConditionData>,
     trait_data: HashMap<String, String>
 ) -> impl IntoView {
     //log!("Char on init {char:#?}");
     let (read_ketra, write_ketra) = create_signal(char);
-    let sheet_error = create_rw_signal(SheetError::new(""));
+    let sheet_error: RwSignal<SheetError> = create_rw_signal(SheetError::new(""));
     let upload_ketra = create_action( move |_:&i32| async move {
         let ketra = read_ketra.get_untracked();
         sheet_error.set(SheetError::new(""));
@@ -47,9 +48,10 @@ pub fn BaseView(
     provide_context(read_ketra);
     provide_context(sheet_error);
     provide_context(write_ketra);
-    provide_context(conditions.clone());
     provide_context(trait_data.clone());
+    let conditions_map: HashMap<String, ConditionData> = conditions.into_iter().map(|cond: ConditionData| (cond.name.clone(), cond)).collect();
     let feat_map: HashMap<String, Feat> = feats.into_iter().map(|feat: Feat| (feat.name.clone(), feat)).collect();
+    provide_context(conditions_map);
     provide_context(feat_map);
     view!{
         <CharView/>
@@ -143,6 +145,9 @@ pub fn TopCharViewSection() -> impl IntoView {
             <section class="align-center" id="shield_section">
                 <ShieldView/>
             </section>
+            <section class="align-center" id="condition_section">
+                <ConditionSection/>
+            </section>
         </div>
     }
 }
@@ -224,15 +229,3 @@ pub fn HorseSection(
     }
 }
 
-
-/* <section class="flex-row flex-grow-1 flex-shrink" style="justify-content:center">
-    {
-        move || {
-            let condition_clone: Condition = conditions[0].clone();
-            view!{
-                <h3 style="no-grow">{move || condition_clone.name.clone()}</h3>
-                <p style="flex-grow-1">{move || condition_clone.description.clone()}</p>
-            }
-        }
-    }
-</section> */

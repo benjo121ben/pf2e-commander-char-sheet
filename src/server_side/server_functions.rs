@@ -1,6 +1,6 @@
 use leptos::*;
 
-use crate::char_data::conditions::Condition;
+use crate::char_data::conditions::ConditionData;
 use crate::char_data::feats::Feat;
 use crate::server_side::read_json::{read_char_from_file, write_char_to_file, read_vector_from_file};
 use crate::char_data::character::Character;
@@ -29,8 +29,8 @@ pub async fn set_char(char: Character) -> Result<i32, ServerFnError> {
 
 
 #[server(GetConditions, "/api", "GetJson", "conditions")]
-pub async fn get_conditions() -> Result<Vec<Condition>, ServerFnError> {
-    let read_cond_result = read_vector_from_file::<Condition,_>("resources/conditions.json", "Condition");
+pub async fn get_conditions() -> Result<Vec<ConditionData>, ServerFnError> {
+    let read_cond_result = read_vector_from_file::<ConditionData,_>("resources/conditions.json", "Condition");
     match read_cond_result {
         Ok(conditions) => return Ok(conditions),
         Err(error) => return Err(ServerFnError::new(error.to_string())),

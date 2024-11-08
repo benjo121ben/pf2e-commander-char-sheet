@@ -1,7 +1,7 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, default};
 
 use serde::{Deserialize, Serialize};
-use super::{auto_bonus_prog::AbpData, conditions::Condition, gear::Gear, hp::{HpInfo, ShieldInfo}, proficiency::ProficiencyLevel, stats::{Attributes, CalculatedStat, ProficiencyType}, tactics::Tactic};
+use super::{auto_bonus_prog::AbpData, conditions::{CharacterConditionInfo, ConditionData, FullConditionView}, gear::Gear, hp::{HpInfo, ShieldInfo}, proficiency::ProficiencyLevel, stats::{Attributes, CalculatedStat, ProficiencyType}, tactics::Tactic};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Character {
@@ -34,7 +34,7 @@ pub struct Character {
     pub feats: Vec<String>,
     
     #[serde(default)]
-    pub conditions: Vec<Condition>,
+    pub conditions: Vec<CharacterConditionInfo>,
     
     #[serde(default)]
     pub gear_list: Vec<Gear>,
@@ -80,7 +80,7 @@ pub struct SimpleCharacter {
     pub feats: Vec<String>,
 
     #[serde(default)]
-    pub conditions: Vec<Condition>,
+    pub conditions: Vec<CharacterConditionInfo>,
 
     #[serde(default)]
     pub gear_list: Vec<Gear>,   
