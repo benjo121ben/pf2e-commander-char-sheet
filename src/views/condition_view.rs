@@ -1,3 +1,10 @@
+use std::collections::HashMap;
+
+use leptos::*;
+use leptos::logging::*;
+use super::view_helpers::get_base_context;
+use crate::char_data::conditions::{ConditionData, FullConditionView};
+
 
 #[component]
 pub fn ConditionSection() -> impl IntoView {
@@ -9,24 +16,35 @@ pub fn ConditionSection() -> impl IntoView {
             Err(error) => {log!("ConditionSection: error getting character conditions: {error}"); vec![]}
         }
     };
+    let check_icon = move |condition: FullConditionView| {
+        if condition.forced {
+            "lock.svg"
+        }
+        else if condition.active {
+            "./icons/add.svg"
+        }
+        else {
+            "./icons/remove.svg"
+        }
+    };
     view!{
         <For
             each=move || get_active_conditions()
             key=move |val| val.name.clone() 
             children = move |condition| {
                 let cond_clone = condition.clone();
-                let ret = view!{
+                let name = cond_clone.name.clone();
+                view!{
                     <h3 style="no-grow">
-                    {move || cond_clone.name.clone()} {
-                        move || match cond_clone.level.clone() {
+                    {move || name.clone()} {
+                        move || match cond_clone.level {
                             Some(value) => format!("{value}"),
                             None => format!(""),
                         }
                     }
                     </h3>
-                    <label>forced: {move || cond_clone.forced} active: {move || cond_clone.active}</label>
-                };
-                ret
+                    <i alt="test" src="icons/lock.svg"/>
+                }
             }
         />
     }
