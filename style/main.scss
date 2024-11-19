@@ -34,11 +34,6 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-/* Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
-}
-
 
 h2, h3 {
 	margin: 0 0 0.5rem;
@@ -106,6 +101,10 @@ hr {
 
 .no-grow {
 	flex-grow: 0;
+}
+
+.no-margins {
+	margin: unset;
 }
 
 .no-grow-children > * {

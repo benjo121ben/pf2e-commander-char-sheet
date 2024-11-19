@@ -16,36 +16,41 @@ pub fn ConditionSection() -> impl IntoView {
             Err(error) => {log!("ConditionSection: error getting character conditions: {error}"); vec![]}
         }
     };
-    let check_icon = move |condition: FullConditionView| {
+    let check_icon = move |condition: &FullConditionView| {
         if condition.forced {
-            "lock.svg"
+            "icons/lock.svg"
         }
         else if condition.active {
-            "./icons/add.svg"
+            "icons/add.svg"
         }
         else {
-            "./icons/remove.svg"
+            "icons/remove.svg"
         }
     };
     view!{
-        <For
+        <div class="flex-col">
+            <For
             each=move || get_active_conditions()
             key=move |val| val.name.clone() 
             children = move |condition| {
+                log!("{}", condition.name);
                 let cond_clone = condition.clone();
                 let name = cond_clone.name.clone();
                 view!{
-                    <h3 style="no-grow">
-                    {move || name.clone()} {
-                        move || match cond_clone.level {
-                            Some(value) => format!("{value}"),
-                            None => format!(""),
+                    <div class="flex-row">
+                        <h3 style="no-grow">
+                        {move || name.clone()} {
+                            move || match cond_clone.level {
+                                Some(value) => format!("{value}"),
+                                None => format!(""),
+                            }
                         }
-                    }
-                    </h3>
-                    <i alt="test" src="icons/lock.svg"/>
+                        </h3>
+                        <img alt="test" src=move|| check_icon(&cond_clone) style="width: 20px; height:20px;"/>
+                    </div>
                 }
             }
-        />
+            />
+        </div>
     }
 }

@@ -154,7 +154,7 @@ pub fn HpView(
                 type="number" 
                 id="hp_inp" 
                 class="hp-input"
-                placeholder={move || if horse {"Horse"}else{"HP Change"}}
+                placeholder={move || if horse {"Horse"}else{"HP"}}
                 prop:value=move || {let _ = reset_input.get(); return String::from("")} 
                 on:change=move |event: Event|{ 
                     match event_target_value(&event).parse::<i32>() {
@@ -212,7 +212,7 @@ pub fn ShieldView() -> impl IntoView {
                 type="number" 
                 id="sh_inp" 
                 class="hp-input"
-                placeholder="SH Change"
+                placeholder="SH"
                 prop:value=move || {let _ = reset_input.get(); return String::from("")} 
                 on:change=move |event: Event|{ 
                     write_char.update(|c|{
