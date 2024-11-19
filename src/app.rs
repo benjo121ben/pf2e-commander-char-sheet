@@ -64,7 +64,8 @@ pub fn App() -> impl IntoView {
         }
     };
     view! {
-        <Stylesheet id="pf2echar_style" href="/pkg/pf2e-char-sheet.css" />
+        <Stylesheet id="google_icons_style" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+        <Stylesheet id="pf2echar_style" href="/pkg/pf2e-char-sheet.css"/>
         // sets the document title
         <Title text="Pf2e char sheet" />
         <body oncontextmenu="return false;" style="height:inherit">

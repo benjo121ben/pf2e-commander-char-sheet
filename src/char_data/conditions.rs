@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{cmp::Ordering, collections::HashMap};
 
 use leptos::logging::log;
 use serde::{Serialize, Deserialize};
@@ -93,7 +93,26 @@ fn add_full_to_hash_map (full_cond_map: &mut HashMap<String, FullConditionView>,
 impl Character {
     pub fn get_all_conditions(self: & Self, condition_data_map: &HashMap<String, ConditionData>) -> Result<Vec<FullConditionView>, String>{
         let mut full_char_conditions: HashMap<String, FullConditionView> = HashMap::new();
+        let condition_cmp = move |a: &FullConditionView, b: &FullConditionView| {
+            let mut cmp_val = b.active as i32 - a.active as i32;
+            if cmp_val == 0 {
+                cmp_val = a.forced as i32 - b.forced as i32;
+            }
+            if cmp_val == 0 {
+                cmp_val = a.name.cmp(&b.name) as i32
+            }
 
+            if cmp_val == 0 {
+                Ordering::Equal
+            }
+            else if cmp_val == 1 {
+                Ordering::Greater
+            }
+            else {
+                Ordering::Less
+            }
+            
+        };
         for condition in self.conditions.clone() {
             let condition_data = get_condition_data(&condition.name, condition_data_map)?;
             let insert_obj = FullConditionView {
@@ -105,16 +124,18 @@ impl Character {
             };
             add_full_to_hash_map(&mut full_char_conditions, &insert_obj);
 
-            for forced_condition in condition_data.forced_conditions {
-                let forced_condition_data = get_condition_data(&condition.name, condition_data_map)?;
-                let insert_obj = FullConditionView {
-                    level: forced_condition.value,
-                    name: forced_condition.name,
-                    active: false,
-                    forced: true,
-                    condition_data: forced_condition_data,
-                };
-                add_full_to_hash_map(&mut full_char_conditions, &insert_obj);
+            if condition.active {
+                for forced_condition in condition_data.forced_conditions {
+                    let forced_condition_data = get_condition_data(&condition.name, condition_data_map)?;
+                    let insert_obj = FullConditionView {
+                        level: forced_condition.value,
+                        name: forced_condition.name,
+                        active: true,
+                        forced: true,
+                        condition_data: forced_condition_data,
+                    };
+                    add_full_to_hash_map(&mut full_char_conditions, &insert_obj);
+                }
             }
         }
         
@@ -124,6 +145,8 @@ impl Character {
                 condition_view
             );
         }
+        ret_vec.sort_by(|a, b| condition_cmp(a,b));
+        log!("{ret_vec:#?}");
         let size = ret_vec.len();
         log!("conditions calculated {size}, {ret_vec:#?}");
         return Ok(ret_vec);

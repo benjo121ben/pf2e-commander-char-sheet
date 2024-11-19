@@ -16,41 +16,45 @@ pub fn ConditionSection() -> impl IntoView {
             Err(error) => {log!("ConditionSection: error getting character conditions: {error}"); vec![]}
         }
     };
-    let check_icon = move |condition: &FullConditionView| {
-        if condition.forced {
-            "icons/lock.svg"
-        }
-        else if condition.active {
-            "icons/add.svg"
-        }
-        else {
-            "icons/remove.svg"
-        }
-    };
+    let condition_memo = create_memo(move |_| get_active_conditions());
     view!{
         <div class="flex-col">
             <For
-            each=move || get_active_conditions()
-            key=move |val| val.name.clone() 
-            children = move |condition| {
-                log!("{}", condition.name);
-                let cond_clone = condition.clone();
-                let name = cond_clone.name.clone();
-                view!{
-                    <div class="flex-row">
-                        <h3 style="no-grow">
-                        {move || name.clone()} {
-                            move || match cond_clone.level {
-                                Some(value) => format!("{value}"),
-                                None => format!(""),
-                            }
-                        }
-                        </h3>
-                        <img alt="test" src=move|| check_icon(&cond_clone) style="width: 20px; height:20px;"/>
-                    </div>
+                each=move|| condition_memo.get().clone()
+                key=move |val| val.name.clone() 
+                children = move |condition| {
+                    log!("{}", condition.name);
+                    let cond_clone = condition.clone();
+                    view! {
+                        <ConditionView condition=cond_clone/>
+                    }
                 }
-            }
             />
         </div>
     }
+}
+
+#[component]
+pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
+    let cond_clone = condition.clone();
+    let name = cond_clone.name.clone();
+    view!{
+        <div class="flex-row">
+            <h3 style="no-grow" title=condition.condition_data.description.clone()>
+            {move || name.clone()} {
+                move || match cond_clone.level {
+                    Some(value) => format!(" {value}"),
+                    None => format!(""),
+                }
+            }
+            </h3>
+            <Show when=move||cond_clone.forced>
+                <img alt="disabled" src="icons/lock.svg" style="width: 20px; height:20px;"/>
+            </Show> 
+            <Show when=move||!cond_clone.forced>
+                <img alt="test" src="icons/add.svg" style="width: 20px; height:20px;"/>
+                <img alt="test" src="icons/remove.svg" style="width: 20px; height:20px;"/>
+            </Show> 
+        </div>
+    }.into_view()
 }
