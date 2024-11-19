@@ -236,7 +236,7 @@
     {
       "level": 1,
       "name": "Enfeebled",
-      "active": true
+      "active": false
     },
     {
       "level": null,

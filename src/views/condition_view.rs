@@ -36,10 +36,22 @@ pub fn ConditionSection() -> impl IntoView {
 
 #[component]
 pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
+    let (_, set_char) = get_base_context("ConditionSection");
     let cond_clone = condition.clone();
     let name = cond_clone.name.clone();
+    let change_activate = move |cond_name: &str| {
+        set_char.update(|c|{
+            c.conditions.iter_mut().for_each(|f_cond| {
+                if f_cond.name == cond_name {
+                    f_cond.active = !f_cond.active;
+                }
+            });
+        });
+    };
+
     view!{
         <div class="flex-row">
+            <input type="checkbox" prop:checked=move|| cond_clone.active prop:disabled=move||cond_clone.forced on:change=move|_| change_activate(&cond_clone.name)/>
             <h3 style="no-grow" title=condition.condition_data.description.clone()>
             {move || name.clone()} {
                 move || match cond_clone.level {
