@@ -74,13 +74,15 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
     let get_memo = move || current_state_memo.get();
 
     view!{
-        <div class="flex-row align-center bright-bg" title=move || get_memo().condition_data.description.clone()>
-            <input type="checkbox" prop:checked=move|| get_memo().active prop:disabled=move||get_memo().forced on:change=move|_| change_activate(&get_memo().name)/>
-            <label class="no-grow no-margins condition-text">
+        <div class="condition" 
+                title=move || get_memo().condition_data.description.clone() 
+                class:selected-condition=move ||get_memo().active
+                on:contextmenu=move|_|change_activate(&get_memo().name)>
+            <label class="no-grow no-margins">
                 {let _name = name.clone(); move || _name.clone()} 
             </label>
             <Show when=move||get_memo().level.is_some()>
-                <label class="no-grow no-margins condition-text">
+                <label class="no-grow no-margins">
                     {move || get_memo().level.unwrap()}
                 </label>
             </Show> 

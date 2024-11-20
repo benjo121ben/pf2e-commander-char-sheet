@@ -231,7 +231,7 @@
     {
       "level": null,
       "name": "Blinded",
-      "active": false
+      "active": true
     },
     {
       "level": 0,
@@ -251,7 +251,7 @@
     {
       "level": null,
       "name": "Unconcious",
-      "active": false
+      "active": true
     }
   ],
   "gear_list": [

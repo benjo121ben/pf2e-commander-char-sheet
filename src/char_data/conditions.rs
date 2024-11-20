@@ -10,6 +10,7 @@ pub struct FullConditionView {
     pub level: Option<i32>,
     pub name: String,
     pub active: bool,
+    pub on_sheet: bool,
     pub forced: bool,
     pub condition_data: ConditionData
 }
@@ -81,6 +82,7 @@ fn add_full_to_hash_map (full_cond_map: &mut HashMap<String, FullConditionView>,
             present_cond.level = get_max_opt_level(present_cond.level, insert_obj.level);
             present_cond.forced = insert_obj.forced || present_cond.forced;
             present_cond.active = insert_obj.active || present_cond.active;
+            present_cond.on_sheet = insert_obj.on_sheet || present_cond.on_sheet;
         },
         None => {
             full_cond_map.insert(insert_obj.name.clone(), insert_obj.clone());
@@ -88,13 +90,30 @@ fn add_full_to_hash_map (full_cond_map: &mut HashMap<String, FullConditionView>,
     }
 }
 
+fn get_ordering(value: i32) -> Ordering {
+    if value == 0 {
+        Ordering::Equal
+    }
+    else if value > 0 {
+        Ordering::Greater
+    }
+    else {
+        Ordering::Less
+    }
+}
 
 
 impl Character {
     pub fn get_all_conditions(self: & Self, condition_data_map: &HashMap<String, ConditionData>) -> Result<Vec<FullConditionView>, String>{
         let mut full_char_conditions: HashMap<String, FullConditionView> = HashMap::new();
         let condition_cmp = move |a: &FullConditionView, b: &FullConditionView| {
-            a.name.cmp(&b.name)
+            let sheet_sort = get_ordering(b.on_sheet as i32 - a.on_sheet as i32);
+            if sheet_sort == Ordering::Equal {
+                a.name.cmp(&b.name)
+            }
+            else {
+                sheet_sort
+            }
         };
         for condition in self.conditions.clone() {
             let condition_data = get_condition_data(&condition.name, condition_data_map)?;
@@ -104,6 +123,7 @@ impl Character {
                 active: condition.active,
                 forced: false,
                 condition_data: condition_data.clone(),
+                on_sheet: true,
             };
             add_full_to_hash_map(&mut full_char_conditions, &insert_obj);
 
@@ -118,6 +138,7 @@ impl Character {
                         active: true,
                         forced: true,
                         condition_data: forced_condition_data,
+                        on_sheet: false,
                     };
                     add_full_to_hash_map(&mut full_char_conditions, &insert_obj);
                 }

@@ -186,14 +186,21 @@ hr {
 
 .condition-div {
 	@extend .flex-row;
-	flex-wrap: wrap-reverse;
 	align-items: center;
-	justify-content: flex-end;
+	justify-content:space-between
 }
 
-.condition-text {
-	font-size: 1rem;
+.condition {
+	@extend .flex-row;
+	@extend .align-center;
+	@extend .bright-bg;
+	border: 2px solid rgba(165, 42, 42, 0);
+	
+	> label {
+		font-size: 1rem;
+	}
 }
+
 
 .selected-condition {
 	border: 2px solid brown;
