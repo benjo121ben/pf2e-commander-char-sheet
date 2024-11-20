@@ -48,7 +48,7 @@ pub struct ConditionData {
     pub added_on_gain: Vec<String>,
 }
 
-#[derive( Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ForcedConditionEntry {
     pub name: String,
     pub value: Option<i32>,
@@ -94,24 +94,7 @@ impl Character {
     pub fn get_all_conditions(self: & Self, condition_data_map: &HashMap<String, ConditionData>) -> Result<Vec<FullConditionView>, String>{
         let mut full_char_conditions: HashMap<String, FullConditionView> = HashMap::new();
         let condition_cmp = move |a: &FullConditionView, b: &FullConditionView| {
-            let mut cmp_val = b.active as i32 - a.active as i32;
-            if cmp_val == 0 {
-                cmp_val = a.forced as i32 - b.forced as i32;
-            }
-            if cmp_val == 0 {
-                cmp_val = a.name.cmp(&b.name) as i32
-            }
-
-            if cmp_val == 0 {
-                Ordering::Equal
-            }
-            else if cmp_val == 1 {
-                Ordering::Greater
-            }
-            else {
-                Ordering::Less
-            }
-            
+            a.name.cmp(&b.name)
         };
         for condition in self.conditions.clone() {
             let condition_data = get_condition_data(&condition.name, condition_data_map)?;
@@ -126,7 +109,9 @@ impl Character {
 
             if condition.active {
                 for forced_condition in condition_data.forced_conditions {
-                    let forced_condition_data = get_condition_data(&condition.name, condition_data_map)?;
+                    let name = forced_condition.name.clone();
+                    let forced_condition_data = get_condition_data(&forced_condition.name, condition_data_map)?;
+                    log!("forced add {name} {forced_condition_data:#?}");
                     let insert_obj = FullConditionView {
                         level: forced_condition.value,
                         name: forced_condition.name,

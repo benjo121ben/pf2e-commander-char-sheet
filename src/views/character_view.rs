@@ -62,25 +62,8 @@ pub fn BaseView(
 #[component]
 pub fn CharView() -> impl IntoView {
     let (read_ketra, write_ketra) = get_base_context("CharView");
-    let sheet_error = get_sheet_error_context("CharView");
-    let send_debug = create_action( move |_:&i32| async move {
-        sheet_error.set(SheetError::new(""));
-        let ret_val = ping_server().await;
-        match ret_val {
-            Ok(val) => {log!("Arrived successfully "); sheet_error.set(SheetError::new(&format!("{val}")))},
-            Err(err) => {log!("Error saving "); sheet_error.set(SheetError::new(&err.to_string()))},
-        }
-    });
     view! {
-        <h2
-            on:click=move|_|send_debug.dispatch(0)
-        >{move || read_ketra.with(|k| k.name.clone())}</h2>
         <TopCharViewSection/>
-        <Show
-            when=move || sheet_error.get().msg != String::from("")
-        >
-            <p style="color: red;">{move || sheet_error.get().msg.clone()}</p>
-        </Show>
         <div class="flex-row space-between">
             <ProficiencySidebar/>
             <section class="flex-col center-col-layout">
@@ -111,43 +94,68 @@ pub fn CharView() -> impl IntoView {
 #[component]
 pub fn TopCharViewSection() -> impl IntoView {
     let (read_ketra, write_ketra) = get_base_context("TopCharView");
+    let sheet_error = get_sheet_error_context("TopCharView");
+    let send_debug = create_action( move |_:&i32| async move {
+        sheet_error.set(SheetError::new(""));
+        let ret_val = ping_server().await;
+        match ret_val {
+            Ok(val) => {log!("Arrived successfully "); sheet_error.set(SheetError::new(&format!("{val}")))},
+            Err(err) => {log!("Error saving "); sheet_error.set(SheetError::new(&err.to_string()))},
+        }
+    });
     view!{
-        <div id="top_div" class="flex-row flex-wrap no-grow-children">
-            <section>
-                <div class="flex-row align-center no-grow-children">   
-                    <button
-                        on:click=move |_| {write_ketra.update(move |c| {
-                            c.level += 1;
-                            c.hp_info.calculate_max_hp(c.level, c.attributes.get_stat_val("con").expect("There should be a con stat"));
-                            c.horse_hp_info.calculate_max_hp(c.level, 2);
-                        })}
-                        on:contextmenu=move |_| {write_ketra.update(move |c| {
-                            c.level -= 1;
-                            c.hp_info.calculate_max_hp(c.level, c.attributes.get_stat_val("con").expect("There should be a con stat"));
-                            c.horse_hp_info.calculate_max_hp(c.level, 2);
-                        })}
-                    >
-                        Level {move || read_ketra.with(|k| k.level)}
-                    </button>
-                    <div>SIZE<br/>Medium</div>
-                    <div>SPEED<br/>30ft.</div>
+        <div class="flex-row">
+            <div id="top_left_div">
+                <div id="header_div" class="flex-row no-grow-children">
+                    <h2
+                        on:click=move|_|send_debug.dispatch(0)
+                    >{move || read_ketra.with(|k| k.name.clone())}</h2>
+                    <Show when=move || sheet_error.get().msg != String::from("")>
+                        <p style="color: red; margin-left: 40px">{move || sheet_error.get().msg.clone()}</p>
+                    </Show>
                 </div>
-            </section>
-            <section class="align-center">
-                <DefenseView/>
-            </section>
-            <section class="align-center">
-                <MainStatsView/>
-            </section>
-            <section class="align-center" id="hp_section">
-                <HpView horse=false/>
-            </section>
-            <section class="align-center" id="shield_section">
-                <ShieldView/>
-            </section>
-            <section class="align-center" id="condition_section">
-                <ConditionSection/>
-            </section>
+                <div id="top_stat_div" class="flex-row no-grow-children">
+                    <section>
+                        <div class="flex-row align-center no-grow-children">   
+                            <button
+                                on:click=move |_| {write_ketra.update(move |c| {
+                                    c.level += 1;
+                                    c.hp_info.calculate_max_hp(c.level, c.attributes.get_stat_val("con").expect("There should be a con stat"));
+                                    c.horse_hp_info.calculate_max_hp(c.level, 2);
+                                })}
+                                on:contextmenu=move |_| {write_ketra.update(move |c| {
+                                    c.level -= 1;
+                                    c.hp_info.calculate_max_hp(c.level, c.attributes.get_stat_val("con").expect("There should be a con stat"));
+                                    c.horse_hp_info.calculate_max_hp(c.level, 2);
+                                })}
+                            >
+                                Level {move || read_ketra.with(|k| k.level)}
+                            </button>
+                            <div>SIZE<br/>Medium</div>
+                            <div>SPEED<br/>30ft.</div>
+                        </div>
+                    </section>
+                    <section class="align-center">
+                        <DefenseView/>
+                    </section>
+                    <section class="align-center">
+                        <MainStatsView/>
+                    </section>
+                    <section class="align-center" id="hp_section">
+                        <HpView horse=false/>
+                    </section>
+                    <section class="align-center" id="shield_section">
+                        <ShieldView/>
+                    </section>
+                </div>
+            </div>
+            <div id="top_right_div" class="flex-row" style="flex: 1 1 0; align-items: flex-end;">
+                <Show when=move ||read_ketra.with(|c| c.conditions.len() > 0)>
+                    <section id="condition_section">
+                        <ConditionSection/>
+                    </section>
+                </Show>
+            </div>
         </div>
     }
 }

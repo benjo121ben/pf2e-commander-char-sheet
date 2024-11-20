@@ -33,7 +33,7 @@
     {
       "name": "Defensive Retreat",
       "actions": 2,
-      "selected": true,
+      "selected": false,
       "traits": [
         "Commander",
         "Tactic",
@@ -234,14 +234,24 @@
       "active": false
     },
     {
-      "level": 1,
+      "level": 0,
       "name": "Enfeebled",
+      "active": false
+    },
+    {
+      "level": 1,
+      "name": "Frightened",
+      "active": false
+    },
+    {
+      "level": 0,
+      "name": "Stunned",
       "active": false
     },
     {
       "level": null,
       "name": "Unconcious",
-      "active": true
+      "active": false
     }
   ],
   "gear_list": [

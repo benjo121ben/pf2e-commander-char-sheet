@@ -99,44 +99,8 @@ hr {
 	text-align: right;
 }
 
-.no-grow {
-	flex-grow: 0;
-}
-
-.no-margins {
-	margin: unset;
-}
-
 .no-grow-children > * {
 	flex-grow: 0;
-}
-
-.flex-grow-1 {
-	flex-grow: 1;
-}
-
-.flex-grow-2 {
-	flex-grow: 2;
-}
-
-.flex-grow-3 {
-	flex-grow: 3;
-}
-
-.flex-grow-4 {
-	flex-grow: 4;
-}
-
-.align-center {
-	align-items: center
-}
-
-.align-stretch {
-	align-items: center
-}
-
-.space-between {
-	justify-content: space-between;
 }
 
 .skill-grid  {
@@ -220,6 +184,21 @@ hr {
 	font-size: 0.7rem;
 }
 
+.condition-div {
+	@extend .flex-row;
+	flex-wrap: wrap-reverse;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+.condition-text {
+	font-size: 1rem;
+}
+
+.selected-condition {
+	border: 2px solid brown;
+}
+
 .feat-title-row {
 	* {
 		margin: unset;
@@ -286,4 +265,40 @@ hr {
 	.tiny-text {
 		font-size: 1rem;
 	}
+}
+
+.no-grow {
+	flex-grow: 0;
+}
+
+.no-margins {
+	margin: unset;
+}
+
+.flex-grow-1 {
+	flex-grow: 1;
+}
+
+.flex-grow-2 {
+	flex-grow: 2;
+}
+
+.flex-grow-3 {
+	flex-grow: 3;
+}
+
+.flex-grow-4 {
+	flex-grow: 4;
+}
+
+.align-center {
+	align-items: center
+}
+
+.align-stretch {
+	align-items: stretch
+}
+
+.space-between {
+	justify-content: space-between;
 }
