@@ -184,10 +184,14 @@ hr {
 	font-size: 0.7rem;
 }
 
+#top_right_div {
+	min-width: 400px;
+}
+
 .condition-div {
 	@extend .flex-row;
 	align-items: center;
-	justify-content:space-between
+	justify-content:center
 }
 
 .condition {

@@ -50,16 +50,40 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
         });
     };
     let change_level = move |cond_name: &str, modifier: i32| {
+        let mut delete = false;
         set_char.update(|c|{
             c.conditions.iter_mut().for_each(|f_cond| {
                 if f_cond.name != cond_name {
                     return;
                 }
                 match f_cond.level {
-                    Some(level) => {f_cond.level = Some(std::cmp::max(level + modifier, 0));},
+                    Some(level) => {
+                        let new_val = level + modifier;
+                        if new_val < 0 {
+                            delete = true;
+                        }
+                        f_cond.level = Some(new_val);
+                    },
                     None => {log!("condition: {cond_name} does not have a level")},
                 }
             });
+            if delete {
+                let mut i = 0;
+                for char_con_info in c.conditions.iter() {
+                    match char_con_info.level {
+                        Some(lvl) => {
+                            if lvl < 0 {
+                                break;
+                            }
+                            else {
+                                i+=1;
+                            }
+                        },
+                        None => {i+=1;},
+                    }
+                }
+                c.conditions.remove(i);
+            }
         });
     };
     
