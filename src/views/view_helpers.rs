@@ -15,8 +15,12 @@ pub fn get_sheet_error_context(view_name: &str) -> RwSignal<SheetError> {
     use_context::<RwSignal<SheetError>>().expect(&format!("{name}: Expect error rw to be set"))
 }
 
+pub fn pretty_print_int(val: i32) -> String {
+    format!("{0}{1}", get_prefix(val), val)
+}
+
 pub fn get_prefix(val:i32) -> String {
-    if val > 0 {"+ "} else {""}.to_string()
+    if val > 0 {"+"} else {""}.to_string()
 }
 
 pub fn check_character_flag(character: &Character, flag: &str) -> bool{

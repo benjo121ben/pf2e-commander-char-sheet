@@ -1,4 +1,4 @@
-use crate::char_data::gear::{Gear, GearType, WeaponType};
+use crate::char_data::gear::*;
 use crate::char_data::tactics::Tactic;
 use crate::views::action_view::ActionView;
 use crate::views::view_helpers::*;
@@ -74,50 +74,49 @@ pub fn WeaponView(
         }
     };
 
-    let get_proficicency = move |weapon: &Gear| {
-        let prof_copy = weapon.proficiency.clone().expect("WeaponView: There should be a weapon proficiency");
-        let stat_opt = character_data.with(|c| c.get_prof_obj_from_name(&prof_copy));
-        match stat_opt {
-            Some(prof) => Ok(prof),
-            None => {let name_copy = prof_copy.clone(); Err(format!("WeaponView: Could not find a proficiency with name {name_copy}"))}
-        }
-    };
+    
 
     let get_weapon_view = move || -> Result<View, String> {
         let weapon = get_weapon()?;
-        let mut stat = get_proficicency(&weapon)?;
-        let weap_info = weapon.weap_info.expect("WeaponView: We expect weapon_data by now. It was checked before");
-        let is_melee = weap_info.w_type == WeaponType::Melee;
-        stat.attribute = if is_melee {"str"} else {"dex"}.to_string();
-        let attack_bonus = character_data.with(|c|stat.calculate_stat(c));
-        let bonus_progression_proficiency = character_data.with(|c|c.abp_data.attack_pot);
-        let prefix = String::from(
-            if attack_bonus + bonus_progression_proficiency > 0 {"+"} else {""}
-        );
-        let dice_amount = character_data.with(|c|c.abp_data.attack_dice);
-        let dice_size = weap_info.damage;
-        let stat_bonus_dmg = if weap_info.w_type == WeaponType::Melee || weapon.traits.iter().any(|t|t=="Propulsive") {
-            let mut val = character_data.with(|c| c.attributes.get_stat_val("str"))?;
-            if weapon.traits.iter().any(|t|t=="Propulsive") {
-                val /= 2;
+        let attack_data = character_data.with(|c| get_weapon_attack_data(&c, &weapon))?;
+        let full_attack_bonus = attack_data.get_full_attack_bonus();
+
+        let bonus_damage_text = {
+            let bonus = attack_data.get_full_damage_bonus();
+            if bonus > 0 {
+                let prefix = get_prefix(bonus);
+                format!("{prefix}{bonus}")
             }
-            let prefix = get_prefix(val);
-            format!(" {prefix}{val}")
-        }
-        else {"".to_string()};
-        let dam_type = weap_info.d_type;
-        let full_damage_text = format!("{dice_amount}d{dice_size}{stat_bonus_dmg}{dam_type}");
-        let total_bonus = format!("{0}{1} {2}", prefix, attack_bonus + bonus_progression_proficiency, full_damage_text);
+            else {"".to_string()}
+        };
+        let att_bonus_text = format!(
+            "{0}/{1}/{2}", 
+            pretty_print_int(full_attack_bonus), 
+            pretty_print_int(full_attack_bonus - attack_data.map), 
+            pretty_print_int(full_attack_bonus - 2*attack_data.map)
+        );
+
+        let full_damage_text = format!(
+            "{0}d{1}{2}{3}",
+            attack_data.dice_amount,
+            attack_data.dice_size,
+            bonus_damage_text,
+            attack_data.dam_type
+        );
+        
         Ok(view!{
             <div class="flex-col bright-bg">
-                <div class="flex-row">
+                <div class="flex-row space-between">
                     <h4>{let name_clone = weapon.name.clone(); move|| name_clone.clone()}</h4>
                     <p>{
-                        move || total_bonus.clone()
+                        move || att_bonus_text.clone()
                     }</p>
-                    <p inner_html={move|| weapon.description.clone()}/>
+                    <p>{
+                        move || full_damage_text.clone()
+                    }</p>
                 </div>
                 <TraitView trait_names=weapon.traits.clone()/>
+                <p inner_html={move|| weapon.description.clone()}/>
             </div>
         }.into_view())
     };
