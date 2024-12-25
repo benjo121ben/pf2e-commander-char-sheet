@@ -23,7 +23,7 @@
     {
       "name": "FORM UP!",
       "actions": 1,
-      "selected": false,
+      "selected": true,
       "traits": [
         "Commander",
         "Tactic"
@@ -234,23 +234,18 @@
       "active": true
     },
     {
-      "level": 0,
-      "name": "Enfeebled",
-      "active": false
-    },
-    {
-      "level": 1,
-      "name": "Frightened",
-      "active": false
-    },
-    {
-      "level": 0,
-      "name": "Stunned",
+      "level": null,
+      "name": "Unconcious",
       "active": false
     },
     {
       "level": null,
-      "name": "Unconcious",
+      "name": "Off-Guard",
+      "active": false
+    },
+    {
+      "level": 1,
+      "name": "Stupefied",
       "active": true
     }
   ],
@@ -354,7 +349,7 @@
     "max_hp": 20,
     "current_hp": 20,
     "hardness": 5,
-    "raised": false
+    "raised": true
   },
   "horse_hp_info": {
     "ancestry_hp": 8,

@@ -123,6 +123,20 @@ hr {
 	grid-template-columns: 6fr 4fr 0.5fr;
 }
 
+.modal {
+	position: fixed; /* Stay in place */
+	z-index: 1; /* Sit on top */
+	right: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0,0,0); /* Fallback color */
+	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+	padding: 1%;
+	justify-items: center;
+}
+
 .proficiency-letter {
 	background-color: gray;
 	color: white;
@@ -176,8 +190,14 @@ hr {
 
 .bright-bg {
 	background-color: rgb(243, 227, 219);
+	border: 2px solid rgb(243, 227, 219);
 	padding: 0.4rem;
 	border-radius: 0.5rem;
+}
+
+.bright-bg:hover {
+	background-color: rgb(243, 232, 227);
+	border: 2px solid brown;
 }
 
 .tiny-text {
@@ -205,6 +225,20 @@ hr {
 	}
 }
 
+.condition-modal {
+	display: grid;
+	float: right;
+	width: fit-content;
+	grid-auto-flow: column;
+	grid-template-rows: repeat(9, 1fr);
+	max-height: 100%;
+	background-color: rgb(235, 209, 198);
+	padding: 0.6rem;
+	border-radius: 0.7rem;
+	justify-items: stretch;
+	gap: 10px 30px
+}
+
 
 .selected-condition {
 	border: 2px solid brown;
@@ -223,6 +257,13 @@ hr {
 
 .selected-tactic {
 	background-color: brown;
+	border: 2px solid brown;
+	color: white;
+}
+
+.selected-tactic:hover {
+	background-color: rgb(166, 62, 62);
+	border: 2px solid rgb(166, 62, 62);
 	color: white;
 }
 

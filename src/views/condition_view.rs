@@ -1,9 +1,9 @@
-use std::collections::HashMap;
+use std::{borrow::Borrow, collections::HashMap};
 
 use leptos::*;
 use leptos::logging::*;
 use super::view_helpers::get_base_context;
-use crate::char_data::conditions::{ConditionData, FullConditionView};
+use crate::char_data::{character::Character, conditions::{ConditionData, FullConditionView}};
 
 
 #[component]
@@ -17,6 +17,7 @@ pub fn ConditionSection() -> impl IntoView {
         }
     };
     let condition_memo = create_memo(move |_| get_active_conditions());
+    let add_cond_visible_signal = create_rw_signal(false);
     view!{
         <div class="condition-div">
             <For
@@ -30,7 +31,15 @@ pub fn ConditionSection() -> impl IntoView {
                     }
                 }
             />
+            <img alt="test" src="icons/add.svg" style="width: 20px; height:20px;"
+                    on:click={move|_| add_cond_visible_signal.set(true)}
+                />
         </div>
+        <Show
+            when=move||add_cond_visible_signal.get()
+        >
+            <ConditionSelectView add_cond_visible_signal=add_cond_visible_signal/>
+        </Show>
     }
 }
 
@@ -124,4 +133,45 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
             </Show> 
         </div>
     }.into_view()
+}
+
+
+#[component]
+pub fn ConditionSelectView(add_cond_visible_signal: RwSignal<bool>) -> impl IntoView {
+    let (_, set_char) = get_base_context("ConditionSelectView");
+    let conditions_map: HashMap<String, ConditionData> = use_context().expect("ConditionSelectView expected conditiondata to be ready");
+    let cond_map_clone = conditions_map.clone();
+
+    let get_condition_list = move |conditions_map: &HashMap<String, ConditionData>| {
+        let mut keys: Vec<String> = conditions_map.keys().cloned().collect();
+        keys.sort();
+        return keys;
+    };
+    
+    let add_condition = move|name: &str, conditions_map: &HashMap<String, ConditionData>| {
+        set_char.update(|c: &mut Character| {
+            c.add_condtion(conditions_map, name);
+        })
+    };
+    
+    view! {
+        <div class="modal" on:click=move |_| add_cond_visible_signal.set(false)>
+            <div class="condition-modal">
+                <For each=move|| get_condition_list(&conditions_map)
+                    key=move|val|val.clone()
+                    children=move |name| {
+                        let nameclone = name.clone();
+                        let conditions_map_clone = cond_map_clone.clone();
+                        view!{
+                            <label class="bright-bg"
+                                on:click=move |_| add_condition(&name, &conditions_map_clone)
+                            >
+                                {move || nameclone.clone()}
+                            </label>
+                        }
+                    }
+                />
+            </div>
+        </div>
+    }
 }

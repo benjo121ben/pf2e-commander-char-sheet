@@ -152,9 +152,26 @@ impl Character {
             );
         }
         ret_vec.sort_by(|a, b| condition_cmp(a,b));
-        log!("{ret_vec:#?}");
-        let size = ret_vec.len();
-        log!("conditions calculated {size}, {ret_vec:#?}");
         return Ok(ret_vec);
+    }
+
+    pub fn add_condtion(self: &mut Self, conditions_map: &HashMap<String, ConditionData>, add_condition_name: &str) {
+        if self.conditions.iter().any(move|cond_info| cond_info.name == add_condition_name) {
+            log!("already exists"); 
+            return;
+        }
+
+        match conditions_map.get(add_condition_name) {
+            Some(cond_data) => {
+                let level = if cond_data.has_value { Some(1) } else { None };
+                let info_to_add = CharacterConditionInfo{
+                    level, 
+                    name: add_condition_name.to_string(), 
+                    active: true
+                };
+                self.conditions.push(info_to_add);
+            },
+            None => log!("no condition data found. Error"),
+        }
     }
 }
