@@ -26,6 +26,11 @@ button {
 	justify-content: center;
 	text-align: center;
 	align-items: center;
+	cursor: pointer;
+}
+
+label, h1, h2, h3, h4, div {
+	cursor: default;
 }
 
 input::-webkit-outer-spin-button,
@@ -137,6 +142,23 @@ hr {
 	justify-items: center;
 }
 
+.bright-bg {
+	background-color: rgb(243, 227, 219);
+	border: 2px solid rgb(243, 227, 219);
+	padding: 0.4rem;
+	border-radius: 0.5rem;
+	cursor: pointer;
+}
+
+.bright-bg * {
+	cursor: pointer;
+}
+
+.bright-bg:hover {
+	background-color: rgb(243, 232, 227);
+	border: 2px solid brown;
+}
+
 .proficiency-letter {
 	background-color: gray;
 	color: white;
@@ -162,10 +184,9 @@ hr {
 .center-text-area {
 	@extend .bright-bg;
 	min-height: 20rem; 
-	background:unset;
 	flex-grow: 2;
-	border: unset;
 	resize: none;
+	cursor: text;
 }
 
 .boosted-stat {
@@ -186,18 +207,6 @@ hr {
 	background-color: rgb(114, 49, 17);
 	border: 2px solid rgb(175, 145, 101);
 	color: white;
-}
-
-.bright-bg {
-	background-color: rgb(243, 227, 219);
-	border: 2px solid rgb(243, 227, 219);
-	padding: 0.4rem;
-	border-radius: 0.5rem;
-}
-
-.bright-bg:hover {
-	background-color: rgb(243, 232, 227);
-	border: 2px solid brown;
 }
 
 .tiny-text {

@@ -129,9 +129,7 @@ impl Character {
 
             if condition.active {
                 for forced_condition in condition_data.forced_conditions {
-                    let name = forced_condition.name.clone();
                     let forced_condition_data = get_condition_data(&forced_condition.name, condition_data_map)?;
-                    log!("forced add {name} {forced_condition_data:#?}");
                     let insert_obj = FullConditionView {
                         level: forced_condition.value,
                         name: forced_condition.name,
@@ -157,7 +155,6 @@ impl Character {
 
     pub fn add_condtion(self: &mut Self, conditions_map: &HashMap<String, ConditionData>, add_condition_name: &str) {
         if self.conditions.iter().any(move|cond_info| cond_info.name == add_condition_name) {
-            log!("already exists"); 
             return;
         }
 

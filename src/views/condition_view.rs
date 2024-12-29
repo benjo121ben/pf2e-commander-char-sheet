@@ -1,4 +1,4 @@
-use std::{borrow::Borrow, collections::HashMap};
+use std::collections::HashMap;
 
 use leptos::*;
 use leptos::logging::*;
@@ -24,7 +24,6 @@ pub fn ConditionSection() -> impl IntoView {
                 each=move|| condition_memo.get().clone()
                 key=move |val| val.name.clone() 
                 children = move |condition| {
-                    log!("{}", condition.name);
                     let cond_clone = condition.clone();
                     view! {
                         <ConditionView condition=cond_clone/>
@@ -49,6 +48,7 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
     let conditions_map: HashMap<String, ConditionData> = use_context().expect("ConditionsSection expected conditiondata to be ready");
     let cond_clone = condition.clone();
     let name = cond_clone.name.clone();
+    let name_clone = cond_clone.name.clone();
     let change_activate = move |cond_name: &str| {
         set_char.update(|c|{
             c.conditions.iter_mut().for_each(|f_cond| {
@@ -73,25 +73,15 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
                         }
                         f_cond.level = Some(new_val);
                     },
-                    None => {log!("condition: {cond_name} does not have a level")},
+                    None => {delete = true; },//this is the way to remove conditions that dont have a level
                 }
             });
             if delete {
-                let mut i = 0;
-                for char_con_info in c.conditions.iter() {
-                    match char_con_info.level {
-                        Some(lvl) => {
-                            if lvl < 0 {
-                                break;
-                            }
-                            else {
-                                i+=1;
-                            }
-                        },
-                        None => {i+=1;},
-                    }
+                match c.conditions.iter().position(|char_cond_info| char_cond_info.name == cond_name) {
+                    Some(index) => {c.conditions.remove(index);},
+                    None => {log!("could not remove condition with name {cond_name}");}
                 }
-                c.conditions.remove(i);
+                
             }
         });
     };
@@ -122,13 +112,15 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
             
             <Show when=move||get_memo().forced>
                 <img alt="disabled" src="icons/lock.svg" style="width: 20px; height:20px;"/>
-            </Show> 
+            </Show>
+            <Show when=move||{let val: FullConditionView = get_memo(); !val.forced}>
+                <img alt="test" src="icons/remove.svg" style="width: 20px; height:20px;"
+                    on:click={let _name = name.clone(); move|_| change_level(&_name, -1)}
+                /> 
+            </Show>
             <Show when=move||{let val: FullConditionView = get_memo(); !val.forced && val.level.is_some()}>
                 <img alt="test" src="icons/add.svg" style="width: 20px; height:20px;"
-                    on:click={let _name =name.clone(); move|_| change_level(&_name, 1)}
-                />
-                <img alt="test" src="icons/remove.svg" style="width: 20px; height:20px;"
-                    on:click={let _name =name.clone(); move|_| change_level(&_name, -1)}
+                    on:click={let _name = name_clone.clone(); move|_| change_level(&_name, 1)}
                 />
             </Show> 
         </div>
