@@ -40,7 +40,7 @@ input::-webkit-inner-spin-button {
 }
 
 
-h2, h3 {
+h1, h2, h3 {
 	margin: 0 0 0.5rem;
 }
 
@@ -129,17 +129,41 @@ hr {
 }
 
 .modal {
+	display:flex;
+	top:0;
+	left:0;
 	position: fixed; /* Stay in place */
 	z-index: 1; /* Sit on top */
-	right: 0;
-	top: 0;
 	width: 100%; /* Full width */
 	height: 100%; /* Full height */
 	overflow: auto; /* Enable scroll if needed */
 	background-color: rgb(0,0,0); /* Fallback color */
-	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+	background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
 	padding: 1%;
-	justify-items: center;
+	align-items: center;
+	justify-content: center;
+}
+
+.modal-content {
+	width: fit-content;
+	height: fit-content;
+	background-color: rgb(235, 209, 198);
+	padding: 1.5rem;
+	border-radius: 0.7rem;
+}
+
+.modal-description {
+	max-width: 70vw;
+}
+
+.condition-modal {
+	@extend .modal-content;
+	display: grid;
+	grid-auto-flow: column;
+	grid-template-rows: repeat(9, 1fr);
+	max-height: 100%;
+	justify-items: stretch;
+	gap: 10px 30px
 }
 
 .bright-bg {
@@ -232,20 +256,6 @@ hr {
 	> label {
 		font-size: 1rem;
 	}
-}
-
-.condition-modal {
-	display: grid;
-	float: right;
-	width: fit-content;
-	grid-auto-flow: column;
-	grid-template-rows: repeat(9, 1fr);
-	max-height: 100%;
-	background-color: rgb(235, 209, 198);
-	padding: 0.6rem;
-	border-radius: 0.7rem;
-	justify-items: stretch;
-	gap: 10px 30px
 }
 
 

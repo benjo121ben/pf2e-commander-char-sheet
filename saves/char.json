@@ -246,6 +246,11 @@
     {
       "level": null,
       "name": "Quickened",
+      "active": false
+    },
+    {
+      "level": null,
+      "name": "Unconcious",
       "active": true
     }
   ],

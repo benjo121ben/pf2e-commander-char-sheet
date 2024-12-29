@@ -8,6 +8,8 @@ use crate::char_data::stats::ProficiencyType;
 use crate::error_template::SheetError;
 use crate::server_side::server_functions::*;
 use crate::views::condition_view::ConditionSection;
+use crate::views::info_modal_view::SimpleModalData;
+use crate::views::info_modal_view::SimpleModalView;
 use super::view_helpers::*;
 use super::stats_views::*;
 use super::equip_views::*;
@@ -24,6 +26,7 @@ pub fn BaseView(
 ) -> impl IntoView {
     //log!("Char on init {char:#?}");
     let (read_ketra, write_ketra) = create_signal(char);
+    let simple_modal_data = create_rw_signal(SimpleModalData::default());
     let sheet_error: RwSignal<SheetError> = create_rw_signal(SheetError::new(""));
     let upload_ketra = create_action( move |_:&i32| async move {
         let ketra = read_ketra.get_untracked();
@@ -46,6 +49,7 @@ pub fn BaseView(
         
     });
     provide_context(read_ketra);
+    provide_context(simple_modal_data);
     provide_context(sheet_error);
     provide_context(write_ketra);
     provide_context(trait_data.clone());
@@ -54,6 +58,7 @@ pub fn BaseView(
     provide_context(conditions_map);
     provide_context(feat_map);
     view!{
+        <SimpleModalView data=simple_modal_data/>
         <CharView/>
         <HorseSection/>
     }

@@ -2,6 +2,8 @@ use leptos::{use_context, ReadSignal, RwSignal, WriteSignal};
 
 use crate::{char_data::character::Character, error_template::SheetError};
 
+use super::info_modal_view::SimpleModalData;
+
 pub fn get_base_context(view_name: &str) -> (ReadSignal<Character>, WriteSignal<Character>){
     let name = String::from(view_name);
     (
@@ -13,6 +15,11 @@ pub fn get_base_context(view_name: &str) -> (ReadSignal<Character>, WriteSignal<
 pub fn get_sheet_error_context(view_name: &str) -> RwSignal<SheetError> {
     let name = String::from(view_name);
     use_context::<RwSignal<SheetError>>().expect(&format!("{name}: Expect error rw to be set"))
+}
+
+pub fn get_modal_context(view_name: &str) -> RwSignal<SimpleModalData> {
+    let name = String::from(view_name);
+    use_context::<RwSignal<SimpleModalData>>().expect(&format!("{name}: Expect modal rw to be set"))
 }
 
 pub fn pretty_print_int(val: i32) -> String {
