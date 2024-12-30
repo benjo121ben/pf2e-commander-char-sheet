@@ -60,6 +60,14 @@ hr {
 	margin: unset;
 }
 
+textarea b {
+	color: #4c85c1;
+}
+
+p b {
+	color: #4c85c1;
+}
+
 .flex-row {
 	display: flex;
 	flex-direction: row;
@@ -153,7 +161,7 @@ hr {
 }
 
 .modal-description {
-	max-width: 70vw;
+	max-width: 60vw;
 }
 
 .condition-modal {
