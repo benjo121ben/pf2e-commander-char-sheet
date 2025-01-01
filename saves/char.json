@@ -230,42 +230,17 @@
   "conditions": [
     {
       "level": null,
-      "name": "Blinded",
-      "active": true
+      "name": "Unconcious",
+      "active": false
     },
     {
       "level": null,
       "name": "Off-Guard",
-      "active": false
-    },
-    {
-      "level": null,
-      "name": "Petrified",
-      "active": false
-    },
-    {
-      "level": null,
-      "name": "Quickened",
-      "active": false
-    },
-    {
-      "level": null,
-      "name": "Unconcious",
-      "active": true
-    },
-    {
-      "level": null,
-      "name": "Controlled",
       "active": true
     },
     {
       "level": 1,
       "name": "Frightened",
-      "active": true
-    },
-    {
-      "level": 1,
-      "name": "Wounded",
       "active": true
     }
   ],

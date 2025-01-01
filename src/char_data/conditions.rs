@@ -43,10 +43,7 @@ pub struct ConditionData {
     #[serde(default)]
     pub added_on_remove: Vec<String>,
 
-    pub increase_on_gain_by: Option<String>,
-
-    #[serde(default)]
-    pub added_on_gain: Vec<String>,
+    pub increase_on_gain_by: Option<String>
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -76,6 +73,17 @@ pub fn get_condition_data(condition_name: &str, condition_data_map: &HashMap<Str
     }
 }
 
+pub fn get_condition_base_lvl (condition: &ConditionData, character: &Character) -> Option<i32>{
+    if !condition.has_value {
+        return None;
+    }
+    //this is relevant for conditions like dying that are increased by other conditions
+    return condition.increase_on_gain_by.as_ref().and_then(|other_condition| {
+        character.get_condition_lvl(&other_condition, true)
+        .and_then(|lvl| Some(lvl + 1))
+    }).or(Some(1))
+}
+
 fn add_full_to_hash_map (full_cond_map: &mut HashMap<String, FullConditionView>, insert_obj: &FullConditionView) {
     match full_cond_map.get_mut(&insert_obj.name) {
         Some(present_cond) => {
@@ -88,6 +96,27 @@ fn add_full_to_hash_map (full_cond_map: &mut HashMap<String, FullConditionView>,
             full_cond_map.insert(insert_obj.name.clone(), insert_obj.clone());
         }
     }
+}
+
+fn add_forced_to_hash_map(condition_data_map: &HashMap<String, ConditionData>, full_cond_map: &mut HashMap<String, FullConditionView>, forced_condition: &ForcedConditionEntry) -> Result<(), String> {
+    let forced_condition_data = get_condition_data(&forced_condition.name, condition_data_map)?;
+    let insert_obj = FullConditionView {
+        level: forced_condition.value,
+        name: forced_condition.name.clone(),
+        active: true,
+        forced: true,
+        condition_data: forced_condition_data.clone(),
+        on_sheet: false,
+    };
+    add_full_to_hash_map(full_cond_map, &insert_obj);
+    for child_forced_data in forced_condition_data.forced_conditions {
+        let res = add_forced_to_hash_map(condition_data_map, full_cond_map, &child_forced_data);
+        if res.is_err() {
+            return res;
+        }
+    }
+    return Ok(());
+    
 }
 
 fn get_ordering(value: i32) -> Ordering {
@@ -127,20 +156,17 @@ impl Character {
             };
             add_full_to_hash_map(&mut full_char_conditions, &insert_obj);
 
-            if condition.active {
-                for forced_condition in condition_data.forced_conditions {
-                    let forced_condition_data = get_condition_data(&forced_condition.name, condition_data_map)?;
-                    let insert_obj = FullConditionView {
-                        level: forced_condition.value,
-                        name: forced_condition.name,
-                        active: true,
-                        forced: true,
-                        condition_data: forced_condition_data,
-                        on_sheet: false,
-                    };
-                    add_full_to_hash_map(&mut full_char_conditions, &insert_obj);
+            if !condition.active {
+                continue;
+            }
+
+            for forced_condition in condition_data.forced_conditions {
+                let res = add_forced_to_hash_map(condition_data_map, &mut full_char_conditions, &forced_condition);
+                if res.is_err() {
+                    return Err(res.unwrap_err());
                 }
             }
+            
         }
         
         let mut ret_vec = vec![];
@@ -153,22 +179,71 @@ impl Character {
         return Ok(ret_vec);
     }
 
-    pub fn add_condtion(self: &mut Self, conditions_map: &HashMap<String, ConditionData>, add_condition_name: &str) {
-        if self.conditions.iter().any(move|cond_info| cond_info.name == add_condition_name) {
-            return;
+    fn get_condition(self: &Self, condition_name: &str) -> Option<(CharacterConditionInfo, usize)>{
+        self.conditions.iter().position(move|cond_info| cond_info.name == condition_name).and_then(|pos| {
+            return Some((self.conditions.get(pos).cloned().unwrap(), pos));
+        })
+    }
+
+    pub fn remove_condition (self: &mut Self, cond_name: &str){
+        match self.get_condition(cond_name) {
+            Some((_, index)) => {self.conditions.remove(index);},
+            None => {log!("could not remove condition with name {cond_name}");}
         }
+    }
+
+    fn get_condition_lvl(self: &Self, condition_name: &str, ignore_inactive: bool) -> Option<i32> {
+        self.get_condition(condition_name).and_then(|(cond_info, _)| {
+            if ignore_inactive && !cond_info.active {
+                return None;
+            }
+            cond_info.level.and_then(|level| {
+                return Some(level);
+            })
+        })
+    }
+
+    pub fn add_condition(self: &mut Self, conditions_map: &HashMap<String, ConditionData>, add_condition_name: &str, increase_lvl: bool) {
+        match self.conditions.iter().position(move|cond_info| cond_info.name == add_condition_name) {
+            Some(pos) => {
+                let current_cond = self.conditions.get(pos).unwrap();
+                if !increase_lvl && current_cond.active {
+                    return;
+                }
+                else if increase_lvl && current_cond.active {
+                    self.increase_condition(add_condition_name);
+                    return;
+                }
+                else { 
+                    //present but not activated, easiest version is to just delete it and replace it
+                    self.conditions.remove(pos);
+                }
+            },
+            None => {}
+        }
+
 
         match conditions_map.get(add_condition_name) {
             Some(cond_data) => {
-                let level = if cond_data.has_value { Some(1) } else { None };
-                let info_to_add = CharacterConditionInfo{
-                    level, 
+                self.conditions.push(CharacterConditionInfo {
+                    level: get_condition_base_lvl(cond_data, self), 
                     name: add_condition_name.to_string(), 
                     active: true
-                };
-                self.conditions.push(info_to_add);
+                });
             },
-            None => log!("no condition data found. Error"),
+            None => log!("no condition data found. Error")
         }
+    }
+
+    pub fn increase_condition(self: &mut Self, cond_name: &str,) {
+        self.conditions.iter_mut()
+            .filter(move|cond_info| cond_info.name == cond_name)
+            .for_each(move|cond_info| {
+                match cond_info.level {
+                    Some(lvl) => cond_info.level = Some(lvl + 1),
+                    None => {}
+                }
+            })
+        ;
     }
 }
