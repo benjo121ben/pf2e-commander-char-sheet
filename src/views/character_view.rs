@@ -66,7 +66,8 @@ pub fn BaseView(
 
 #[component]
 pub fn CharView() -> impl IntoView {
-    let (read_ketra, write_ketra) = get_base_context("CharView");
+    let (read_char, write_char) = get_base_context("CharView");
+    let center_text_memo = create_memo(move|_| read_char.with(|c|c.text.clone()));
     view! {
         <TopCharViewSection/>
         <div class="flex-row space-between">
@@ -76,13 +77,12 @@ pub fn CharView() -> impl IntoView {
                     class="center-text-area" 
                     id="test"
                     on:change=move |event| {
-                        write_ketra
-                        .update(|c| {
+                        write_char.update(|c| {
                             let val: String = event_target_value(&event);
                             c.text = val;
                         })
                     }
-                    prop:value={move || read_ketra.with(|c| c.text.clone())}
+                    prop:value={move || center_text_memo.get()}
                 />
             </section>
             <section class="flex-col equip-section">
@@ -98,7 +98,7 @@ pub fn CharView() -> impl IntoView {
 
 #[component]
 pub fn TopCharViewSection() -> impl IntoView {
-    let (read_ketra, write_ketra) = get_base_context("TopCharView");
+    let (read_char, set_char) = get_base_context("TopCharView");
     let sheet_error = get_sheet_error_context("TopCharView");
     let send_debug = create_action( move |_:&i32| async move {
         sheet_error.set(SheetError::new(""));
@@ -112,9 +112,9 @@ pub fn TopCharViewSection() -> impl IntoView {
         <div class="flex-row">
             <div id="top_left_div">
                 <div id="header_div" class="flex-row no-grow-children">
-                    <h2
-                        on:click=move|_|send_debug.dispatch(0)
-                    >{move || read_ketra.with(|k| k.name.clone())}</h2>
+                    <h2 on:click=move|_|send_debug.dispatch(0)>
+                        {move || read_char.with(|k| k.name.clone())}
+                    </h2>
                     <Show when=move || sheet_error.get().msg != String::from("")>
                         <p style="color: red; margin-left: 40px">{move || sheet_error.get().msg.clone()}</p>
                     </Show>
@@ -123,18 +123,18 @@ pub fn TopCharViewSection() -> impl IntoView {
                     <section>
                         <div class="flex-row align-center no-grow-children">   
                             <button
-                                on:click=move |_| {write_ketra.update(move |c| {
+                                on:click=move |_| {set_char.update(move |c| {
                                     c.level += 1;
                                     c.hp_info.calculate_max_hp(c.level, c.attributes.get_stat_val("con").expect("There should be a con stat"));
                                     c.horse_hp_info.calculate_max_hp(c.level, 2);
                                 })}
-                                on:contextmenu=move |_| {write_ketra.update(move |c| {
+                                on:contextmenu=move |_| {set_char.update(move |c| {
                                     c.level -= 1;
                                     c.hp_info.calculate_max_hp(c.level, c.attributes.get_stat_val("con").expect("There should be a con stat"));
                                     c.horse_hp_info.calculate_max_hp(c.level, 2);
                                 })}
                             >
-                                Level {move || read_ketra.with(|k| k.level)}
+                                Level {move || read_char.with(|k| k.level)}
                             </button>
                             <div>SIZE<br/>Medium</div>
                             <div>SPEED<br/>30ft.</div>
@@ -155,31 +155,26 @@ pub fn TopCharViewSection() -> impl IntoView {
                 </div>
             </div>
             <div id="top_right_div" class="flex-row" style="flex: 1 1 0; align-items: flex-end;">
-                <Show when=move ||read_ketra.with(|c| c.conditions.len() > 0)>
-                    <section id="condition_section">
-                        <ConditionSection/>
-                    </section>
-                </Show>
+                <ConditionSection/>
             </div>
         </div>
     }
 }
 
 #[component]
-pub fn ProficiencySidebar(
-) -> impl IntoView {
+pub fn ProficiencySidebar() -> impl IntoView {
     let (read_char, _): (ReadSignal<Character>, WriteSignal<Character>) = get_base_context("ProficiencySidebar");
-    let show_edit_stats = create_rw_signal(false);
-    let has_incr_init = move || {
+    let show_edit_stats= create_rw_signal(false);
+    let has_incr_init_memo = create_memo(move |_| {
         read_char.with(|c| {
             check_character_flag(c, "incred_init")
         })
-    };
+    });
     view! {
         <section class="flex-col flex-wrap" style="flex-grow: 0; flex-shrink: 0">
             <b><SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::ClassDC]/></b>
             <b><SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Perception]/></b>
-            <Show when=has_incr_init>
+            <Show when={move||has_incr_init_memo.get()}>
                 <div class="skill-grid">
                     <div style="display:flex; flex: 1 0 0">initiative</div>
                     <div></div>

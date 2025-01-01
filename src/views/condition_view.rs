@@ -2,7 +2,6 @@ use std::collections::HashMap;
 
 use leptos::*;
 use leptos::logging::*;
-use server_fn::codec::IntoRes;
 use super::view_helpers::{get_base_context, get_modal_context};
 use crate::char_data::{character::Character, conditions::{ConditionData, FullConditionView}};
 
@@ -20,26 +19,28 @@ pub fn ConditionSection() -> impl IntoView {
     let add_cond_visible_signal = create_rw_signal(false);
     create_effect(move |_| {let _ = condition_memo.get(); log!("cond_view_updated")});
     view!{
-        <div class="condition-div">
-            <For
-                each=move|| condition_memo.get().clone()
-                key=move |val| val.name.clone() 
-                children = move |condition| {
-                    let cond_clone = condition.clone();
-                    view! {
-                        <ConditionView condition=cond_clone/>
+        <section id="condition_section">
+            <div class="condition-div">
+                <For
+                    each=move|| condition_memo.get().clone()
+                    key=move |val| val.name.clone() 
+                    children = move |condition| {
+                        let cond_clone = condition.clone();
+                        view! {
+                            <ConditionView condition=cond_clone/>
+                        }
                     }
-                }
-            />
-            <img alt="test" src="icons/add.svg" style="width: 20px; height:20px;"
-                    on:click={move|_| add_cond_visible_signal.set(true)}
                 />
-        </div>
-        <Show
-            when=move||add_cond_visible_signal.get()
-        >
-            <ConditionSelectView add_cond_visible_signal=add_cond_visible_signal/>
-        </Show>
+                <img alt="test" src="icons/add.svg" style="width: 20px; height:20px;"
+                        on:click={move|_| add_cond_visible_signal.set(true)}
+                    />
+            </div>
+            <Show
+                when=move||add_cond_visible_signal.get()
+            >
+                <ConditionSelectView add_cond_visible_signal=add_cond_visible_signal/>
+            </Show>
+        </section>
     }
 }
 
@@ -53,7 +54,6 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
 
     let current_state_memo: Memo<FullConditionView> = create_memo(move |_| {
         let cond_name_clone = name.clone();
-        log!("update called to {}", cond_name_clone); 
         match get_char.with(|c| c.get_all_conditions(&conditions_map)){
             Ok(conditions_vec) => {
                 conditions_vec.iter().find(|cond| (**cond).name == cond_name_clone).cloned().expect("condition view expects condition to exist")
