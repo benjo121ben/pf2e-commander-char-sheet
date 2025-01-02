@@ -51,7 +51,7 @@
                 "selector": [
                     "perception"
                 ],
-                "amount": {
+                "calculation": {
                     "calc_type": "Fixed",
                     "value": 2
                 }
@@ -71,7 +71,7 @@
         "bonus_penalty": [
             {
                 "selector": ["hp", "maxhp"],
-                "amount": {
+                "calculation": {
                     "calc_type": "Calculated",
                     "penalty_type": "Untyped"
                 }
@@ -102,7 +102,7 @@
         "bonus_penalty": [
             {
                 "selector": ["speed"],
-                "amount": {
+                "calculation": {
                     "calc_type": "Fixed",
                     "penalty_type": "Untyped",
                     "value": 10
@@ -143,7 +143,7 @@
         "bonus_penalty": [
             {
                 "selector": ["ac", "fortitude", "reflex", "will"],
-                "amount": {
+                "calculation": {
                     "calc_type": "Fixed",
                     "value": 1
                 }
@@ -205,7 +205,7 @@
         "bonus_penalty": [
             {
                 "selector": ["ac"],
-                "amount": {
+                "calculation": {
                     "calc_type": "Fixed",
                     "penalty_type": "Circumstance",
                     "value": 2
@@ -235,7 +235,7 @@
         "bonus_penalty": [
             {
                 "selector": ["attack"],
-                "amount": {
+                "calculation": {
                     "calc_type": "Fixed",
                     "value": 2
                 }

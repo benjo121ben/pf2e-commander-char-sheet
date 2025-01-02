@@ -3,7 +3,7 @@ use std::{cmp::Ordering, collections::HashMap};
 use leptos::logging::log;
 use serde::{Serialize, Deserialize};
 
-use super::{bonus_penalty::BonusPenaltyAmount, character::Character};
+use super::{bonus_penalty::BonusPenaltyCalculation, character::Character};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct FullConditionView {
@@ -55,7 +55,7 @@ pub struct ForcedConditionEntry {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ConditionBonusPenalty {
     pub selector: Vec<String>,
-    pub amount: Option<BonusPenaltyAmount>,
+    pub amount: Option<BonusPenaltyCalculation>,
 }
 
 fn get_max_opt_level(opt1:Option<i32>, opt2:Option<i32>) -> Option<i32>{

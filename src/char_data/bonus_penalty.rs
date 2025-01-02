@@ -1,7 +1,7 @@
 use serde::{Serialize, Deserialize};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub enum BonusPenaltyCalcType {
+pub enum CalcType {
     Fixed,
     Calculated,
     Level
@@ -18,12 +18,12 @@ pub enum BonusPenaltyType {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct BonusPenalty {
     pub selector: Vec<String>,
-    pub amount: BonusPenaltyAmount,
+    pub calculation: BonusPenaltyCalculation,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct BonusPenaltyAmount {
-    pub calc_type: BonusPenaltyCalcType,
+pub struct BonusPenaltyCalculation {
+    pub calc_type: CalcType,
     pub value: Option<i32>,
     pub penalty_type: Option<BonusPenaltyType>,
 }
