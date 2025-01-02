@@ -27,13 +27,12 @@ pub fn BaseView(
     let (read_ketra, write_ketra) = create_signal(char);
     let simple_modal_data = create_rw_signal(SimpleModalData::default());
     let sheet_error: RwSignal<SheetError> = create_rw_signal(SheetError::new(""));
-    let upload_ketra = create_action( move |_:&i32| async move {
+    let upload_ketra = create_action( move |_| async move {
         let ketra = read_ketra.get_untracked();
         sheet_error.set(SheetError::new(""));
         let ret_val = set_char(ketra).await;
-        match ret_val {
-            Ok(_) => {},
-            Err(err) => sheet_error.set(SheetError::new(&err.to_string())),
+        if ret_val.is_err() {
+            sheet_error.set(SheetError::new(&ret_val.unwrap_err().to_string()));
         }
     });
     create_effect(move |prev| {
