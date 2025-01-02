@@ -24,7 +24,6 @@ pub fn BaseView(
     conditions: Vec<ConditionData>,
     trait_data: HashMap<String, String>
 ) -> impl IntoView {
-    //log!("Char on init {char:#?}");
     let (read_ketra, write_ketra) = create_signal(char);
     let simple_modal_data = create_rw_signal(SimpleModalData::default());
     let sheet_error: RwSignal<SheetError> = create_rw_signal(SheetError::new(""));
@@ -34,7 +33,7 @@ pub fn BaseView(
         let ret_val = set_char(ketra).await;
         match ret_val {
             Ok(_) => {},
-            Err(err) => {log!("Error saving "); sheet_error.set(SheetError::new(&err.to_string()))},
+            Err(err) => sheet_error.set(SheetError::new(&err.to_string())),
         }
     });
     create_effect(move |prev| {
@@ -104,8 +103,8 @@ pub fn TopCharViewSection() -> impl IntoView {
         sheet_error.set(SheetError::new(""));
         let ret_val = ping_server().await;
         match ret_val {
-            Ok(val) => {log!("Arrived successfully "); sheet_error.set(SheetError::new(&format!("{val}")))},
-            Err(err) => {log!("Error saving "); sheet_error.set(SheetError::new(&err.to_string()))},
+            Ok(val) => sheet_error.set(SheetError::new(&format!("{val}"))),
+            Err(err) => sheet_error.set(SheetError::new(&err.to_string())),
         }
     });
     view!{
@@ -144,10 +143,10 @@ pub fn TopCharViewSection() -> impl IntoView {
                         <DefenseView/>
                     </section>
                     <section class="align-center">
-                        <MainStatsView/>
+                        <AttributeView/>
                     </section>
                     <section class="align-center" id="hp_section">
-                        <HpView horse=false/>
+                        <HpView is_horse=false/>
                     </section>
                     <section class="align-center" id="shield_section">
                         <ShieldView/>
@@ -222,7 +221,7 @@ pub fn HorseSection(
     view! {
         <div class="flex-row">
             <section class="align-center">
-                <HpView horse=true/>
+                <HpView is_horse=true/>
             </section>
             <section class="align-center">
                 <label>AC: {get_ac}</label>

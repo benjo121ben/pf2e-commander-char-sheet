@@ -9,9 +9,10 @@ use leptos::logging::log;
 #[component]
 pub fn EquipView() -> impl IntoView {
     let (character_data, _) = get_base_context("EquipView");
+    let gear_list_memo = create_memo(move|_|character_data.with(|k| k.gear_list.clone()));
     view! {
         <For
-            each=move ||character_data.with(|k| k.gear_list.clone())
+            each=move || gear_list_memo.get()
             key=|gear_item| gear_item.name.clone()
             children=move |gear_item| {
                 let item_name = gear_item.name.clone();
@@ -39,9 +40,7 @@ pub fn EquipView() -> impl IntoView {
 }
 
 #[component]
-pub fn WeaponView(
-    item: Gear
-) -> impl IntoView {
+pub fn WeaponView(item: Gear) -> impl IntoView {
     let (character_data, _) = get_base_context("WeaponView");
     let debug_name_clone = item.name.clone();
     let mut err_text = String::from("");
@@ -57,11 +56,11 @@ pub fn WeaponView(
     }
 
     if &err_text != "" {
-        log!("Logged error {err_text}");
+        log!("Weaponview: Logged error {err_text}");
         return err_text.into_view();
     }
 
-    let get_weapon = move || {
+    let char_weapon_item_memo = create_memo(move |_| {
         let weapon_Item = character_data.with(|c| c.gear_list.iter().find(|i| i.name == item.name.clone()).cloned());
         match weapon_Item {
             Some(weapon) => {
@@ -69,15 +68,15 @@ pub fn WeaponView(
             },
             None => {
                 let second_clone = item.name.clone();
-                Err(format!("WeaponView: Could not find a weapon with name: {second_clone}. weird synchro error"))
+                Err(format!("WeaponView: Could not find a weapon with name: {second_clone}."))
             }
         }
-    };
+    });
 
     
 
     let get_weapon_view = move || -> Result<View, String> {
-        let weapon = get_weapon()?;
+        let weapon = char_weapon_item_memo.get()?;
         let attack_data = character_data.with(|c| get_weapon_attack_data(&c, &weapon))?;
         let full_attack_bonus = attack_data.get_full_attack_bonus();
 
@@ -137,10 +136,9 @@ pub fn WeaponView(
 pub fn TacticsView() -> impl IntoView {
     let (character_data, character_write) = get_base_context("TacticsView");
     let max_tactics = 2;
-    let count_tactics = {
-        move || character_data.with(|c| {
-            c.tactics.iter().filter(|tactic| tactic.selected).count()
-        })
+    let tactics_memo = create_memo(move|_|character_data.with(|c|c.tactics.clone()));
+    let count_tactics = move || {
+        tactics_memo.with(|t|t.iter().filter(|tactic| tactic.selected).count())
     };
     let tactics_header = move || {
         let count = count_tactics();
@@ -151,15 +149,15 @@ pub fn TacticsView() -> impl IntoView {
             <h4>{tactics_header}</h4>
             <div class="flex-col no-grow" style="gap:10px">
                 <For
-                    each=move ||character_data.with(|k| k.tactics.clone())
+                    each=move || tactics_memo.get()
                     key=|tactic| tactic.name.clone()
                     children=move |tactic| {
                         let tac_name = tactic.name.clone();
                         let collapse = create_rw_signal(false);
                         let get_selected_on_tactic = {
                             let tac_name2 = tactic.name.clone();
-                            move || character_data.with(|c|{
-                                c.tactics.iter().find(|val| val.name == tac_name2).expect("TacticView: get_selected - There should be a tactic of the same name").selected
+                            move || tactics_memo.with(|tactics|{
+                                tactics.iter().find(|val| val.name == tac_name2).expect("TacticView: get_selected - There should be a tactic of the same name").selected
                             })
                         };
                         let update_selected_on_tactic = {
@@ -170,8 +168,9 @@ pub fn TacticsView() -> impl IntoView {
                                     return;
                                 }
                                 character_write.update(|c|{
-                                    let mut_ref: &mut Tactic = c.tactics.iter_mut().find(|val| val.name == tac_name2).expect("TacticView: update_selected_on_tactic - There should be a tactic of the same name"); 
-                                    mut_ref.selected = !mut_ref.selected
+                                    let char_tactic: &mut Tactic = c.tactics.iter_mut().find(|val| val.name == tac_name2)
+                                        .expect("TacticView: update_selected_on_tactic - There should be a tactic of the same name"); 
+                                    char_tactic.selected = !char_tactic.selected
                                 });
                             }
                         };

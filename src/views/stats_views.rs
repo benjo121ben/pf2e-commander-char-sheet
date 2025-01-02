@@ -2,7 +2,8 @@ use std::collections::HashMap;
 
 use crate::char_data::feats::Feat;
 use crate::char_data::proficiency::ProficiencyLevel;
-use crate::char_data::stats::ProficiencyType;
+use crate::char_data::stats::{CalculatedStat, ProficiencyType};
+use crate::views::view_helpers::get_modal_context;
 use super::action_view::ActionView;
 use super::view_helpers::get_base_context;
 use leptos::ev::Event;
@@ -13,19 +14,23 @@ use leptos::logging::log;
 
 
 #[component]
-pub fn MainStatsView() -> impl IntoView {
+pub fn AttributeView() -> impl IntoView {
     let unlocked = create_rw_signal(false);
     let (read_char, write_char) = get_base_context("MainStatsView");
-    let update_stat = move |id: String, offset: i32| write_char.update(|f| {
-        f.attributes.set_stat(&id, f.attributes.get_stat_val(&id).expect("MainStatsView - update_stat: There should be an attribute of the same name in the char") + offset);
+    let attribute_memo = create_memo(move|_| read_char.with(|c|c.attributes.clone()));
+    let update_stat_if_unlocked = move |id: &str, offset: i32| write_char.update(|f| {
+        if !unlocked.get() {
+            return
+        }
+        f.attributes.set_stat(id, f.attributes.get_stat_val(id).expect("MainStatsView - update_stat: There should be an attribute of the same name in the char") + offset);
         f.hp_info.calculate_max_hp(f.level, f.attributes.get_stat_val("con").expect("There should be a con stat"));
     });
     view! {
         <div style="display: flex; flex-direction: row; gap: 10px">
             <For
                 each=move || {
-                    read_char.with(|c|
-                        c.attributes
+                    attribute_memo.with(|attributes|
+                        attributes
                         .as_vec()
                         .into_iter()
                         .map(|f| (String::from(f.get_id()), String::from(f.get_abbr())))
@@ -33,39 +38,24 @@ pub fn MainStatsView() -> impl IntoView {
                 }
                 key=|(id, _)| id.clone()
                 children=move |(id, abbr)| {
-                    let id_for_left_click = id.clone();
-                    let id_for_right_click = id.clone();
+                    let id_clone = id.clone();
                     let val = create_memo(move |_| {
-                        let id_clone = id.clone();
-                        read_char.with(move |cha_obj| cha_obj.attributes.get_stat_val(&id_clone).expect("MainStatsView - View: There should be an attribute of the same name in the char"))
+                        attribute_memo.with(|attributes| attributes.get_stat_val(&id_clone).expect("MainStatsView - View: There should be an attribute of the same name in the char"))
                     });
                     view! { 
                         <div 
-                            on:click=move |_| {
-                                if unlocked.get() {
-                                    update_stat(id_for_left_click.clone(), 1)
-                                }
-                            }
-                            on:contextmenu=move |_| {
-                                if unlocked.get() {
-                                    update_stat(id_for_right_click.clone(), -1)
-                                }
-                            }
+                            on:click = {let id_clone = id.clone(); move |_| update_stat_if_unlocked(&id_clone, 1)}
+                            on:contextmenu = {let id_clone = id.clone(); move |_| update_stat_if_unlocked(&id_clone, -1)}
                         >
                             {abbr}: {val}
-                        </div> }
+                        </div>
+                    }
                 }
             />
-            <button
+            <button 
                 on:click=move |_| unlocked.update(|l| *l = !*l)
             >
-            {
-                move || if unlocked.get() {
-                    "Unlocked"
-                } else {
-                    "Locked"
-                }
-            }
+                {move || if unlocked.get() {"Unlocked"} else {"Locked"}}
             </button>
         </div>
     }
@@ -74,22 +64,22 @@ pub fn MainStatsView() -> impl IntoView {
 
 #[component]
 pub fn HpView(
-    horse: bool
+    is_horse: bool
 ) -> impl IntoView {
     let (read_char, write_char) = get_base_context("HpView");
     let reset_input = create_rw_signal(false);
     let temp_hp_switch = create_rw_signal(false);
-    let get_hp_info = move || read_char.with(|c| {
-        if horse {
+    let hp_info_memo = create_memo(move |_| read_char.with(|c| {
+        if is_horse {
             c.horse_hp_info.clone()
         } 
         else {
             c.hp_info.clone()
         }
-    });
+    }));
     let change_hp = move |val: i32| {
         write_char.update(|c| {
-            if horse {
+            if is_horse {
                 c.horse_hp_info.change_hp(val)
             }
             else {
@@ -98,9 +88,8 @@ pub fn HpView(
         });
     }; 
     let hp_view = move || {
-        let hp = get_hp_info().get_hp();
-        let maxhp = get_hp_info().get_max_hp();
-        format!("{hp}/{maxhp}")
+        let hp_info = hp_info_memo.get();
+        format!("{0}/{1}", hp_info.get_hp(), hp_info.get_max_hp())
     };
     let flip_temp_switch = {
         move || temp_hp_switch.update(|active| *active = !*active)
@@ -128,7 +117,7 @@ pub fn HpView(
                                     write_char.update(|c|{
                                         match event_target_value(&event).parse::<i32>() {
                                             Ok(number) => {
-                                                if horse {c.horse_hp_info.set_temp(number)}
+                                                if is_horse {c.horse_hp_info.set_temp(number)}
                                                 else {c.hp_info.set_temp(number)}
                                             },
                                             Err(err) => {log!("HpView/tempHP error getting target value: {err}")},
@@ -144,7 +133,7 @@ pub fn HpView(
                             <label style="color: blue" name="temphp" id="temphp"
                                 on:contextmenu=move |_| flip_temp_switch()
                             >
-                                {move || get_hp_info().get_temp()}
+                                {move || hp_info_memo.get().get_temp()}
                             </label>
                         }.into_view()
                     }
@@ -154,7 +143,7 @@ pub fn HpView(
                 type="number" 
                 id="hp_inp" 
                 class="hp-input"
-                placeholder={move || if horse {"Horse"}else{"HP"}}
+                placeholder={move || if is_horse {"Horse"}else{"HP"}}
                 prop:value=move || {let _ = reset_input.get(); return String::from("")} 
                 on:change=move |event: Event|{ 
                     match event_target_value(&event).parse::<i32>() {
@@ -172,17 +161,18 @@ pub fn HpView(
 #[component]
 pub fn ShieldView() -> impl IntoView {
     let (read_char, write_char) = get_base_context("ShieldView");
-    let reset_input = create_rw_signal(false);
-    let get_shield_info = move || read_char.with(|c| {
+    let shield_info_memo = create_memo(move |_| read_char.with(|c| {
         c.shield_info.clone()
-    });
+    }));
+    let reset_input = create_rw_signal(false);
     let shield_view = move || {
-        let hp = get_shield_info().get_hp();
-        let maxhp = get_shield_info().get_max_hp();
+        let shield_info = shield_info_memo.get();
+        let hp = shield_info.get_hp();
+        let maxhp = shield_info.get_max_hp();
         format!("{hp}/{maxhp}")
     };
     let check_broken = move || {
-        let info = get_shield_info();
+        let info = shield_info_memo.get();
         info.get_hp() <= info.get_max_hp()/2
     };
     let update_health = move |val: i32, ignore: bool| {
@@ -205,7 +195,7 @@ pub fn ShieldView() -> impl IntoView {
                     on:click=move |_| update_hardness(1)
                     on:contextmenu=move |_| update_hardness(-1)
                 >
-                    {move || get_shield_info().hardness}
+                    {move || shield_info_memo.get().hardness}
                 </label>
             </div>
             <input 
@@ -235,21 +225,28 @@ pub fn EditProfListView(
     types: Vec<ProficiencyType> 
 ) -> impl IntoView {
     let (read_char, write_char) = get_base_context("EditProfListView");
+    let proficiencies_memo: Memo<Vec<CalculatedStat>> = create_memo(move |_| 
+        read_char.with(|k| {
+            let type_clone = types.clone();
+            k.proficiencies.clone().into_iter().filter(move|s| type_clone.contains(&s.p_type.clone())).collect()
+        }
+    ));
     view! {
         <div class="skill-grid skill-grid-edit">
             <For
-                each=move || {
-                    let types_clone = types.clone();
-                    read_char.with(
-                        |k| k.proficiencies.clone().into_iter().filter(move |s| types_clone.contains(&s.p_type.clone()))
-                    )
-                }
+                each=move || proficiencies_memo.get()
                 key=|skill| skill.name.clone()
                 children=move |skill| {
                     let name = skill.name.clone();
-                    let name2 = skill.name.clone();
                     let skill_prof = skill.proficiency.clone();
-                    let skill_value = create_memo({move |_| read_char.with(|c| c.get_prof_obj_from_name(&(name.clone())).expect("should be able to find proficiency").calculate_stat(&c))});
+                    let skill_value = create_memo({
+                        let name_clone = name.clone();
+                        move |_| read_char.with(|c| 
+                            c.get_prof_obj_from_name(&name_clone)
+                            .expect("should be able to find proficiency")
+                            .calculate_stat(&c)
+                        )
+                    });
                     let options = vec![ProficiencyLevel::Untrained, ProficiencyLevel::Trained, ProficiencyLevel::Expert, ProficiencyLevel::Master, ProficiencyLevel::Legendary];
                     let change_proficiency = move |event: Event| {
                         write_char.update(|character| {
@@ -265,7 +262,7 @@ pub fn EditProfListView(
                     };
                     view! {
                         <div style="display:flex; flex: 1 0 0">
-                            {move || name2.clone()}
+                            {let name_clone = name.clone(); move || name_clone.clone()}
                         </div>
                         <select name="proficiency" 
                             id="profs"
@@ -355,18 +352,18 @@ pub fn SwitchProfView(
 pub fn DefenseView() -> impl IntoView {
     let (read_character, write_character) = get_base_context("DefenseView");
 
-    let shield_raised = move || read_character.with(|c| c.shield_info.raised);
-    let calc_ac = move || read_character.with(|c| c.calculate_ac());
+    let shield_info_memo = create_memo(move|_| read_character.with(|c| c.shield_info.clone()));
+    let ac_memo= create_memo(move |_| read_character.with(|c| c.calculate_ac()));
     let switch_shield_pos = move |_| write_character.update(|c| c.shield_info.raised=!c.shield_info.raised);
 
     view!{
         <div class="flex-col" style="align-items: stretch">
-            <h3 style="margin: 0; white-spacce:nowrap" on:click=switch_shield_pos class:boosted-stat=shield_raised.clone()>
-                AC: {calc_ac}
+            <h3 style="margin: 0; white-spacce:nowrap" on:click=switch_shield_pos class:boosted-stat=move||shield_info_memo.get().raised>
+                AC: {move||ac_memo.get()}
             </h3>
             <button on:click=switch_shield_pos style="justify-content:center">
-                {
-                    move || if shield_raised() {
+                {move || 
+                    if shield_info_memo.get().raised {
                         "Lower"
                     }
                     else {
@@ -383,19 +380,24 @@ pub fn DefenseView() -> impl IntoView {
 pub fn FeatView() -> impl IntoView {
     let full_feat_map = use_context::<HashMap<String, Feat>>().expect("FeatView: Expected full feat list to be set");
     let (read_character, _) = get_base_context("FeatView");
+    let feats_memo = create_memo(move|_|read_character.with(|c|c.feats.clone()));
     
     let get_feat_list = move || {
         let mut ret_list = vec![];
         let mut missing_feats = vec![];
-        read_character.with(|c| {
-            c.feats.iter().for_each(|feat_name|{
+        feats_memo.with(|feats| {
+            feats.iter().for_each(|feat_name|{
                 match full_feat_map.get(feat_name) {
                     Some(feat) => ret_list.push(feat.clone()),
                     None => missing_feats.push(feat_name.clone()),
                 }
             });
         });
-        ret_list
+
+        if missing_feats.len() > 0 {
+            panic!("Feats missing data{missing_feats:#?}")
+        }
+        return ret_list;
     };
     view!{
         <div class="flex-col">
@@ -431,29 +433,45 @@ pub fn TraitView(
     trait_names: Vec<String>
 ) -> impl IntoView {
     let traitMap = use_context::<HashMap<String, String>>().expect("Trait Hashmap should be set by now");
+    let modal_context = get_modal_context("TraitView");
     view!{
         <div class="flex-row">{
-            trait_names.into_iter().map(|t| {
-                let tooltip = if t.is_empty() {
+            trait_names.into_iter().map(|trait_name| {
+                let tooltip = if trait_name.is_empty() {
                     log!("An empty trait was set somewhere"); String::from("No tooltip") 
                 }
                 else {
-                    let found_val = traitMap.get(&t).clone();
+                    let found_val = traitMap.get(&trait_name).clone();
                     match found_val {
                         Some(description) => String::from(description),
                         None => {
                             //some traits vary after the first word, so we reattempt after a splice
-                            let first_word = traitMap.get(t.split_whitespace().next().expect("TraitView: there should be at least one word in this trait by now"));
+                            let first_word = traitMap.get(trait_name.split_whitespace().next().expect("TraitView: there should be at least one word in this trait by now"));
                             match first_word {
                                 Some(description) => String::from(description),
-                                None => {log!("No tooltip was set for {0}", t); String::from("No tooltip") }
+                                None => {log!("No tooltip was set for {0}", trait_name); String::from("No tooltip") }
                             }
                         },
                     }
                 };
                 
                 view!{
-                    <div class="trait tiny-text" title=tooltip>{t}</div>
+                    <div class="trait tiny-text" title=tooltip.clone()
+                        on:click={
+                            let name = trait_name.clone(); 
+                            let desc = tooltip.clone();
+                            move|ev|{
+                                ev.stop_propagation();
+                                modal_context.update(|cont| {
+                                    cont.visible = true; 
+                                    cont.title = name.clone();
+                                    cont.description = desc.clone();
+                                })
+                            }
+                        }
+                    >
+                        {trait_name} 
+                    </div>
                 }
             }).collect::<Vec<_>>()
         }</div>

@@ -1,11 +1,11 @@
 {
   "name": "Ketrania Valenzia Adriaste Uth Viharin VII",
-  "level": 5,
+  "level": 4,
   "hp_info": {
     "ancestry_hp": 8,
     "class_hp": 8,
-    "max_hp": 53,
-    "current_hp": 47,
+    "max_hp": 44,
+    "current_hp": 38,
     "temp_hp": 0
   },
   "attributes": [
@@ -237,6 +237,11 @@
       "level": null,
       "name": "Unconcious",
       "active": false
+    },
+    {
+      "level": null,
+      "name": "Encumbered",
+      "active": true
     }
   ],
   "gear_list": [
@@ -344,8 +349,8 @@
   "horse_hp_info": {
     "ancestry_hp": 8,
     "class_hp": 6,
-    "max_hp": 48,
-    "current_hp": 48,
+    "max_hp": 40,
+    "current_hp": 40,
     "temp_hp": 0
   },
   "override_prof": {

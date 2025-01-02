@@ -9,15 +9,13 @@ use crate::char_data::{character::Character, conditions::{ConditionData, FullCon
 pub fn ConditionSection() -> impl IntoView {
     let (read_char, _) = get_base_context("ConditionSection");
     let conditions_map: HashMap<String, ConditionData> = use_context().expect("ConditionsSection expected conditiondata to be ready");
-    let get_char_conditions = move || {
+    let condition_memo = create_memo(move |_| {
         match read_char.with(|c| c.get_all_conditions(&conditions_map)) {
             Ok(condition_list) => condition_list.clone(),
             Err(error) => {log!("ConditionSection: error getting character conditions: {error}"); vec![]}
         }
-    };
-    let condition_memo = create_memo(move |_| get_char_conditions());
+    });
     let add_cond_visible_signal = create_rw_signal(false);
-    create_effect(move |_| {let _ = condition_memo.get(); log!("cond_view_updated")});
     view!{
         <section id="condition_section">
             <div class="condition-div">
@@ -60,7 +58,6 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
             },
             Err(e) => {
                 let message = format!("Error with getting condition data: {}", e);
-                log!("{}", message);
                 panic!("{}", message);
             },
         }

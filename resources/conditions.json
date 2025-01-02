@@ -8,6 +8,16 @@
         ]
     },
     {
+        "name": "Clumsy",
+        "has_value": true,
+        "description": "Your movements become clumsy and inexact. Clumsy always includes a value. You take a <b>status penalty</b> equal to the condition value to <b>Dexterity-based checks and DCs,</b> including AC, Reflex saves, ranged attack rolls, and skill checks using Acrobatics, Stealth, and Thievery.",
+        "bonus_penalty": [
+            {
+                "selector": ["dex"]
+            }
+        ]
+    },
+    {
         "name": "Concealed",
         "has_value": false,
         "description": "You are difficult for one or more creatures to see due to thick fog or some other obscuring feature. You can be concealed to some creatures but not others. While concealed, you can still be observed, but you're tougher to target. A creature that you're concealed from must succeed at a <b>DC 5 flat check when targeting you with an attack, spell, or other effect</b>. If the check fails, you aren't affected. <b>Area effects aren't subject to this flat check.</b>"
