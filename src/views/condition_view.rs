@@ -47,24 +47,29 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
     let (get_char, set_char) = get_base_context("ConditionSection");
     let modal_data = get_modal_context("ConditionsSection");
     let conditions_map: HashMap<String, ConditionData> = use_context().expect("ConditionsSection expected conditiondata to be ready");
+    let conditions_map_clone = conditions_map.clone();
     let cond_data = conditions_map.get(&condition.name).expect("ConditionsSection, expecting condition to exist in map").clone();
     let name = condition.name.clone();
 
-    let current_state_memo: Memo<FullConditionView> = create_memo(move |_| {
-        let cond_name_clone = name.clone();
-        match get_char.with(|c| c.get_all_conditions(&conditions_map)){
-            Ok(conditions_vec) => {
-                conditions_vec.iter().find(|cond| (**cond).name == cond_name_clone).cloned().expect("condition view expects condition to exist")
-            },
-            Err(e) => {
-                let message = format!("Error with getting condition data: {}", e);
-                panic!("{}", message);
-            },
+    let current_state_memo: Memo<FullConditionView> = create_memo({
+        let cond_map_clone = conditions_map.clone();
+        move |_| {
+            let cond_name_clone = name.clone();
+            match get_char.with(|c| c.get_all_conditions(&cond_map_clone)){
+                Ok(conditions_vec) => {
+                    conditions_vec.iter().find(|cond| (**cond).name == cond_name_clone).cloned().expect("condition view expects condition to exist")
+                },
+                Err(e) => {
+                    let message = format!("Error with getting condition data: {}", e);
+                    panic!("{}", message);
+                },
+            }
         }
     });
+
     let get_current_cond_view_state = move || current_state_memo.get();
 
-    let change_level_and_delete_if_zero = move |modifier: i32| {
+    let change_level_and_delete_if_zero = move |conditions_map: &HashMap<String, ConditionData> , modifier: i32| {
         let cond_view = get_current_cond_view_state();
         let cond_name = cond_view.name.clone();
         if cond_view.forced {
@@ -89,6 +94,9 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
             });
             if delete {
                 c.remove_condition(&cond_name);
+                for condition_to_add_name in  cond_view.condition_data.added_on_remove {
+                    c.add_condition(conditions_map, &condition_to_add_name, true);
+                }
             }
         });
     };
@@ -137,12 +145,20 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
             </Show>
             <Show when=move||{let val: FullConditionView = get_current_cond_view_state(); !val.forced}>
                 <img alt="decr" src="icons/remove.svg" style="width: 20px; height:20px;"
-                    on:click=move|ev| {ev.stop_propagation(); change_level_and_delete_if_zero(-1)}
+                    on:click={
+                        let map = conditions_map.clone(); 
+                        let change_lvl = change_level_and_delete_if_zero.clone(); 
+                        move|ev| {ev.stop_propagation(); change_lvl(&map,-1)}
+                    }
                 /> 
             </Show>
             <Show when=move||{let val: FullConditionView = get_current_cond_view_state(); !val.forced && val.level.is_some()}>
                 <img alt="incr" src="icons/add.svg" style="width: 20px; height:20px;"
-                    on:click=move|ev| {ev.stop_propagation(); change_level_and_delete_if_zero(1)}
+                    on:click={
+                        let map = conditions_map_clone.clone(); 
+                        let change_lvl = change_level_and_delete_if_zero.clone(); 
+                        move|ev| {ev.stop_propagation(); change_lvl(&map,1)}
+                    }
                 />
             </Show> 
         </div>
