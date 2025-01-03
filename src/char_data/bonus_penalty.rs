@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, hash::Hash, vec};
 
 use serde::{Serialize, Deserialize};
 
@@ -38,6 +38,14 @@ pub struct StatBonusPenalties {
 }
 
 impl StatBonusPenalties {
+    pub fn new() -> Self {
+        StatBonusPenalties {
+            selector: "".to_string(),
+            bonuses: HashMap::new(),
+            penalties: HashMap::new(),
+        }
+    }
+
     pub fn calculate_total(self: &Self) -> i32 {
         let bonus_total = self.bonuses.values().fold(
             0,
@@ -97,4 +105,29 @@ impl BonusPenaltyCalculation {
             },
         }
     }
+}
+
+pub fn combine_selected_bonus_penalties(penalty_map: &HashMap<String, StatBonusPenalties>, selectors: &Vec<String>) -> StatBonusPenalties {
+    let mut bp_vector = vec![];
+    selectors.iter().map(|select| penalty_map.get(select)).for_each(|stat_bp_option|{
+        stat_bp_option.and_then(|bp|{
+            bp_vector.push(bp.clone());
+            None::<()>
+        });
+    });
+    return combine_stat_bonus_penalties(&bp_vector);
+}
+
+fn combine_stat_bonus_penalties(list_of_affectors: &Vec<StatBonusPenalties>) -> StatBonusPenalties {
+    let mut ret = StatBonusPenalties::new();
+    list_of_affectors.iter().for_each(|bp|{
+        for (key, val) in bp.bonuses.iter() {
+            ret.add_bonus_penalty(&key, *val);
+        }
+
+        for (key, val) in bp.penalties.iter() {
+            ret.add_bonus_penalty(&key, *val);
+        }
+    });
+    ret
 }

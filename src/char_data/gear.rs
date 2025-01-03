@@ -1,6 +1,8 @@
+use std::collections::HashMap;
+
 use serde::{Deserialize, Serialize};
 
-use super::{character::Character, stats::CalculatedStat};
+use super::{bonus_penalty::StatBonusPenalties, character::Character, stats::CalculatedStat};
 
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -40,6 +42,7 @@ pub struct AttackData {
     pub attribute_att_bonus: i32,
     pub prof_att_bonus: i32,
     pub item_att_bonus: i32,
+    pub bonus_penalty_adjustment: i32,
     pub map: i32,
     pub dice_amount: i32,
     pub dice_size: i32,
@@ -71,14 +74,14 @@ pub fn get_weapon_proficiency (character_data: &Character, weapon: &Gear) -> Res
     }
 }
 
-pub fn get_weapon_attack_data(character_data: &Character, weapon: &Gear) -> Result<AttackData, String> {
+pub fn get_weapon_attack_data(character_data: &Character, bp_map: &HashMap<String, StatBonusPenalties>, weapon: &Gear) -> Result<AttackData, String> {
         let mut stat: CalculatedStat = get_weapon_proficiency(&character_data, &weapon)?;
         let weap_info = match weapon.weap_info.clone() {
             Some(data) => Ok(data),
             None => Err(String::from("get_weapon_attack_data: We expect weapon_data by now. It was checked before")),
         }?;
         stat.attribute = if weap_info.w_type == WeaponType::Melee {"str"} else {"dex"}.to_string();
-        let base_bonus = stat.calculate_stat(&character_data);
+        let (base_bonus, bp_adjustment) = stat.calculate_stat(&character_data, bp_map);
         let bonus_progression_proficiency = character_data.abp_data.attack_pot;
         let map = if weapon.traits.contains(&"Agile".to_string()) {4} else {5};
 
@@ -103,6 +106,7 @@ pub fn get_weapon_attack_data(character_data: &Character, weapon: &Gear) -> Resu
             attribute_damage_bonus: stat_bonus_dmg,
             item_damage_bonus: 0,
             dam_type: weap_info.d_type,
+            bonus_penalty_adjustment: bp_adjustment,
         })
         
 }

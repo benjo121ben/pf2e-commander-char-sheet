@@ -52,9 +52,7 @@
         "description": "You can't hear. You automatically critically fail Perception checks that require you to be able to hear. You take a <b>–2 status penalty</b> to <b>Perception checks for initiative and checks that involve sound</b> but also rely on other senses. If you perform an action that has the auditory trait, you must succeed at a <b>DC 5 flat check</b> or the action is lost; attempt the check after spending the action but before any effects are applied. You are immune to auditory effects while deafened.",
         "bonus_penalty": [
             {
-                "selector": [
-                    "perception"
-                ],
+                "selector": ["perception"],
                 "calculation": {
                     "calc_type": "Fixed",
                     "penalty_type": "Status",
