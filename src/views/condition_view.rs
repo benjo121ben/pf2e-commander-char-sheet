@@ -1,20 +1,25 @@
 use std::collections::HashMap;
 
 use leptos::*;
-use leptos::logging::*;
 use super::view_helpers::{get_base_context, get_modal_context};
-use crate::char_data::{character::Character, conditions::{ConditionData, FullConditionView}};
+use crate::{
+    char_data::{
+        character::Character, 
+        conditions::{
+            ConditionData, 
+            FullConditionView
+        }
+    }, 
+    views::view_helpers::{
+        get_all_conditions_vector_memo_from_context, 
+        get_bonus_penalty_map_from_context
+    }
+};
 
 #[component]
 pub fn ConditionSection() -> impl IntoView {
-    let (read_char, _) = get_base_context("ConditionSection");
-    let conditions_map: HashMap<String, ConditionData> = use_context().expect("ConditionsSection expected conditiondata to be ready");
-    let condition_memo = create_memo(move |_| {
-        match read_char.with(|c| c.get_all_conditions(&conditions_map)) {
-            Ok(condition_list) => condition_list.clone(),
-            Err(error) => {log!("ConditionSection: error getting character conditions: {error}"); vec![]}
-        }
-    });
+    let condition_memo = get_all_conditions_vector_memo_from_context("ConditionSection");
+    let bonus_penalty_memo = get_bonus_penalty_map_from_context("ConditionSection");
     let add_cond_visible_signal = create_rw_signal(false);
     view!{
         <section id="condition_section">
@@ -38,6 +43,9 @@ pub fn ConditionSection() -> impl IntoView {
             >
                 <ConditionSelectView add_cond_visible_signal=add_cond_visible_signal/>
             </Show>
+            <div>
+                {move || format!("{:#?}", bonus_penalty_memo.get())}
+            </div>
         </section>
     }
 }
@@ -47,8 +55,6 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
     let (get_char, set_char) = get_base_context("ConditionSection");
     let modal_data = get_modal_context("ConditionsSection");
     let conditions_map: HashMap<String, ConditionData> = use_context().expect("ConditionsSection expected conditiondata to be ready");
-    let conditions_map_clone = conditions_map.clone();
-    let cond_data = conditions_map.get(&condition.name).expect("ConditionsSection, expecting condition to exist in map").clone();
     let name = condition.name.clone();
 
     let current_state_memo: Memo<FullConditionView> = create_memo({
@@ -69,41 +75,47 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
 
     let get_current_cond_view_state = move || current_state_memo.get();
 
-    let change_level_and_delete_if_zero = move |conditions_map: &HashMap<String, ConditionData> , modifier: i32| {
-        let cond_view = get_current_cond_view_state();
-        let cond_name = cond_view.name.clone();
-        if cond_view.forced {
-            return;
-        }
-        let mut delete = false;
-        set_char.update(|c|{
-            c.conditions.iter_mut().for_each(|f_cond| {
-                if f_cond.name != cond_view.name {
-                    return;
-                }
-                match f_cond.level {
-                    Some(level) => {
-                        let new_val = level + modifier;
-                        if new_val == 0 {
-                            delete = true;
-                        }
-                        f_cond.level = Some(new_val);
-                    },
-                    None => {delete = true; },//this is the way to remove conditions that dont have a level
+    let change_level_and_delete_if_zero = {
+        let conditions_map_clone = conditions_map.clone();
+        move |modifier: i32| {
+            let cond_view = get_current_cond_view_state();
+            let cond_name = cond_view.name.clone();
+            if cond_view.forced {
+                return;
+            }
+            let mut delete = false;
+            set_char.update(|c|{
+                c.conditions.iter_mut().for_each(|f_cond| {
+                    if f_cond.name != cond_view.name {
+                        return;
+                    }
+                    match f_cond.level {
+                        Some(level) => {
+                            let new_val = level + modifier;
+                            if new_val == 0 {
+                                delete = true;
+                            }
+                            f_cond.level = Some(new_val);
+                        },
+                        None => {delete = true; },//this is the way to remove conditions that dont have a level
+                    }
+                });
+                if delete {
+                    c.remove_condition(&cond_name);
+                    for condition_to_add_name in  cond_view.condition_data.added_on_remove {
+                        c.add_condition(&conditions_map_clone, &condition_to_add_name, true);
+                    }
                 }
             });
-            if delete {
-                c.remove_condition(&cond_name);
-                for condition_to_add_name in  cond_view.condition_data.added_on_remove {
-                    c.add_condition(conditions_map, &condition_to_add_name, true);
-                }
-            }
-        });
+        }
     };
+
+    //we have to clone this, because they are passed into different show contexts, which means we require this data twice
+    let change_level_and_delete_if_zero_clone = change_level_and_delete_if_zero.clone();
 
 
     let open_condition_data_modal = move || {
-        let cond_data_clone = cond_data.clone();
+        let cond_data_clone = condition.condition_data.clone();
         modal_data.update(|data| {
             data.visible = true;
             data.title = cond_data_clone.name;
@@ -146,18 +158,16 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
             <Show when=move||{let val: FullConditionView = get_current_cond_view_state(); !val.forced}>
                 <img alt="decr" src="icons/remove.svg" style="width: 20px; height:20px;"
                     on:click={
-                        let map = conditions_map.clone(); 
-                        let change_lvl = change_level_and_delete_if_zero.clone(); 
-                        move|ev| {ev.stop_propagation(); change_lvl(&map,-1)}
+                        let change_lvl = change_level_and_delete_if_zero.clone();
+                        move|ev| {ev.stop_propagation(); change_lvl(-1)}
                     }
                 /> 
             </Show>
             <Show when=move||{let val: FullConditionView = get_current_cond_view_state(); !val.forced && val.level.is_some()}>
                 <img alt="incr" src="icons/add.svg" style="width: 20px; height:20px;"
                     on:click={
-                        let map = conditions_map_clone.clone(); 
-                        let change_lvl = change_level_and_delete_if_zero.clone(); 
-                        move|ev| {ev.stop_propagation(); change_lvl(&map,1)}
+                        let change_lvl = change_level_and_delete_if_zero_clone.clone();
+                        move|ev| {ev.stop_propagation(); change_lvl(1)}
                     }
                 />
             </Show> 

@@ -1,6 +1,8 @@
-use leptos::{use_context, ReadSignal, RwSignal, WriteSignal};
+use std::collections::HashMap;
 
-use crate::{char_data::character::Character, error_template::SheetError};
+use leptos::{use_context, Memo, ReadSignal, RwSignal, WriteSignal};
+
+use crate::{char_data::{bonus_penalty::StatBonusPenalties, character::Character, conditions::FullConditionView}, error_template::SheetError};
 
 use super::info_modal_view::SimpleModalData;
 
@@ -10,6 +12,14 @@ pub fn get_base_context(view_name: &str) -> (ReadSignal<Character>, WriteSignal<
         use_context::<ReadSignal<Character>>().expect(&format!("{name}: Expect Char read to be set")),
         use_context::<WriteSignal<Character>>().expect(&format!("{name}: Expect Char write to be set")),
     )
+}
+
+pub fn get_all_conditions_vector_memo_from_context(view_name: &str) -> Memo<Vec<FullConditionView>> {
+    use_context::<Memo<Vec<FullConditionView>>>().expect(&format!("{view_name}: Expect conditions to be added to context"))
+}
+
+pub fn get_bonus_penalty_map_from_context(view_name: &str) ->Memo<HashMap<String, StatBonusPenalties>> {
+    use_context::<Memo<HashMap<String, StatBonusPenalties>>>().expect(&format!("{view_name}: Expect bonus_penalties to be calculated"))
 }
 
 pub fn get_sheet_error_context(view_name: &str) -> RwSignal<SheetError> {

@@ -229,18 +229,28 @@
   ],
   "conditions": [
     {
-      "level": 2,
-      "name": "Frightened",
+      "level": null,
+      "name": "Unconcious",
       "active": true
     },
     {
       "level": null,
-      "name": "Unconcious",
+      "name": "Encumbered",
+      "active": false
+    },
+    {
+      "level": 1,
+      "name": "Frightened",
+      "active": false
+    },
+    {
+      "level": 3,
+      "name": "Clumsy",
       "active": false
     },
     {
       "level": null,
-      "name": "Encumbered",
+      "name": "Off-Guard",
       "active": true
     }
   ],

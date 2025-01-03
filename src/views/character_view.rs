@@ -1,7 +1,10 @@
 use std::collections::HashMap;
 
+use crate::char_data::bonus_penalty::StatBonusPenalties;
 use crate::char_data::character::*;
+use crate::char_data::conditions::get_stat_bonus_penalty_map;
 use crate::char_data::conditions::ConditionData;
+use crate::char_data::conditions::FullConditionView;
 use crate::char_data::feats::Feat;
 use crate::char_data::proficiency::ProficiencyLevel;
 use crate::char_data::stats::ProficiencyType;
@@ -15,7 +18,6 @@ use super::stats_views::*;
 use super::equip_views::*;
 
 use leptos::*;
-use leptos::logging::log;
 
 #[component]
 pub fn BaseView(
@@ -24,19 +26,19 @@ pub fn BaseView(
     conditions: Vec<ConditionData>,
     trait_data: HashMap<String, String>
 ) -> impl IntoView {
-    let (read_ketra, write_ketra) = create_signal(char);
+    let (read_char, write_char) = create_signal(char);
     let simple_modal_data = create_rw_signal(SimpleModalData::default());
     let sheet_error: RwSignal<SheetError> = create_rw_signal(SheetError::new(""));
     let upload_ketra = create_action( move |_| async move {
-        let ketra = read_ketra.get_untracked();
+        let character = read_char.get_untracked();
         sheet_error.set(SheetError::new(""));
-        let ret_val = set_char(ketra).await;
+        let ret_val = set_char(character).await;
         if ret_val.is_err() {
             sheet_error.set(SheetError::new(&ret_val.unwrap_err().to_string()));
         }
     });
     create_effect(move |prev| {
-        let _getUp = read_ketra.with(|c| c.name.clone());
+        let _getUp = read_char.with(|c| c.name.clone());
         match prev {
             Some(_) => {
                 upload_ketra.dispatch(0);
@@ -46,15 +48,38 @@ pub fn BaseView(
         }
         
     });
-    provide_context(read_ketra);
+    provide_context(read_char);
     provide_context(simple_modal_data);
     provide_context(sheet_error);
-    provide_context(write_ketra);
+    provide_context(write_char);
     provide_context(trait_data.clone());
+
     let conditions_map: HashMap<String, ConditionData> = conditions.into_iter().map(|cond: ConditionData| (cond.name.clone(), cond)).collect();
     let feat_map: HashMap<String, Feat> = feats.into_iter().map(|feat: Feat| (feat.name.clone(), feat)).collect();
-    provide_context(conditions_map);
-    provide_context(feat_map);
+    provide_context(conditions_map.clone());
+    provide_context(feat_map.clone());
+
+    let char_level_memo = create_memo(move |_| read_char.with(|c| c.level));
+    let condition_memo = create_memo(move |_| {
+        match read_char.with(|c| c.get_all_conditions(&conditions_map)) {
+            Ok(condition_list) => condition_list.clone(),
+            Err(error) => {panic!("ConditionSection: error getting character conditions: {error}");}
+        }
+    });
+    let bonus_penalty_memo: Memo<HashMap<String, StatBonusPenalties>> = create_memo(move |_| {
+        let conditions = condition_memo.get();
+        let char_level = char_level_memo.get();
+        let bonus_penalty_map = match get_stat_bonus_penalty_map(char_level, &conditions) {
+            Ok(map) => map,
+            Err(err) => panic!("{}",err),
+        };
+        bonus_penalty_map
+    });
+
+    provide_context(condition_memo);
+    provide_context(bonus_penalty_memo);
+
+
     view!{
         <SimpleModalView data=simple_modal_data/>
         <CharView/>

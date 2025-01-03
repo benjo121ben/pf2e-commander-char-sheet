@@ -15,7 +15,7 @@
             {
                 "selector": ["dex"],
                 "calculation": {
-                    "calc_type": "Level",
+                    "calc_type": "ConditionValue",
                     "penalty_type": "Status"
                 }
             }
@@ -84,7 +84,7 @@
             {
                 "selector": ["con"],
                 "calculation": {
-                    "calc_type": "Level",
+                    "calc_type": "ConditionValue",
                     "penalty_type": "Status"
                 }
             }
@@ -133,7 +133,7 @@
             {
                 "selector": ["str"],
                 "calculation": {
-                    "calc_type": "Level",
+                    "calc_type": "ConditionValue",
                     "penalty_type": "Status"
                 }
             }
@@ -182,7 +182,7 @@
             {
                 "selector": ["check", "dc"],
                 "calculation": {
-                    "calc_type": "Level",
+                    "calc_type": "ConditionValue",
                     "penalty_type": "Status"
                 }
             }
@@ -300,7 +300,7 @@
             {
                 "selector": ["check", "dc"],
                 "calculation": {
-                    "calc_type": "Level",
+                    "calc_type": "ConditionValue",
                     "penalty_type": "Status"
                 }
             }
@@ -327,7 +327,7 @@
             {
                 "selector": ["int", "wis", "cha"],
                 "calculation": {
-                    "calc_type": "Level",
+                    "calc_type": "ConditionValue",
                     "penalty_type": "Status"
                 }
             }

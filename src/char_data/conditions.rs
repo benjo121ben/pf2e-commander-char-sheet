@@ -3,7 +3,7 @@ use std::{cmp::Ordering, collections::HashMap};
 use leptos::logging::log;
 use serde::{Serialize, Deserialize};
 
-use super::{bonus_penalty::BonusPenalty, character::Character};
+use super::{bonus_penalty::{StatBonusPenalties, BonusPenalty}, character::Character};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct FullConditionView {
@@ -52,6 +52,32 @@ pub struct ForcedConditionEntry {
     pub value: Option<i32>,
 }
 
+impl FullConditionView {
+    pub fn add_conditon_bonus_penalties(self: &Self, bonus_penalty_hashmap: &mut HashMap<String, StatBonusPenalties>, character_level: i32) -> Result<(), String> {
+        for bonus_or_penalty in self.condition_data.bonus_penalty.iter() {
+            let calculation = &bonus_or_penalty.calculation;
+            let affecting_value: i32 = calculation.calculate_bonus_penalty_value(character_level, self.level)?;
+            bonus_or_penalty.selector.iter().for_each(|select| {
+                match bonus_penalty_hashmap.get_mut(select) {
+                    Some(existing_data) => {
+                        existing_data.add_bonus_penalty(&calculation.penalty_type, affecting_value);
+                    },
+                    None => {
+                        let mut new_data = StatBonusPenalties {
+                            selector: select.clone(),
+                            bonuses: HashMap::new(),
+                            penalties: HashMap::new(),
+                        };
+                        new_data.add_bonus_penalty(&calculation.penalty_type, affecting_value);
+                        bonus_penalty_hashmap.insert(select.clone(), new_data);
+                    },
+                }
+            });
+        }
+        Ok(())
+    }
+}
+
 fn get_max_opt_level(opt1:Option<i32>, opt2:Option<i32>) -> Option<i32>{
     let val = match (opt1, opt2) {
         (Some(val1), Some(val2)) => Some(std::cmp::max(val1, val2)),
@@ -76,6 +102,20 @@ pub fn get_condition_base_lvl (condition: &ConditionData, character: &Character)
         character.get_condition_lvl(&other_condition, true)
         .and_then(|lvl| Some(lvl + 1))
     }).or(Some(1))
+}
+
+pub fn get_stat_bonus_penalty_map(character_level: i32, conditions: &Vec<FullConditionView>) -> Result<HashMap<String, StatBonusPenalties>, String> {
+    let affecting_conditions: Vec<&FullConditionView> = 
+        conditions.into_iter()
+        .filter(|cond|cond.active)
+        .collect();
+
+    let mut bonus_penalty_hashmap: HashMap<String, StatBonusPenalties> = HashMap::new();
+
+    for condition in affecting_conditions.into_iter() {
+        let _ = condition.add_conditon_bonus_penalties(&mut bonus_penalty_hashmap, character_level)?;
+    }
+    Ok(bonus_penalty_hashmap)
 }
 
 fn add_full_to_hash_map (full_cond_map: &mut HashMap<String, FullConditionView>, insert_obj: &FullConditionView) {
