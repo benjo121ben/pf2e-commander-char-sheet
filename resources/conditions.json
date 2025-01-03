@@ -13,7 +13,11 @@
         "description": "Your movements become clumsy and inexact. Clumsy always includes a value. You take a <b>status penalty</b> equal to the condition value to <b>Dexterity-based checks and DCs,</b> including AC, Reflex saves, ranged attack rolls, and skill checks using Acrobatics, Stealth, and Thievery.",
         "bonus_penalty": [
             {
-                "selector": ["dex"]
+                "selector": ["dex"],
+                "calculation": {
+                    "calc_type": "Level",
+                    "penalty_type": "Status"
+                }
             }
         ]
     },
@@ -53,7 +57,8 @@
                 ],
                 "calculation": {
                     "calc_type": "Fixed",
-                    "value": 2
+                    "penalty_type": "Status",
+                    "value": -2
                 }
             }
         ]
@@ -77,7 +82,11 @@
                 }
             },
             {
-                "selector": ["con"]
+                "selector": ["con"],
+                "calculation": {
+                    "calc_type": "Level",
+                    "penalty_type": "Status"
+                }
             }
         ]
     },
@@ -105,7 +114,7 @@
                 "calculation": {
                     "calc_type": "Fixed",
                     "penalty_type": "Untyped",
-                    "value": 10
+                    "value": -10
                 }
             }
         ],
@@ -122,7 +131,11 @@
         "description": "You're physically weakened. Enfeebled always includes a value. When you are enfeebled, you take a <b>status penalty equal to the condition value to Strength-based rolls and DCs</b>, including Strength-based melee attack rolls, Strength-based damage rolls, and Athletics checks.",
         "bonus_penalty": [
             {
-                "selector": ["str"]
+                "selector": ["str"],
+                "calculation": {
+                    "calc_type": "Level",
+                    "penalty_type": "Status"
+                }
             }
         ]
     },
@@ -132,7 +145,12 @@
         "description": "You're compelled to focus your attention on something, distracting you from whatever else is going on around you. You take a <b>–2 status penalty to Perception and skill checks, and you can't use concentrate actions</b> unless they (or their intended consequences) are related to the subject of your fascination, as determined by the GM. For instance, you might be able to Seek and Recall Knowledge about the subject, but you likely couldn't cast a spell targeting a different creature. This condition <b>ends if a creature uses hostile actions against you or any of your allies.</b>",
         "bonus_penalty": [
             {
-                "selector": ["skill", "perception"]
+                "selector": ["skill", "perception"],
+                "calculation": {
+                    "calc_type": "Fixed",
+                    "penalty_type": "Status",
+                    "value": -2
+                }
             }
         ]
     },
@@ -145,7 +163,8 @@
                 "selector": ["ac", "fortitude", "reflex", "will"],
                 "calculation": {
                     "calc_type": "Fixed",
-                    "value": 1
+                    "penalty_type": "Status",
+                    "value": -1
                 }
             }
         ]
@@ -161,7 +180,11 @@
         "description": "You're gripped by fear and struggle to control your nerves. The frightened condition always includes a value. You take a <b>status penalty equal to this value to all your checks and DCs</b>. Unless specified otherwise, at the <b>end of each of your turns</b>, the value of your frightened condition <b>decreases by 1.</b>",
         "bonus_penalty": [
             {
-                "selector": ["check", "dc"]
+                "selector": ["check", "dc"],
+                "calculation": {
+                    "calc_type": "Level",
+                    "penalty_type": "Status"
+                }
             }
         ]
     },
@@ -208,7 +231,7 @@
                 "calculation": {
                     "calc_type": "Fixed",
                     "penalty_type": "Circumstance",
-                    "value": 2
+                    "value": -2
                 }
             }
         ]
@@ -237,7 +260,8 @@
                 "selector": ["attack"],
                 "calculation": {
                     "calc_type": "Fixed",
-                    "value": 2
+                    "penalty_type": "Status",
+                    "value": -2
                 }
             }
         ],
@@ -274,7 +298,11 @@
         "description": "You feel ill. Sickened always includes a value. You <b>take a status penalty equal to this value on all your checks and DCs</b>. <b>You can't willingly ingest anything</b>—including elixirs and potions—while sickened.<br>You can <b>spend a single action</b> retching in an attempt to recover, which lets you immediately <b>attempt a Fortitude save against the DC</b> of the effect that made you sickened. On a success, you reduce your sickened value by 1 (or by 2 on a critical success).",
         "bonus_penalty": [
             {
-                "selector": ["check", "dC"]
+                "selector": ["check", "dc"],
+                "calculation": {
+                    "calc_type": "Level",
+                    "penalty_type": "Status"
+                }
             }
         ]
     },
@@ -297,7 +325,11 @@
         "description": "Your thoughts and instincts are clouded. Stupefied always includes a value. You <b>take a status penalty equal to this value on Intelligence-, Wisdom-, and Charisma-based checks and DCs</b>, including Will saving throws, spell attack modifiers, spell DCs, and skill checks that use these attribute modifiers. Any time you attempt to <b>Cast a Spell while stupefied</b>, the spell is disrupted unless you succeed at a <b>flat check with a DC equal to 5 + your stupefied value</b>.",
         "bonus_penalty": [
             {
-                "selector": ["int", "wis", "cha"]
+                "selector": ["int", "wis", "cha"],
+                "calculation": {
+                    "calc_type": "Level",
+                    "penalty_type": "Status"
+                }
             }
         ]
     },
@@ -307,7 +339,12 @@
         "description": "You're sleeping or have been knocked out. <b>You can't act. You take a –4 status penalty to AC, Perception, and Reflex saves, and you have the blinded and off-guard conditions.</b> When you gain this condition, you <b>fall prone and drop items you're holding</b> unless the effect states otherwise or the GM determines you're positioned so you wouldn't.<br>If you're unconscious because you're dying, you <b>can't wake up while you have 0 Hit Points</b>. If you are restored to 1 Hit Point or more, you lose the dying and unconscious conditions and can act normally on your next turn.<br>If you are <b>unconscious and at 0 Hit Points, but not dying, you return to 1 Hit Point and awaken after sufficient time passes</b>. The GM determines how long you remain unconscious, from a minimum of 10 minutes to several hours. If you are healed, you lose the unconscious condition and can act normally on your next turn.<br>If you're unconscious and have more than 1 Hit Point (typically because you are asleep or unconscious due to an effect), you wake up in one of the following ways.<br><ul><li>You take damage, though if the damage reduces you to 0 Hit Points, you remain unconscious and gain the dying condition as normal.</li><li>You receive healing, other than the natural healing you get from resting.</li><li>Someone shakes you awake with an Interact action.</li><li>Loud noise around you might wake you. At the start of your turn, you automatically attempt a Perception check against the noise's DC (or the lowest DC if there is more than one noise), waking up if you succeed. If creatures are attempting to stay quiet around you, this Perception check uses their Stealth DCs. Some effects make you sleep so deeply that they don't allow you this Perception check.</li><li>If you are simply asleep, the GM decides you wake up either because you have had a restful night's sleep or something disrupted that rest.</li></ul>",
         "bonus_penalty": [
             {
-                "selector": ["ac", "perception", "reflex"]
+                "selector": ["ac", "perception", "reflex"],
+                "calculation": {
+                    "calc_type": "Fixed",
+                    "penalty_type": "Status",
+                    "value": -4
+                }
             }
         ],
         "forced_conditions": [

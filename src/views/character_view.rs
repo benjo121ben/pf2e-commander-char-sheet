@@ -229,9 +229,9 @@ pub fn HorseSection(
                 <label>Attack: {get_att}</label>
             </section>
         </div>
-        <img src="horse.png" style="display:flex"/>
-        <img src="support.png" style="display:flex"/>
-        <img src="mature_horse.png" style="display:flex"/>
+        <img src="horse.png" style="max-width: 100%; height: auto;"/>
+        <img src="support.png" style="max-width: 100%; height: auto;"/>
+        <img src="mature_horse.png" style="max-width: 100%; height: auto;"/>
     }
 }
 

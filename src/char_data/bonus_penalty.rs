@@ -25,6 +25,6 @@ pub struct BonusPenalty {
 pub struct BonusPenaltyCalculation {
     pub calc_type: CalcType,
     pub value: Option<i32>,
-    pub penalty_type: Option<BonusPenaltyType>,
+    pub penalty_type: BonusPenaltyType,
 }
 

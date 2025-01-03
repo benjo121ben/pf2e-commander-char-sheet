@@ -221,6 +221,12 @@ p b {
 	cursor: text;
 }
 
+.center-text-area:focus {
+	border-color: brown;
+	outline: 0;
+	background-color: rgb(243, 232, 227);
+}
+
 .boosted-stat {
 	color: rgb(39, 161, 60);
 }
