@@ -1,6 +1,8 @@
+use std::collections::HashMap;
+
 use serde::{Deserialize, Serialize};
 use leptos::logging::log;
-use super::{character::Character, proficiency::ProficiencyLevel};
+use super::{bonus_penalty::StatBonusPenalties, character::Character, proficiency::ProficiencyLevel};
 
 
 #[derive(Debug, Clone, Deserialize, Serialize, Eq)]
@@ -261,17 +263,23 @@ impl CalculatedStat {
     pub fn calculate_stat(self: &Self, character: &Character) -> i32 {
         let attribute_name = self.attribute.clone();
         let char_attributes = &character.attributes;
-        let mut base_val: Result<Attribute, String> = char_attributes.get_stat(&attribute_name);
+        let get_attribute_result: Result<Attribute, String> = char_attributes.get_stat(&attribute_name);
         let skill_auto_bonus_prog = match character.abp_data.skill_pot.get(&self.name) {
             Some(value) => *value,
             None => 0,
         };
-        match character.override_prof.get(&self.name) {
-            Some(val) => {base_val = char_attributes.get_stat(&val);},
-            None => {},
-        }
-        match base_val {
-            Ok(val) => val.value + skill_auto_bonus_prog + self.proficiency.get_bonus(character.level),
+        //we check this because some feat may override which stat to use for a skill
+        let override_attribute = character.override_prof.get(&self.name).and_then(|override_name| {
+            return char_attributes.get_stat(&override_name).ok();
+        });
+        match get_attribute_result {
+            Ok(default_attribute) => {
+                let mut attribute_used = default_attribute;
+                if override_attribute.is_some() && override_attribute.clone().unwrap().value > attribute_used.value{
+                    attribute_used = override_attribute.unwrap();
+                }
+                attribute_used.value + skill_auto_bonus_prog + self.proficiency.get_bonus(character.level)
+            },
             Err(err) => {log!("{err}"); return -99},
         }
     }
