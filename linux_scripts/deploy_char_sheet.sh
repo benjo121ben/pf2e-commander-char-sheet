@@ -1,5 +1,6 @@
 sudo systemctl stop char-sheet.service
 base_dir=~/programs/pf2e-char-sheet &&
+sudo wget https://github.com/benjo121ben/pf2e-commander-char-sheet/releases/latest/download/pf2e-app.tar.gz &&
 rm -r $base_dir/site
 mkdir -p $base_dir &&
 mv ./pf2e-app.tar.gz $base_dir/pf2e-app.tar.gz &&
