@@ -106,7 +106,7 @@ impl BonusPenaltyCalculation {
             super::bonus_penalty::CalcType::Calculated => {
                 //this at the moment is just for the drained condition, which needs to be calculated using the character level
                 let condition_value = condition_value.ok_or(format!("A calculated penalty requires the outer value to be present"))?;
-                return Ok(condition_value * character_level);
+                return Ok(-condition_value * character_level);
             },
             super::bonus_penalty::CalcType::ConditionValue => {
                 return condition_value.map(|cond_val| -cond_val).ok_or(format!("A ConditionValue penalty requires the outer value to be present"))

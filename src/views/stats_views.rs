@@ -67,6 +67,7 @@ pub fn HpView(
     is_horse: bool
 ) -> impl IntoView {
     let (read_char, write_char) = get_base_context("HpView");
+    let bp_map_memo = get_bonus_penalty_map_from_context("HpView");
     let reset_input = create_rw_signal(false);
     let temp_hp_switch = create_rw_signal(false);
     let hp_info_memo = create_memo(move |_| read_char.with(|c| {
@@ -89,7 +90,10 @@ pub fn HpView(
     }; 
     let hp_view = move || {
         let hp_info = hp_info_memo.get();
-        format!("{0}/{1}", hp_info.get_hp(), hp_info.get_max_hp())
+        let bp_map = bp_map_memo();
+        let hp_penalty = bp_map.get("hp").and_then(|stat_bp| Some(stat_bp.calculate_total())).or(Some(0)).unwrap();
+        let maxhp_penalty = bp_map.get("maxhp").and_then(|stat_bp| Some(stat_bp.calculate_total())).or(Some(0)).unwrap();
+        (format!("{0}/{1}", hp_info.get_hp() + hp_penalty, hp_info.get_max_hp() + maxhp_penalty), maxhp_penalty)
     };
     let flip_temp_switch = {
         move || temp_hp_switch.update(|active| *active = !*active)
@@ -100,8 +104,10 @@ pub fn HpView(
                 <label name="hp_view" id="hp_view"
                     on:click=move |_| change_hp(1)
                     on:contextmenu=move |_| change_hp(-1)
+                    class:adjust-up=move || {hp_view().1 > 0}
+                    class:adjust-down=move || {hp_view().1 < 0}
                 >
-                    {move || hp_view()}
+                    {move || hp_view().0}
                 </label>
                 {move || 
                     if temp_hp_switch.get() {
