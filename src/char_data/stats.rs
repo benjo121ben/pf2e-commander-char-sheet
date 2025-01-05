@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 use leptos::logging::log;
-use super::{bonus_penalty::StatBonusPenalties, character::Character, proficiency::ProficiencyLevel};
+use super::{bonus_penalty::{combine_selected_bonus_penalties, StatBonusPenalties}, character::Character, proficiency::ProficiencyLevel};
 
 
 #[derive(Debug, Clone, Deserialize, Serialize, Eq)]
@@ -313,7 +313,11 @@ impl CalculatedStat {
                 if override_attribute.is_some() && override_attribute.clone().unwrap().value > attribute_used.value{
                     attribute_used = override_attribute.unwrap();
                 }
-                attribute_used.value + skill_auto_bonus_prog + self.proficiency.get_bonus(character.level)
+                let mut selectors = self.get_selectors();
+                selectors.push(attribute_used.abbrv.to_lowercase());
+                let final_bp = combine_selected_bonus_penalties(bp_map, &selectors);
+                let adjustment = final_bp.calculate_total();
+                return attribute_used.value + skill_auto_bonus_prog + self.proficiency.get_bonus(character.level) + final_bp.calculate_total();
             },
             Err(err) => {log!("{err}"); return -99},
         }
