@@ -81,7 +81,7 @@ pub fn get_weapon_attack_data(character_data: &Character, bp_map: &HashMap<Strin
             None => Err(String::from("get_weapon_attack_data: We expect weapon_data by now. It was checked before")),
         }?;
         stat.attribute = if weap_info.w_type == WeaponType::Melee {"str"} else {"dex"}.to_string();
-        let base_bonus = stat.calculate_stat(&character_data, &bp_map);
+        let (base_bonus, bp_adjustment) = stat.calculate_stat(&character_data, &bp_map);
         let bonus_progression_proficiency = character_data.abp_data.attack_pot;
         let map = if weapon.traits.contains(&"Agile".to_string()) {4} else {5};
 
@@ -106,7 +106,7 @@ pub fn get_weapon_attack_data(character_data: &Character, bp_map: &HashMap<Strin
             attribute_damage_bonus: stat_bonus_dmg,
             item_damage_bonus: 0,
             dam_type: weap_info.d_type,
-            bonus_penalty_adjustment: 0,
+            bonus_penalty_adjustment: bp_adjustment,
         })
         
 }

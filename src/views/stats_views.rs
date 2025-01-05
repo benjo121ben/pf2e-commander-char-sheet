@@ -242,11 +242,11 @@ pub fn EditProfListView(
                     let skill_prof = skill.proficiency.clone();
                     let skill_value = create_memo({
                         let name_clone = name.clone();
-                        move |_| read_char.with(|c| 
+                        move |_| read_char.with(|c| {
                             c.get_prof_obj_from_name(&name_clone)
                             .expect("should be able to find proficiency")
-                            .calculate_stat(&c, &active_bonus_penalties_memo.get())
-                        )
+                            .calculate_stat(&c, &active_bonus_penalties_memo.get()).0
+                        })
                     });
                     let options = vec![ProficiencyLevel::Untrained, ProficiencyLevel::Trained, ProficiencyLevel::Expert, ProficiencyLevel::Master, ProficiencyLevel::Legendary];
                     let change_proficiency = move |event: Event| {
@@ -276,7 +276,7 @@ pub fn EditProfListView(
                             }
                         </select>
                         <div style="margin-left=10px">
-                            {move || skill_value}
+                            {move || skill_value.get()}
                         </div>
                     }
                 }
@@ -306,22 +306,27 @@ pub fn ProficiencyListView(
                     let name_clone = skill.name.clone();
                     let skill_name_clone = move || skill.name.clone();
                     let get_skill_data = move || (&character_data).with(|c| c.proficiencies[c.get_prof_indx_from_name(&skill_name_clone()).expect("Expected an index for the proficiency")].clone());
-                    let get_skill_prof = {
+                    let get_first_prof_letter = {
                         let data = get_skill_data.clone();
                         move || data().proficiency.to_string()[..1].to_string()
                     };
-                    let get_skill_val = {
+                    let get_skill_tuple = create_memo({
                         let data = get_skill_data.clone();
-                        move || character_data.with(|c| data().calculate_stat(c, &active_bonus_penalties_memo.get()))
-                    };
+                        move |_| character_data.with(|c| data().calculate_stat(c, &active_bonus_penalties_memo.get()))
+                    });
                     let is_proficient = {
-                        let get_prof = get_skill_prof.clone();
-                        move || get_prof() != String::from("U")
+                        let get_prof = get_first_prof_letter.clone();
+                        move || get_prof() != String::from("U") && get_prof() != String::from("H")
                     };
                     view! {
                         <div>{move || name_clone.clone()}</div>
-                        <div class="proficiency-letter" class:proficiency-letter-trained=is_proficient>{get_skill_prof}</div>
-                        <div>{get_skill_val}</div>
+                        <div class="proficiency-letter" class:proficiency-letter-trained=is_proficient>{get_first_prof_letter}</div>
+                        <div 
+                            class:adjust-up={move||get_skill_tuple().1 > 0}
+                            class:adjust-down={move||get_skill_tuple().1 < 0}
+                        >
+                            {move || get_skill_tuple().0}
+                        </div>
                     }.into_view()
                 }
             />

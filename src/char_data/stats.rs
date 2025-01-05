@@ -295,7 +295,7 @@ impl CalculatedStat {
         selectors
     }
 
-    pub fn calculate_stat(self: &Self, character: &Character, bp_map: &HashMap<String, StatBonusPenalties>) -> i32 {
+    pub fn calculate_stat(self: &Self, character: &Character, bp_map: &HashMap<String, StatBonusPenalties>) -> (i32, i32) {
         let attribute_name = self.attribute.clone();
         let char_attributes = &character.attributes;
         let get_attribute_result: Result<Attribute, String> = char_attributes.get_stat(&attribute_name);
@@ -317,9 +317,12 @@ impl CalculatedStat {
                 selectors.push(attribute_used.abbrv.to_lowercase());
                 let final_bp = combine_selected_bonus_penalties(bp_map, &selectors);
                 let adjustment = final_bp.calculate_total();
-                return attribute_used.value + skill_auto_bonus_prog + self.proficiency.get_bonus(character.level) + final_bp.calculate_total();
+                return (
+                    attribute_used.value + skill_auto_bonus_prog + self.proficiency.get_bonus(character.level) + final_bp.calculate_total(),
+                    adjustment
+                );
             },
-            Err(err) => {log!("{err}"); return -99},
+            Err(err) => {log!("{err}"); return (-99, -1)},
         }
     }
 }

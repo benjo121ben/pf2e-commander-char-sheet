@@ -195,8 +195,8 @@ pub fn ConditionSelectView(add_cond_visible_signal: RwSignal<bool>) -> impl Into
     };
     
     view! {
-        <div class="modal" style="justify-content: flex-end;" on:click=move |_| add_cond_visible_signal.set(false)>
-            <div class="condition-modal">
+        <div class="condition-modal" style="justify-content: flex-end;" on:click=move |_| add_cond_visible_signal.set(false)>
+            <div class="condition-modal-content">
                 <For each=move|| get_condition_list(&conditions_map)
                     key=move|val|val.clone()
                     children=move |name| {
