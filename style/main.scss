@@ -204,7 +204,7 @@ p b {
 }
 
 .proficiency-letter-trained {
-	background-color: orangered;
+	background-color: brown;
 }
 
 .align-flex-start {
@@ -248,16 +248,20 @@ p b {
 	font-size: 0.8rem;
 }
 
+.tiny-text {
+	font-size: 0.7rem;
+}
 
 .trait{
 	padding: 0.2rem;
-	background-color: rgb(114, 49, 17);
-	border: 2px solid rgb(175, 145, 101);
-	color: white;
+	border-radius: 3;
+	color: black;
+	font-style: italic;
 }
 
-.tiny-text {
-	font-size: 0.7rem;
+.weapon-view {
+	@extend .flex-col;
+	gap: 2px;
 }
 
 #top_right_div {
@@ -395,4 +399,14 @@ p b {
 
 .space-between {
 	justify-content: space-between;
+}
+
+.shield-button {
+	background-color: brown;
+	color: white;
+}
+
+.raised-shield-button{
+	border: 2px solid rgb(39, 161, 60);
+	border-radius: 5;
 }

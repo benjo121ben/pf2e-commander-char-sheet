@@ -241,7 +241,7 @@
     {
       "level": 1,
       "name": "Clumsy",
-      "active": true
+      "active": false
     },
     {
       "level": null,
@@ -349,7 +349,7 @@
     "max_hp": 20,
     "current_hp": 20,
     "hardness": 5,
-    "raised": true
+    "raised": false
   },
   "horse_hp_info": {
     "ancestry_hp": 8,

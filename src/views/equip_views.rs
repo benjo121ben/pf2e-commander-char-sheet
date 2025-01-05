@@ -74,7 +74,7 @@ pub fn WeaponView(item: Gear) -> impl IntoView {
         }
     });
 
-    
+    let collapsed_signal = create_rw_signal(true);
 
     let get_weapon_view = move || -> Result<View, String> {
         let weapon = char_weapon_item_memo.get()?;
@@ -89,7 +89,6 @@ pub fn WeaponView(item: Gear) -> impl IntoView {
             }
             else {"".to_string()}
         };
-        let attack_bonus_adjust = attack_data.bonus_penalty_adjustment;
         let att_bonus_text = format!(
             "{0}/{1}/{2}", 
             pretty_print_int(full_attack_bonus), 
@@ -104,9 +103,12 @@ pub fn WeaponView(item: Gear) -> impl IntoView {
             bonus_damage_text,
             attack_data.dam_type
         );
-        
+
+        let weap_description_clone = weapon.description.clone();
         Ok(view!{
-            <div class="flex-col bright-bg">
+            <div class="weapon-view bright-bg"
+                on:click=move|_|collapsed_signal.update(|c| *c = !*c)
+            >
                 <div class="flex-row space-between">
                     <h4>{let name_clone = weapon.name.clone(); move|| name_clone.clone()}</h4>
                     <div
@@ -123,7 +125,10 @@ pub fn WeaponView(item: Gear) -> impl IntoView {
                     }</p>
                 </div>
                 <TraitView trait_names=weapon.traits.clone()/>
-                <p inner_html={move|| weapon.description.clone()}/>
+                <Show when=move||!collapsed_signal()>
+                    <hr/>
+                    <p inner_html={let desc = weap_description_clone.clone(); move|| desc.clone()}/>
+                </Show>
             </div>
         }.into_view())
     };

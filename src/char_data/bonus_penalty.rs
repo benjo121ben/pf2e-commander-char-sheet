@@ -46,6 +46,14 @@ impl StatBonusPenalties {
         }
     }
 
+    pub fn from(selector: &str, bp_type: BonusPenaltyType, value: i32) -> Self {
+        let mut ret = StatBonusPenalties::new();
+        ret.selector = selector.to_string();
+        ret.add_bonus_penalty(&bp_type, value);
+
+        return ret;
+    }
+
     pub fn calculate_total(self: &Self) -> i32 {
         let bonus_total = self.bonuses.values().fold(
             0,

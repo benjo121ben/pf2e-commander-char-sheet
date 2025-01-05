@@ -359,25 +359,23 @@ pub fn SwitchProfView(
 #[component]
 pub fn DefenseView() -> impl IntoView {
     let (read_character, write_character) = get_base_context("DefenseView");
-
+    let bp_map_memo = get_bonus_penalty_map_from_context("DefenseView");
     let shield_info_memo = create_memo(move|_| read_character.with(|c| c.shield_info.clone()));
-    let ac_memo= create_memo(move |_| read_character.with(|c| c.calculate_ac()));
+    let ac_memo= create_memo(move |_| read_character.with(|c| c.calculate_ac(&bp_map_memo())));
     let switch_shield_pos = move |_| write_character.update(|c| c.shield_info.raised=!c.shield_info.raised);
 
     view!{
         <div class="flex-col" style="align-items: stretch">
-            <h3 style="margin: 0; white-spacce:nowrap" on:click=switch_shield_pos class:boosted-stat=move||shield_info_memo.get().raised>
-                AC: {move||ac_memo.get()}
+            <h3 style="margin: 0; white-spacce:nowrap" 
+                class:adjust-up={move||ac_memo().1 > 0}
+                class:adjust-down={move||ac_memo().1 < 0}
+            >
+                AC: {move||ac_memo.get().0}
             </h3>
-            <button on:click=switch_shield_pos style="justify-content:center">
-                {move || 
-                    if shield_info_memo.get().raised {
-                        "Lower"
-                    }
-                    else {
-                        "Raise"
-                    }
-                }
+            <button on:click=switch_shield_pos style="justify-content:center"
+                class:raised-shield-button=move||shield_info_memo().raised
+            >
+                "Raise +2"
             </button>
         </div>
     }

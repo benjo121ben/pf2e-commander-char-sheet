@@ -3,7 +3,7 @@ use std::{cmp::Ordering, collections::HashMap};
 use leptos::logging::log;
 use serde::{Serialize, Deserialize};
 
-use super::{bonus_penalty::{StatBonusPenalties, BonusPenalty}, character::Character};
+use super::{bonus_penalty::{BonusPenalty, BonusPenaltyType, StatBonusPenalties}, character::Character};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct FullConditionView {
@@ -104,13 +104,16 @@ pub fn get_condition_base_lvl (condition: &ConditionData, character: &Character)
     }).or(Some(1))
 }
 
-pub fn get_stat_bonus_penalty_map(character_level: i32, conditions: &Vec<FullConditionView>) -> Result<HashMap<String, StatBonusPenalties>, String> {
+pub fn get_stat_bonus_penalty_map(character_level: i32, shield_raised: bool, conditions: &Vec<FullConditionView>) -> Result<HashMap<String, StatBonusPenalties>, String> {
     let affecting_conditions: Vec<&FullConditionView> = 
         conditions.into_iter()
         .filter(|cond|cond.active)
         .collect();
 
     let mut bonus_penalty_hashmap: HashMap<String, StatBonusPenalties> = HashMap::new();
+    if shield_raised {
+        bonus_penalty_hashmap.insert("ac".to_string(), StatBonusPenalties::from("ac", BonusPenaltyType::Circumstance, 2));
+    }
 
     for condition in affecting_conditions.into_iter() {
         let _ = condition.add_conditon_bonus_penalties(&mut bonus_penalty_hashmap, character_level)?;

@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
-use super::{auto_bonus_prog::AbpData, conditions::CharacterConditionInfo, gear::Gear, hp::{HpInfo, ShieldInfo}, proficiency::ProficiencyLevel, stats::{Attributes, CalculatedStat, ProficiencyType}, tactics::Tactic};
+use super::{auto_bonus_prog::AbpData, bonus_penalty::{combine_selected_bonus_penalties, StatBonusPenalties}, conditions::CharacterConditionInfo, gear::Gear, hp::{HpInfo, ShieldInfo}, proficiency::ProficiencyLevel, stats::{Attributes, CalculatedStat, ProficiencyType}, tactics::Tactic};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Character {
@@ -180,13 +180,17 @@ impl Character {
         return None;
     }
 
-    pub fn calculate_ac(self: & Self) -> i32 {
+    pub fn calculate_ac(self: & Self, bp_map: &HashMap<String, StatBonusPenalties>) -> (i32, i32) {
         let calc_stat = self.get_prof_obj_from_name("Medium").expect("Character must have a medium proficiency");
         let dex_cap = 1;
         let item_bonus = 4;
+        let dex_bonus = std::cmp::min(self.attributes.get_stat_val("dex").expect("Defense expects a dex attribute to be set"), dex_cap);
         let prof_bonus = calc_stat.proficiency.get_bonus(self.level);
-        let raised_bonus = if self.shield_info.raised {2} else {0};
-        10 + std::cmp::min(self.attributes.get_stat_val("dex").expect("Defense expects a dex attribute to be set"), dex_cap) + prof_bonus + item_bonus + raised_bonus
+        let selectors = vec!["dex".to_string(), "ac".to_string()];
+        let armor_bonus_penalties = combine_selected_bonus_penalties(&bp_map, &selectors).calculate_total();
+        let armor_total = 10 + dex_bonus + prof_bonus + item_bonus + armor_bonus_penalties;
+
+        return (armor_total, armor_bonus_penalties)
     }
 }
 

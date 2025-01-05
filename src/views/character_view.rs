@@ -4,7 +4,6 @@ use crate::char_data::bonus_penalty::StatBonusPenalties;
 use crate::char_data::character::*;
 use crate::char_data::conditions::get_stat_bonus_penalty_map;
 use crate::char_data::conditions::ConditionData;
-use crate::char_data::conditions::FullConditionView;
 use crate::char_data::feats::Feat;
 use crate::char_data::proficiency::ProficiencyLevel;
 use crate::char_data::stats::ProficiencyType;
@@ -60,6 +59,7 @@ pub fn BaseView(
     provide_context(feat_map.clone());
 
     let char_level_memo = create_memo(move |_| read_char.with(|c| c.level));
+    let shield_raised_memo = create_memo(move |_| read_char.with(|c| c.shield_info.raised));
     let condition_memo = create_memo(move |_| {
         match read_char.with(|c| c.get_all_conditions(&conditions_map)) {
             Ok(condition_list) => condition_list.clone(),
@@ -68,8 +68,9 @@ pub fn BaseView(
     });
     let bonus_penalty_memo: Memo<HashMap<String, StatBonusPenalties>> = create_memo(move |_| {
         let conditions = condition_memo.get();
-        let char_level = char_level_memo.get();
-        let bonus_penalty_map = match get_stat_bonus_penalty_map(char_level, &conditions) {
+        let char_level = char_level_memo();
+        let shield_raised = shield_raised_memo();
+        let bonus_penalty_map = match get_stat_bonus_penalty_map(char_level, shield_raised, &conditions) {
             Ok(map) => map,
             Err(err) => panic!("{}",err),
         };
