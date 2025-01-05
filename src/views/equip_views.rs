@@ -42,6 +42,7 @@ pub fn EquipView() -> impl IntoView {
 #[component]
 pub fn WeaponView(item: Gear) -> impl IntoView {
     let (character_data, _) = get_base_context("WeaponView");
+    let active_bonus_penalties_memo = get_bonus_penalty_map_from_context("WeaponView");
     let debug_name_clone = item.name.clone();
     let mut err_text = String::from("");
 
@@ -77,7 +78,7 @@ pub fn WeaponView(item: Gear) -> impl IntoView {
 
     let get_weapon_view = move || -> Result<View, String> {
         let weapon = char_weapon_item_memo.get()?;
-        let attack_data = character_data.with(|c| get_weapon_attack_data(&c, &weapon))?;
+        let attack_data = character_data.with(|c| get_weapon_attack_data(&c, &active_bonus_penalties_memo.get(), &weapon))?;
         let full_attack_bonus = attack_data.get_full_attack_bonus();
 
         let bonus_damage_text = {

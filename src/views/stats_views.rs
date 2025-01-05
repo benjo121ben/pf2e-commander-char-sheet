@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use crate::char_data::feats::Feat;
 use crate::char_data::proficiency::ProficiencyLevel;
 use crate::char_data::stats::{CalculatedStat, ProficiencyType};
-use crate::views::view_helpers::get_modal_context;
+use crate::views::view_helpers::{get_bonus_penalty_map_from_context, get_modal_context};
 use super::action_view::ActionView;
 use super::view_helpers::get_base_context;
 use leptos::ev::Event;
@@ -225,6 +225,7 @@ pub fn EditProfListView(
     types: Vec<ProficiencyType> 
 ) -> impl IntoView {
     let (read_char, write_char) = get_base_context("EditProfListView");
+    let active_bonus_penalties_memo = get_bonus_penalty_map_from_context("EditProfListView");
     let proficiencies_memo: Memo<Vec<CalculatedStat>> = create_memo(move |_| 
         read_char.with(|k| {
             let type_clone = types.clone();
@@ -244,7 +245,7 @@ pub fn EditProfListView(
                         move |_| read_char.with(|c| 
                             c.get_prof_obj_from_name(&name_clone)
                             .expect("should be able to find proficiency")
-                            .calculate_stat(&c)
+                            .calculate_stat(&c, &active_bonus_penalties_memo.get())
                         )
                     });
                     let options = vec![ProficiencyLevel::Untrained, ProficiencyLevel::Trained, ProficiencyLevel::Expert, ProficiencyLevel::Master, ProficiencyLevel::Legendary];
@@ -289,6 +290,8 @@ pub fn ProficiencyListView(
     types: Vec<ProficiencyType> 
 ) -> impl IntoView {
     let (character_data, _) = get_base_context("ProficiencyListView");
+    let active_bonus_penalties_memo = get_bonus_penalty_map_from_context("ProficiencyListView");
+
     view! {
         <div class="skill-grid">
             <For
@@ -309,7 +312,7 @@ pub fn ProficiencyListView(
                     };
                     let get_skill_val = {
                         let data = get_skill_data.clone();
-                        move || character_data.with(|c| data().calculate_stat(c))
+                        move || character_data.with(|c| data().calculate_stat(c, &active_bonus_penalties_memo.get()))
                     };
                     let is_proficient = {
                         let get_prof = get_skill_prof.clone();

@@ -260,7 +260,7 @@ impl CalculatedStat {
             ]
     }
 
-    pub fn calculate_stat(self: &Self, character: &Character) -> i32 {
+    pub fn calculate_stat(self: &Self, character: &Character, bp_map: &HashMap<String, StatBonusPenalties>) -> i32 {
         let attribute_name = self.attribute.clone();
         let char_attributes = &character.attributes;
         let get_attribute_result: Result<Attribute, String> = char_attributes.get_stat(&attribute_name);
