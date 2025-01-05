@@ -234,8 +234,24 @@ p b {
 	max-width: 30vw;
 }
 
-.weapon-first-row {
+.weapon-first-row-bonuses {
+	margin-left: 20px;
+	display: grid;
+	grid-auto-flow: row;
+	grid-template-columns: 1fr 1fr;
+	max-height: 100%;
+	justify-items: stretch;
 	gap: 20px
+}
+
+.weapon-first-row-bonuses div:nth-of-type(1) {
+	min-width: 90px;
+	text-align: center;
+	justify-content: center;
+}
+
+.weapon-first-row-bonuses div:nth-of-type(2) {
+	text-align: end;
 }
 
 .center-text-area:focus {
@@ -268,6 +284,18 @@ p b {
 	padding: 0.2rem;
 	border-radius: 3;
 	color: black;
+	font-style: italic;
+}
+
+.trait-view {
+	gap: 3px
+}
+
+.trait:hover{
+	padding: 0.2rem;
+	border-radius: 3;
+	background-color: brown;
+	color: white;
 	font-style: italic;
 }
 
@@ -326,9 +354,12 @@ p b {
 }
 
 .selected-tactic .trait {
-	background-color: rgb(43, 16, 11);
-	border: 2px solid rgb(253, 251, 248);
 	color: white;
+}
+
+.selected-tactic .trait:hover {
+	background-color: white;
+	color: rgb(25, 25, 41);
 }
 
 .selected-tactic hr {

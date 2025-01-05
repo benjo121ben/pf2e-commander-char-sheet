@@ -109,24 +109,30 @@ pub fn WeaponView(item: Gear) -> impl IntoView {
             <div class="weapon-view bright-bg"
                 on:click=move|_|collapsed_signal.update(|c| *c = !*c)
             >
-                <div class="flex-row space-between weapon-first-row">
-                    <div style="font-weight:bold">{let name_clone = weapon.name.clone(); move|| name_clone.clone()}</div>
-                    <div
-                        class:adjust-up={move||attack_data.bonus_penalty_adjustment > 0}
-                        class:adjust-down={move||attack_data.bonus_penalty_adjustment < 0}
-                    >{
-                        move || att_bonus_text.clone()
-                    }</div>
-                    <div
-                        class:adjust-up={move||attack_data.damage_bonus_penalty > 0}
-                        class:adjust-down={move||attack_data.damage_bonus_penalty < 0}
-                    >{
-                        move || full_damage_text.clone()
-                    }</div>
+                <div class="flex-row space-between">
+                    <div style="font-weight:bold">
+                        {let name_clone = weapon.name.clone(); move|| name_clone.clone()}
+                    </div>
+                    <div class="weapon-first-row-bonuses">
+                        <div
+                            class:adjust-up={move||attack_data.bonus_penalty_adjustment > 0}
+                            class:adjust-down={move||attack_data.bonus_penalty_adjustment < 0}
+                        >{
+                            move || att_bonus_text.clone()
+                        }</div>
+                        <div
+                            class:adjust-up={move||attack_data.damage_bonus_penalty > 0}
+                            class:adjust-down={move||attack_data.damage_bonus_penalty < 0}
+                        >{
+                            move || full_damage_text.clone()
+                        }</div>
+                    </div>
                 </div>
+                <Show when={let traits = weapon.traits.clone(); move||traits.len() > 0 || !collapsed_signal()}>
+                    <hr style="margin-bottom: 5px;"/>
+                </Show>  
                 <TraitView trait_names=weapon.traits.clone()/>
-                <Show when=move||!collapsed_signal()>
-                    <hr/>
+                <Show when={let desc = weap_description_clone.clone(); move||!collapsed_signal() && desc.len() > 0}>
                     <p inner_html={let desc = weap_description_clone.clone(); move|| desc.clone()}/>
                 </Show>
             </div>

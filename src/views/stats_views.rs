@@ -453,7 +453,7 @@ pub fn TraitView(
     let traitMap = use_context::<HashMap<String, String>>().expect("Trait Hashmap should be set by now");
     let modal_context = get_modal_context("TraitView");
     view!{
-        <div class="flex-row">{
+        <div class="flex-row trait-view">{
             trait_names.into_iter().map(|trait_name| {
                 let tooltip = if trait_name.is_empty() {
                     log!("An empty trait was set somewhere"); String::from("No tooltip") 
