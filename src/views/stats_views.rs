@@ -91,9 +91,12 @@ pub fn HpView(
     let hp_view = move || {
         let hp_info = hp_info_memo.get();
         let bp_map = bp_map_memo();
-        let hp_penalty = bp_map.get("hp").and_then(|stat_bp| Some(stat_bp.calculate_total())).or(Some(0)).unwrap();
-        let maxhp_penalty = bp_map.get("maxhp").and_then(|stat_bp| Some(stat_bp.calculate_total())).or(Some(0)).unwrap();
-        (format!("{0}/{1}", hp_info.get_hp() + hp_penalty, hp_info.get_max_hp() + maxhp_penalty), maxhp_penalty)
+        let hp_bonus_penalty = bp_map.get("hp").and_then(|stat_bp| Some(stat_bp.calculate_total())).or(Some(0)).unwrap();
+        let maxhp_bonus_penalty = bp_map.get("maxhp").and_then(|stat_bp| Some(stat_bp.calculate_total())).or(Some(0)).unwrap();
+        return(
+            format!("{0}/{1}", hp_info.get_hp() + hp_bonus_penalty, hp_info.get_max_hp() + maxhp_bonus_penalty), 
+            maxhp_bonus_penalty // we return this to signal buffs or penalties for frontend coloring
+        )
     };
     let flip_temp_switch = {
         move || temp_hp_switch.update(|active| *active = !*active)
