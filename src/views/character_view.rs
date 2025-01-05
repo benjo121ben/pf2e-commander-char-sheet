@@ -195,34 +195,21 @@ pub fn ProficiencySidebar() -> impl IntoView {
         })
     });
     view! {
-        <section class="flex-col flex-wrap" style="flex-grow: 0; flex-shrink: 0">
-            <b><SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::ClassDC]/></b>
-            <b><SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Perception]/></b>
+        <section class="flex-col flex-wrap" style="flex-grow: 0; flex-shrink: 0; gap:0.3rem">
+            <b><SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::ClassDC] margin=false/></b>
+            <b><SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Perception] margin=false/></b>
             <Show when={move||has_incr_init_memo.get()}>
-                <div class="skill-grid">
+                <div class="skill-grid prof-list" style="font-style:italic">
                     <div style="display:flex; flex: 1 0 0">initiative</div>
                     <div></div>
                     <div>+2</div>
-                
                 </div>
             </Show>
-            <div class="flex-col">
-                <h5>Saves</h5>
-                <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Save]/>
-            </div>
-            <div class="flex-col">
-                <h5>Skills</h5>
-                <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Skill, ProficiencyType::Lore]/>
-            </div>
+            <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Save] margin=true/>
+            <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Skill, ProficiencyType::Lore] margin=true/>
             <Show when=move || show_edit_stats.get()>
-                <div class="flex-col">
-                    <h5>Attack</h5>
-                    <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Weapon]/>
-                </div>
-                <div class="flex-col">
-                    <h5>Armor</h5>
-                    <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Armor]/>
-                </div>
+                <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Weapon] margin=true/>
+                <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Armor] margin=true/>
             </Show>
             <button on:click=move |_| show_edit_stats.update(|b| *b=!*b) style="justify-content:center">Edit</button>
         </section>

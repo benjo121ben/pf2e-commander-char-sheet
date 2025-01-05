@@ -19,7 +19,6 @@ use crate::{
 #[component]
 pub fn ConditionSection() -> impl IntoView {
     let condition_memo = get_all_conditions_vector_memo_from_context("ConditionSection");
-    let bonus_penalty_memo = get_bonus_penalty_map_from_context("ConditionSection");
     let add_cond_visible_signal = create_rw_signal(false);
     view!{
         <section id="condition_section">
@@ -43,9 +42,6 @@ pub fn ConditionSection() -> impl IntoView {
             >
                 <ConditionSelectView add_cond_visible_signal=add_cond_visible_signal/>
             </Show>
-            <div>
-                {move || format!("{:#?}", bonus_penalty_memo.get())}
-            </div>
         </section>
     }
 }

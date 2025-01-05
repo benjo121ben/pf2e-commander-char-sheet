@@ -337,10 +337,13 @@ pub fn ProficiencyListView(
 #[component]
 pub fn SwitchProfView(
     types: Vec<ProficiencyType>,
-    show_edit_stats: RwSignal<bool>
+    show_edit_stats: RwSignal<bool>,
+    margin: bool
 ) -> impl IntoView {
     view!{
-        <div class="flex-col" style="flex-grow: 0">
+        <div class="flex-col" style="flex-grow: 0;"
+            class:prof-list=move|| margin
+        >
             {
                 let t_clone = types.clone();
                 move || if !show_edit_stats.get() {
