@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-use super::{bonus_penalty::StatBonusPenalties, character::Character, stats::CalculatedStat};
+use super::{bonus_penalty::{combine_selected_bonus_penalties, StatBonusPenalties}, character::Character, stats::CalculatedStat};
 
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -47,6 +47,7 @@ pub struct AttackData {
     pub dice_amount: i32,
     pub dice_size: i32,
     pub attribute_damage_bonus: i32,
+    pub damage_bonus_penalty: i32, //todo the item bonus should be moved into general condition bonuses
     pub item_damage_bonus: i32,
     pub dam_type: String
 }
@@ -57,7 +58,7 @@ impl AttackData {
     }
 
     pub fn get_full_damage_bonus(self: &Self) -> i32 {
-        self.attribute_damage_bonus + self.item_damage_bonus
+        self.attribute_damage_bonus + self.item_damage_bonus + self.damage_bonus_penalty
     }
 }
 
@@ -88,12 +89,19 @@ pub fn get_weapon_attack_data(character_data: &Character, bp_map: &HashMap<Strin
         let dice_amount = character_data.abp_data.attack_dice;
         let dice_size = weap_info.damage;
         let mut stat_bonus_dmg = 0;
+        let mut damage_bonus_penalty_selectors = vec!["dam".to_string()];
+
         if weap_info.w_type == WeaponType::Melee || weapon.traits.iter().any(|t|t=="Propulsive") {
             stat_bonus_dmg = character_data.attributes.get_stat_val("str")?;
             if weapon.traits.iter().any(|t|t=="Propulsive") {
                 stat_bonus_dmg /= 2;
             }
+
+            damage_bonus_penalty_selectors.push("str".to_string());
         }
+
+        let damage_bonus_penalty = combine_selected_bonus_penalties(&bp_map, &damage_bonus_penalty_selectors).calculate_total();
+
         //TODO add options for item runes
         Ok(AttackData{
             traits: weapon.traits.clone(),
@@ -105,6 +113,7 @@ pub fn get_weapon_attack_data(character_data: &Character, bp_map: &HashMap<Strin
             dice_size,
             attribute_damage_bonus: stat_bonus_dmg,
             item_damage_bonus: 0,
+            damage_bonus_penalty,
             dam_type: weap_info.d_type,
             bonus_penalty_adjustment: bp_adjustment,
         })

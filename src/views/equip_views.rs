@@ -83,12 +83,13 @@ pub fn WeaponView(item: Gear) -> impl IntoView {
 
         let bonus_damage_text = {
             let bonus = attack_data.get_full_damage_bonus();
-            if bonus > 0 {
+            if bonus != 0 {
                 let prefix = get_prefix(bonus);
                 format!("{prefix}{bonus}")
             }
             else {"".to_string()}
         };
+        let attack_bonus_adjust = attack_data.bonus_penalty_adjustment;
         let att_bonus_text = format!(
             "{0}/{1}/{2}", 
             pretty_print_int(full_attack_bonus), 
@@ -108,10 +109,16 @@ pub fn WeaponView(item: Gear) -> impl IntoView {
             <div class="flex-col bright-bg">
                 <div class="flex-row space-between">
                     <h4>{let name_clone = weapon.name.clone(); move|| name_clone.clone()}</h4>
-                    <p>{
+                    <div
+                        class:adjust-up={move||attack_data.bonus_penalty_adjustment > 0}
+                        class:adjust-down={move||attack_data.bonus_penalty_adjustment < 0}
+                    >{
                         move || att_bonus_text.clone()
-                    }</p>
-                    <p>{
+                    }</div>
+                    <p
+                        class:adjust-up={move||attack_data.damage_bonus_penalty > 0}
+                        class:adjust-down={move||attack_data.damage_bonus_penalty < 0}
+                    >{
                         move || full_damage_text.clone()
                     }</p>
                 </div>
