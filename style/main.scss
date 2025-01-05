@@ -230,6 +230,14 @@ p b {
 	cursor: text;
 }
 
+.equip-section {
+	max-width: 30vw;
+}
+
+.weapon-first-row {
+	gap: 20px
+}
+
 .center-text-area:focus {
 	border-color: brown;
 	outline: 0;

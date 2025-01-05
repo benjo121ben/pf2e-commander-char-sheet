@@ -24,9 +24,9 @@ pub fn EquipView() -> impl IntoView {
                     <div class="flex-col align-flex-start bright-bg" 
                         on:click=move |_| collapse.update(|c| *c = !*c)
                     >
-                        <h4 style="margin:unset">{
-                            move || format!("{item_name}")
-                        }</h4>
+                        <div style="margin:unset; font-weight:bold">{
+                            move || item_name.clone()
+                        }</div>
                         <Show when=move || collapse.get()>
                             <TraitView trait_names=gear_item.traits.clone()/>
                             <hr/>
@@ -109,20 +109,20 @@ pub fn WeaponView(item: Gear) -> impl IntoView {
             <div class="weapon-view bright-bg"
                 on:click=move|_|collapsed_signal.update(|c| *c = !*c)
             >
-                <div class="flex-row space-between">
-                    <h4>{let name_clone = weapon.name.clone(); move|| name_clone.clone()}</h4>
+                <div class="flex-row space-between weapon-first-row">
+                    <div style="font-weight:bold">{let name_clone = weapon.name.clone(); move|| name_clone.clone()}</div>
                     <div
                         class:adjust-up={move||attack_data.bonus_penalty_adjustment > 0}
                         class:adjust-down={move||attack_data.bonus_penalty_adjustment < 0}
                     >{
                         move || att_bonus_text.clone()
                     }</div>
-                    <p
+                    <div
                         class:adjust-up={move||attack_data.damage_bonus_penalty > 0}
                         class:adjust-down={move||attack_data.damage_bonus_penalty < 0}
                     >{
                         move || full_damage_text.clone()
-                    }</p>
+                    }</div>
                 </div>
                 <TraitView trait_names=weapon.traits.clone()/>
                 <Show when=move||!collapsed_signal()>
