@@ -33,7 +33,7 @@ pub fn ConditionSection() -> impl IntoView {
                         }
                     }
                 />
-                <img alt="test" src="icons/add.svg" style="width: 20px; height:20px;"
+                <img alt="image-not-working" src="icons/add.svg" style="width: 20px; height:20px;"
                         on:click={move|_| add_cond_visible_signal.set(true)}
                     />
             </div>

@@ -90,25 +90,11 @@ pub fn BaseView(
 
 #[component]
 pub fn CharView() -> impl IntoView {
-    let (read_char, write_char) = get_base_context("CharView");
-    let center_text_memo = create_memo(move|_| read_char.with(|c|c.text.clone()));
     view! {
         <TopCharViewSection/>
         <div class="flex-row space-between">
             <ProficiencySidebar/>
-            <section class="flex-col center-col-layout">
-                <textarea 
-                    class="center-text-area" 
-                    id="test"
-                    on:change=move |event| {
-                        write_char.update(|c| {
-                            let val: String = event_target_value(&event);
-                            c.text = val;
-                        })
-                    }
-                    prop:value={move || center_text_memo.get()}
-                />
-            </section>
+            <TextCenterSection/>
             <section class="flex-col equip-section">
                 <EquipView/>
             </section>
@@ -123,6 +109,7 @@ pub fn CharView() -> impl IntoView {
 #[component]
 pub fn TopCharViewSection() -> impl IntoView {
     let (read_char, set_char) = get_base_context("TopCharView");
+    let bp_map = get_bonus_penalty_map_from_context("TopCharViewSection");
     let sheet_error = get_sheet_error_context("TopCharView");
     let send_debug = create_action( move |_:&i32| async move {
         sheet_error.set(SheetError::new(""));
@@ -132,6 +119,14 @@ pub fn TopCharViewSection() -> impl IntoView {
             Err(err) => sheet_error.set(SheetError::new(&err.to_string())),
         }
     });
+    let get_speed = move || {
+        let penalty_bonus = match bp_map().get("speed") {
+            Some(stat_bp) => stat_bp.calculate_total(),
+            None => 0,
+        };
+
+        (read_char.with(|c|c.speed) + penalty_bonus, penalty_bonus)
+    };
     view!{
         <div class="flex-row">
             <div id="top_left_div">
@@ -160,8 +155,11 @@ pub fn TopCharViewSection() -> impl IntoView {
                             >
                                 Level {move || read_char.with(|k| k.level)}
                             </button>
-                            <div>SIZE<br/>Medium</div>
-                            <div>SPEED<br/>30ft.</div>
+                            <div>Size<br/>Medium</div>
+                            <div 
+                                class:adjust-up={move||get_speed().1 > 0}
+                                class:adjust-down={move||get_speed().1 < 0}
+                            >Speed<br/>{move || get_speed().0}ft.</div>
                         </div>
                     </section>
                     <section class="align-center">
@@ -248,3 +246,23 @@ pub fn HorseSection(
     }
 }
 
+
+pub fn TextCenterSection() -> impl IntoView {
+    let (read_char, write_char) = get_base_context("TextCenterSection");
+    let center_text_memo = create_memo(move|_| read_char.with(|c|c.text.clone()));
+    view! {
+        <section class="flex-col center-col-layout">
+            <textarea 
+                class="center-text-area" 
+                id="center-text-area"
+                on:change=move |event| {
+                    write_char.update(|c| {
+                        let val: String = event_target_value(&event);
+                        c.text = val;
+                    })
+                }
+                prop:value={move || center_text_memo.get()}
+            />
+        </section>
+    }
+}

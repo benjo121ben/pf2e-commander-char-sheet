@@ -12,6 +12,8 @@ pub struct Character {
     pub shield_info: ShieldInfo,
     
     pub level: i32,
+
+    pub speed: i32,
     
     pub attributes: Attributes,
     
@@ -56,6 +58,8 @@ pub struct SimpleCharacter {
     pub name: String,
     
     pub level: i32,
+
+    pub speed: i32,
 
     pub hp_info: HpInfo,
 
@@ -107,6 +111,7 @@ impl Character {
             horse_hp_info: HpInfo::new(0,0,1, 0),
             shield_info: ShieldInfo::new(20,18,5, false),
             level: 1,
+            speed: 25,
             text: String::from(""),
             attributes: Attributes::zero(),
             background: String::from("Squire"),
@@ -203,6 +208,7 @@ impl From<SimpleCharacter> for Character{
             horse_hp_info: simp_char.horse_hp_info,
             shield_info: simp_char.shield_info,
             level: simp_char.level,
+            speed: simp_char.speed,
             text: simp_char.text,
             attributes: Attributes::from(&simp_char.attributes),
             background: simp_char.background,
@@ -234,6 +240,7 @@ impl From<&SimpleCharacter> for Character{
             horse_hp_info: simp_char.horse_hp_info.clone(),
             shield_info: simp_char.shield_info.clone(),
             level: simp_char.level,
+            speed: simp_char.speed,
             text: simp_char.text.clone(),
             attributes: Attributes::from(&((*simp_char).attributes)),
             background: simp_char.background.clone(),
@@ -265,6 +272,7 @@ impl From<Character> for SimpleCharacter{
             horse_hp_info: ref_char.horse_hp_info.clone(),
             shield_info: ref_char.shield_info.clone(),
             level: ref_char.level,
+            speed: ref_char.speed,
             text: ref_char.text,
             attributes: ref_char.attributes.as_number_vec(),
             background: ref_char.background.clone(),
@@ -292,6 +300,7 @@ impl From<&Character> for SimpleCharacter{
             horse_hp_info: ref_char.horse_hp_info.clone(),
             shield_info: ref_char.shield_info.clone(),
             level: ref_char.level,
+            speed: ref_char.speed,
             text: ref_char.text.clone(),
             attributes: ref_char.attributes.as_number_vec(),
             background: ref_char.background.clone(),
