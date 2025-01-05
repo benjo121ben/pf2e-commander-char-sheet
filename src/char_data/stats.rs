@@ -260,6 +260,41 @@ impl CalculatedStat {
             ]
     }
 
+    pub fn get_selectors(self: &Self) -> Vec<String>{
+        let mut selectors = vec![self.name.to_lowercase()];
+        match self.p_type {
+            ProficiencyType::Save => {
+                selectors.push("save".to_string());
+            },
+            ProficiencyType::Skill => {
+                selectors.push("skill".to_string()); 
+                selectors.push("check".to_string());
+            },
+            ProficiencyType::Lore => {
+                selectors.push("skill".to_string());
+                selectors.push("check".to_string());
+                selectors.push("lore".to_string());
+            },
+            ProficiencyType::Armor => {
+                selectors.push("dc".to_string());
+                selectors.push("ac".to_string());
+            },
+            ProficiencyType::Weapon => {
+                selectors.push("check".to_string());
+                selectors.push("attack".to_string());
+            },
+            ProficiencyType::Spell => todo!(), //spell dc and bonus still need to be implemended seperately
+            ProficiencyType::ClassDC => {
+                selectors.push("dc".to_string());
+            },
+            ProficiencyType::Perception => {
+                selectors.push("check".to_string());
+                selectors.push("perception".to_string());
+            },
+        }
+        selectors
+    }
+
     pub fn calculate_stat(self: &Self, character: &Character, bp_map: &HashMap<String, StatBonusPenalties>) -> i32 {
         let attribute_name = self.attribute.clone();
         let char_attributes = &character.attributes;
