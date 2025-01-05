@@ -231,7 +231,7 @@
     {
       "level": null,
       "name": "Unconcious",
-      "active": true
+      "active": false
     },
     {
       "level": null,
@@ -244,7 +244,7 @@
       "active": false
     },
     {
-      "level": 3,
+      "level": 1,
       "name": "Clumsy",
       "active": false
     },

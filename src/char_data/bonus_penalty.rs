@@ -110,10 +110,9 @@ impl BonusPenaltyCalculation {
 pub fn combine_selected_bonus_penalties(penalty_map: &HashMap<String, StatBonusPenalties>, selectors: &Vec<String>) -> StatBonusPenalties {
     let mut bp_vector = vec![];
     selectors.iter().map(|select| penalty_map.get(select)).for_each(|stat_bp_option|{
-        stat_bp_option.and_then(|bp|{
-            bp_vector.push(bp.clone());
-            None::<()>
-        });
+        if stat_bp_option.is_some() {
+            bp_vector.push(stat_bp_option.unwrap().clone());
+        }
     });
     return combine_stat_bonus_penalties(&bp_vector);
 }
