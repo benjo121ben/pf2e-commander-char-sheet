@@ -18,7 +18,7 @@ pub struct Character {
     pub attributes: Attributes,
     
     #[serde(default)]
-    pub text: String,
+    pub journals: Vec<String>,
     
     #[serde(default)]
     pub background: String,
@@ -66,7 +66,7 @@ pub struct SimpleCharacter {
     pub attributes: Vec<i32>,
 
     #[serde(default)]
-    pub text: String,
+    pub journals: Vec<String>,
 
     #[serde(default)]
     pub background: String,
@@ -112,7 +112,7 @@ impl Character {
             shield_info: ShieldInfo::new(20,18,5, false),
             level: 1,
             speed: 25,
-            text: String::from(""),
+            journals: vec![String::new()],
             attributes: Attributes::zero(),
             background: String::from("Squire"),
             class: String::from("Commander"),
@@ -209,7 +209,7 @@ impl From<SimpleCharacter> for Character{
             shield_info: simp_char.shield_info,
             level: simp_char.level,
             speed: simp_char.speed,
-            text: simp_char.text,
+            journals: simp_char.journals,
             attributes: Attributes::from(&simp_char.attributes),
             background: simp_char.background,
             class: simp_char.class,
@@ -241,7 +241,7 @@ impl From<&SimpleCharacter> for Character{
             shield_info: simp_char.shield_info.clone(),
             level: simp_char.level,
             speed: simp_char.speed,
-            text: simp_char.text.clone(),
+            journals: simp_char.journals.clone(),
             attributes: Attributes::from(&((*simp_char).attributes)),
             background: simp_char.background.clone(),
             class: simp_char.class.clone(),
@@ -273,7 +273,7 @@ impl From<Character> for SimpleCharacter{
             shield_info: ref_char.shield_info.clone(),
             level: ref_char.level,
             speed: ref_char.speed,
-            text: ref_char.text,
+            journals: ref_char.journals,
             attributes: ref_char.attributes.as_number_vec(),
             background: ref_char.background.clone(),
             class: ref_char.class.clone(),
@@ -301,7 +301,7 @@ impl From<&Character> for SimpleCharacter{
             shield_info: ref_char.shield_info.clone(),
             level: ref_char.level,
             speed: ref_char.speed,
-            text: ref_char.text.clone(),
+            journals: ref_char.journals.clone(),
             attributes: ref_char.attributes.as_number_vec(),
             background: ref_char.background.clone(),
             class: ref_char.class.clone(),

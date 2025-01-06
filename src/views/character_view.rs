@@ -246,10 +246,14 @@ pub fn HorseSection(
     }
 }
 
-
+#[component]
 pub fn TextCenterSection() -> impl IntoView {
     let (read_char, write_char) = get_base_context("TextCenterSection");
-    let center_text_memo = create_memo(move|_| read_char.with(|c|c.text.clone()));
+    let journal_index: RwSignal<usize> = create_rw_signal(0);
+    let center_text_memo = create_memo(move|_| read_char.with(|c|{
+        let index = journal_index.get();
+        c.journals.get(index).cloned()
+    }));
     view! {
         <section class="flex-col center-col-layout">
             <textarea 
@@ -258,7 +262,10 @@ pub fn TextCenterSection() -> impl IntoView {
                 on:change=move |event| {
                     write_char.update(|c| {
                         let val: String = event_target_value(&event);
-                        c.text = val;
+                        c.journals.get_mut(journal_index.get()).and_then(|text|{
+                            *text = val.clone();
+                            Some(val)
+                        });
                     })
                 }
                 prop:value={move || center_text_memo.get()}

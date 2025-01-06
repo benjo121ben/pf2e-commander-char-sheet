@@ -1,12 +1,11 @@
 {
   "name": "Ketrania Valenzia Adriaste Uth Viharin VII",
   "level": 4,
-  "speed": 30,
   "hp_info": {
     "ancestry_hp": 8,
     "class_hp": 8,
     "max_hp": 44,
-    "current_hp": 38,
+    "current_hp": 40,
     "temp_hp": 0
   },
   "attributes": [
@@ -17,7 +16,10 @@
     0,
     1
   ],
-  "text": "1 Hero Point\n- 4gp\nPferd Litta\nNorik Luke\nVaris Andi\nVinny Joseph\n\nGear:\n- Leder rüstung mit wappen der lizardpeople\n- Medicine Kit\n- 2 poison dosen\n\n\nMein Wappen hat eine blaue burgmauer mit rotem himmel, im vordergrund liegt eine Spindel mit weißem Garn. An der Spitze ein einziger Tropfen Blut.\n\nSession 3\nTarkhisis Warband sitzt wenige Stunden von Vogler entfernt\n\nSession 4\nBelephaion, Stimme von Tarkhisis\n3 Schatten am Rande von dem Dorf, sie tragen die Rüstungen der Ritter von Solamnia. Sie verschwinden wieder als ich mich umdrehe (Geister?)\n\nEnemy Tactics Log:\nRed dragonlike creatures use crossbows and poison -> reflex high",
+  "journals": [
+    "1 Hero Point\n- 16 + 25gp\nNorik Luke\nVaris Andi\nVinny Joseph\n\nGear:\n- Leder rüstung mit wappen der lizardpeople\n- Medicine Kit\n- 2 poison dosen\n\n",
+    "Enemy Tactics Log:\n\nyellow fat dragonborn?: werden zu stein und schwert bleibt stecken\n\nRed dragonborn?: use crossbows and poison -> reflex high\n\nDragonborn? with Trident: Magical abilities"
+  ],
   "background": "Squire",
   "class": "Commander",
   "tactics": [
@@ -45,7 +47,7 @@
     {
       "name": "End it",
       "actions": 2,
-      "selected": false,
+      "selected": true,
       "traits": [
         "Commander",
         "Tactic",
@@ -57,7 +59,7 @@
     {
       "name": "Pincer Attack",
       "actions": 1,
-      "selected": true,
+      "selected": false,
       "traits": [
         "Commander",
         "Tactic"
@@ -220,6 +222,8 @@
   "feats": [
     "Combat Assessment",
     "Combat Medic",
+    "Quick Mount",
+    "Impressive Mount",
     "Warfare Expertise",
     "Arcane Sense",
     "Cavalier Dedication",
@@ -231,32 +235,7 @@
   "conditions": [
     {
       "level": null,
-      "name": "Unconcious",
-      "active": true
-    },
-    {
-      "level": null,
-      "name": "Encumbered",
-      "active": false
-    },
-    {
-      "level": 1,
-      "name": "Clumsy",
-      "active": false
-    },
-    {
-      "level": null,
       "name": "Off-Guard",
-      "active": false
-    },
-    {
-      "level": 1,
-      "name": "Drained",
-      "active": false
-    },
-    {
-      "level": 1,
-      "name": "Enfeebled",
       "active": false
     }
   ],
@@ -271,7 +250,7 @@
       ],
       "proficiency": "Martial",
       "invested": null,
-      "description": "Price 8 sp; Damage 1d6 B; Bulk 1<br/>Hands 1<br/>Type Melee; Category Martial; Group Flail<br/>This weapon consists of a wooden handle attached to a spiked ball or cylinder by a chain, rope, or strap of leather.",
+      "description": "",
       "weap_info": {
         "damage": 6,
         "w_type": "Melee",
@@ -358,7 +337,7 @@
   ],
   "shield_info": {
     "max_hp": 20,
-    "current_hp": 20,
+    "current_hp": 13,
     "hardness": 5,
     "raised": false
   },
@@ -378,7 +357,7 @@
       "Warfare Lore": 1
     },
     "def_pot": 0,
-    "attack_dice": 1
+    "attack_dice": 2
   },
   "flags": {
     "incred_init": true
