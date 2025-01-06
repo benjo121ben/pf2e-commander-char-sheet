@@ -250,30 +250,39 @@ pub fn HorseSection(
 pub fn TextCenterSection() -> impl IntoView {
     let (read_char, write_char) = get_base_context("TextCenterSection");
     let journal_index: RwSignal<usize> = create_rw_signal(0);
-    let center_text_memo = create_memo(move|_| read_char.with(|c|{
+    let center_journal_memo = create_memo(move|_| {
         let index = journal_index.get();
-        c.journals.get(index).cloned()
-    }));
+        read_char.with(|c|c.journals.get(index).cloned().expect("journal should exist inside character"))
+    });
     view! {
         <section class="flex-col center-col-layout">
             <div class="tabs"> 
-                <div class="selected-tab">tab 1</div>
-                <div>tab 2</div>
-                <div>tab 3</div>
+                <For each=move|| (0..read_char.with(|c|c.journals.len()))
+                    key=move|index|index.to_string()
+                    children=move|index| {
+                        let header_memo = create_memo(move|_|{
+                            read_char.with(|c|c.journals.get(index).expect("journal should exist inside character").name.clone())
+                        });
+                        view! {
+                            <div class:selected-tab=move||journal_index() == index on:click=move|_| journal_index.set(index)>{move||header_memo()}</div>
+                        }
+                    }    
+                />
             </div>
             <textarea 
                 class="center-text-area" 
+                class:first-tab-selected=move||journal_index() == 0
                 id="center-text-area"
                 on:change=move |event| {
                     write_char.update(|c| {
                         let val: String = event_target_value(&event);
-                        c.journals.get_mut(journal_index.get()).and_then(|text|{
-                            *text = val.clone();
+                        c.journals.get_mut(journal_index.get()).and_then(|journal|{
+                            journal.text = val.clone();
                             Some(val)
                         });
                     })
                 }
-                prop:value={move || center_text_memo.get()}
+                prop:value={move || center_journal_memo.get().text.clone()}
             />
         </section>
     }

@@ -10,10 +10,7 @@ use crate::{
             FullConditionView
         }
     }, 
-    views::view_helpers::{
-        get_all_conditions_vector_memo_from_context, 
-        get_bonus_penalty_map_from_context
-    }
+    views::view_helpers::get_all_conditions_vector_memo_from_context
 };
 
 #[component]

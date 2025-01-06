@@ -239,8 +239,8 @@ p b {
 		padding: 0.4rem;
 		border-radius:  0.5rem 0.5rem 0 0;
 		cursor: pointer;
+		background-color: rgb(199, 183, 175);
 	}
-	
 }
 
 .selected-tab {
@@ -251,11 +251,15 @@ p b {
 	@extend .bright-bg;
 	margin-top: unset;
 	border: unset;
-	border-radius: 0 0.5rem 0.5rem 0.5rem;
+	border-radius: 0.5rem;
 	min-height: 20rem; 
 	flex-grow: 2;
 	resize: none;
 	cursor: text;
+}
+
+.first-tab-selected {
+	border-radius: 0 0.5rem 0.5rem 0.5rem;
 }
 
 .center-text-area:hover {
@@ -265,7 +269,7 @@ p b {
 .center-text-area:focus {
 	outline: 0;
 	border: unset;
-	background-color: rgb(243, 232, 227);
+	background-color: rgb(243, 227, 219);
 }
 
 .equip-section {

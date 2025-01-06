@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
-use super::{auto_bonus_prog::AbpData, bonus_penalty::{combine_selected_bonus_penalties, StatBonusPenalties}, conditions::CharacterConditionInfo, gear::Gear, hp::{HpInfo, ShieldInfo}, proficiency::ProficiencyLevel, stats::{Attributes, CalculatedStat, ProficiencyType}, tactics::Tactic};
+use super::{auto_bonus_prog::AbpData, bonus_penalty::{combine_selected_bonus_penalties, StatBonusPenalties}, conditions::CharacterConditionInfo, gear::Gear, hp::{HpInfo, ShieldInfo}, journal::Journal, proficiency::ProficiencyLevel, stats::{Attributes, CalculatedStat, ProficiencyType}, tactics::Tactic};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Character {
@@ -18,7 +18,7 @@ pub struct Character {
     pub attributes: Attributes,
     
     #[serde(default)]
-    pub journals: Vec<String>,
+    pub journals: Vec<Journal>,
     
     #[serde(default)]
     pub background: String,
@@ -66,7 +66,7 @@ pub struct SimpleCharacter {
     pub attributes: Vec<i32>,
 
     #[serde(default)]
-    pub journals: Vec<String>,
+    pub journals: Vec<Journal>,
 
     #[serde(default)]
     pub background: String,
@@ -112,7 +112,7 @@ impl Character {
             shield_info: ShieldInfo::new(20,18,5, false),
             level: 1,
             speed: 25,
-            journals: vec![String::new()],
+            journals: vec![Journal::default()],
             attributes: Attributes::zero(),
             background: String::from("Squire"),
             class: String::from("Commander"),
