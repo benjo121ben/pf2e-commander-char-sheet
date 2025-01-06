@@ -1,6 +1,7 @@
 {
   "name": "Ketrania Valenzia Adriaste Uth Viharin VII",
   "level": 4,
+  "speed": 30,
   "hp_info": {
     "ancestry_hp": 8,
     "class_hp": 8,
