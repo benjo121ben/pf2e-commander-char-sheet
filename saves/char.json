@@ -244,6 +244,16 @@
       "level": null,
       "name": "Off-Guard",
       "active": false
+    },
+    {
+      "level": 1,
+      "name": "Frightened",
+      "active": true
+    },
+    {
+      "level": 1,
+      "name": "Clumsy",
+      "active": false
     }
   ],
   "gear_list": [
@@ -346,7 +356,7 @@
     "max_hp": 20,
     "current_hp": 13,
     "hardness": 5,
-    "raised": false
+    "raised": true
   },
   "horse_hp_info": {
     "ancestry_hp": 8,

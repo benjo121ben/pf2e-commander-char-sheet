@@ -110,9 +110,9 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
     let open_condition_data_modal = move || {
         let cond_data_clone = condition.condition_data.clone();
         modal_data.update(|data| {
-            data.visible = true;
             data.title = cond_data_clone.name;
             data.description = cond_data_clone.description;
+            data.show();
         });
     };
 

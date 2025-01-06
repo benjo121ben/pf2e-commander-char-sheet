@@ -398,6 +398,7 @@ pub fn DefenseView() -> impl IntoView {
 pub fn FeatView() -> impl IntoView {
     let full_feat_map = use_context::<HashMap<String, Feat>>().expect("FeatView: Expected full feat list to be set");
     let (read_character, _) = get_base_context("FeatView");
+    let modal_context = get_modal_context("FeatView");
     let feats_memo = create_memo(move|_|read_character.with(|c|c.feats.clone()));
     
     let get_feat_list = move || {
@@ -426,7 +427,18 @@ pub fn FeatView() -> impl IntoView {
                 children=move |feat| {
                     let collapse = create_rw_signal(false);
                     view!{
-                        <div class="flex-col bright-bg" on:click=move |_| collapse.update(|c| *c = !*c)>
+                        <div class="flex-col bright-bg" 
+                            on:click=move |_| collapse.update(|c| *c = !*c)
+                            on:contextmenu={
+                                let feat_clone = feat.clone();
+                                move |_| modal_context.update(|context| {
+                                    context.description = feat_clone.description.clone();
+                                    context.title = feat_clone.name.clone();
+                                    context.traits = feat_clone.traits.clone();
+                                    context.show();
+                                })
+                            }
+                        >
                             <div class="flex-row feat-title-row ">
                                 <h4>{move || feat.name.clone()}</h4>
                                 <Show when=move || feat.actions != 0>
@@ -481,9 +493,9 @@ pub fn TraitView(
                             move|ev|{
                                 ev.stop_propagation();
                                 modal_context.update(|cont| {
-                                    cont.visible = true; 
                                     cont.title = name.clone();
                                     cont.description = desc.clone();
+                                    cont.show();
                                 })
                             }
                         }

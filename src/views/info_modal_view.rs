@@ -1,21 +1,48 @@
+use std::vec;
+
 use leptos::*;
+
+use crate::views::stats_views::TraitView;
 
 #[derive(Clone, Default, Debug, Eq, PartialEq)] 
 pub struct SimpleModalData {
-    pub visible: bool, 
+    visible: bool, 
     pub title: String, 
-    pub description: String
+    pub description: String,
+    pub traits: Vec<String>
+}
+
+impl SimpleModalData {
+    pub fn show(self: &mut Self) {
+        self.visible = true;
+    }
+
+    pub fn close(self: &mut Self) {
+        self.visible = false;
+        self.title = String::new();
+        self.description = String::new();
+        self.traits = vec![];
+    }
+    
 }
 
 #[component]
 pub fn SimpleModalView(data: RwSignal<SimpleModalData>) -> impl IntoView {
     view! {
         <Show when=move||data.get().visible>
-            <div class="modal" on:click=move |_| data.update(|data| data.visible = false)>
+            <div class="modal" on:click=move |_| data.update(|data| data.close())>
                 <div class="modal-content" on:click=move |_| {}>
-                    <h1>{move|| data.get().title}</h1>
+                    <h2>{move|| data.get().title}</h2>
                     <hr style="margin-bottom:5px"/>
-                    <p class="modal-description" inner_html={move|| data.get().description}/>
+                    <Show when=move||{data.get().traits.len() > 0}>
+                        {move || {
+                            let traits = data.get().traits;
+                            view!{
+                                <TraitView trait_names=traits/>
+                            }
+                        }}
+                    </Show>
+                    <p class="modal-description" style="margin-top:5px" inner_html={move|| data.get().description}/>
                 </div>
             </div>
         </Show>

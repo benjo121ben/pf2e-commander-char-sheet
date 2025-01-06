@@ -21,7 +21,7 @@
       "traits": [
         "Fighter"
       ],
-      "description": "Requirements You can prepare at least two tactics. You’re trained in battlefield triage and wound treatment. You are trained in Medicine and can use your Intelligence modifier in place of your Wisdom modifier for Medicine checks. You gain the Battle Medicine feat (Player Core 253).",
+      "description": "Requirements You can prepare at least two tactics.<br/>You’re trained in battlefield triage and wound treatment. You are trained in Medicine and can use your Intelligence modifier in place of your Wisdom modifier for Medicine checks.<br/>You gain the Battle Medicine feat (Player Core 253).",
       "char_additions": []
     },
     {
@@ -34,7 +34,7 @@
         "Archetype",
         "Dedication"
       ],
-      "description": "Prerequisites trained in Nature or Society You gain a young animal companion (Player Core 206) that serves as your mount. You can choose from animal companions with the mount special ability, as well as any additional options from your pledge (see Cavalier Pledges sidebar, page 193), as determined by your GM. You must choose an animal companion that’s at least one size larger than you, but if the animal usually starts as Small, you can begin with a Medium version of that animal (changing no statistics other than its size). Special If you have pledged yourself to a cause, you can take a second dedication feat closely tied to that cause even if you haven’t taken two additional cavalier feats. For instance, if you pledged yourself to fight crime with a group of vigilantes, you could take the vigilante dedication without first completing the cavalier archetype. The GM determines what archetypes, if any, are valid choices.",
+      "description": "<b>Prerequisites</b> trained in Nature or Society<br/>You gain a young animal companion (Player Core 206) that serves as your mount. You can choose from animal companions with the mount special ability, as well as any additional options from your pledge (see Cavalier Pledges sidebar, page 193), as determined by your GM. You must choose an animal companion that’s at least one size larger than you, but if the animal usually starts as Small, you can begin with a Medium version of that animal (changing no statistics other than its size).<br/><br/><b>Special</b> If you have pledged yourself to a cause, you can take a second dedication feat closely tied to that cause even if you haven’t taken two additional cavalier feats. For instance, if you pledged yourself to fight crime with a group of vigilantes, you could take the vigilante dedication without first completing the cavalier archetype. The GM determines what archetypes, if any, are valid choices.",
       "char_additions": []
     },
     {
