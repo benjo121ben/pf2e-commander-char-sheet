@@ -256,6 +256,11 @@ pub fn TextCenterSection() -> impl IntoView {
     }));
     view! {
         <section class="flex-col center-col-layout">
+            <div class="tabs"> 
+                <div class="selected-tab">tab 1</div>
+                <div>tab 2</div>
+                <div>tab 3</div>
+            </div>
             <textarea 
                 class="center-text-area" 
                 id="center-text-area"

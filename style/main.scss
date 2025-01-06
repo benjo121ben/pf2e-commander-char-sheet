@@ -2,6 +2,7 @@
 *::before,
 *::after {
 	box-sizing: border-box;
+	scrollbar-width: thin;
 }
 
 @font-face {
@@ -93,6 +94,7 @@ p b {
 	flex-basis:1;
 	flex-grow:2;
 	flex-shrink: 1; 
+	gap: unset;
 }
 
 .right-side-col {
@@ -102,6 +104,15 @@ p b {
 	flex-grow:1;
 	flex-basis:1;
 	max-width: fit-content;
+	max-height: 82vh;
+	overflow: scroll;
+	-ms-overflow-style: none;  /* IE and Edge */
+  	scrollbar-width: thin;  /* Firefox */
+	overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+	width: 2px;
 }
 
 .text-right {
@@ -222,12 +233,39 @@ p b {
 	text-align: end;
 }
 
+.tabs {
+	@extend .flex-row;
+	* {
+		padding: 0.4rem;
+		border-radius:  0.5rem 0.5rem 0 0;
+		cursor: pointer;
+	}
+	
+}
+
+.selected-tab {
+	background-color: rgb(243, 227, 219);
+}
+
 .center-text-area {
 	@extend .bright-bg;
+	margin-top: unset;
+	border: unset;
+	border-radius: 0 0.5rem 0.5rem 0.5rem;
 	min-height: 20rem; 
 	flex-grow: 2;
 	resize: none;
 	cursor: text;
+}
+
+.center-text-area:hover {
+	border: unset;
+}
+
+.center-text-area:focus {
+	outline: 0;
+	border: unset;
+	background-color: rgb(243, 232, 227);
 }
 
 .equip-section {
@@ -252,12 +290,6 @@ p b {
 
 .weapon-first-row-bonuses div:nth-of-type(2) {
 	text-align: end;
-}
-
-.center-text-area:focus {
-	border-color: brown;
-	outline: 0;
-	background-color: rgb(243, 232, 227);
 }
 
 .adjust-up {
