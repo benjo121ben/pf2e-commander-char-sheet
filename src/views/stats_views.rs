@@ -14,16 +14,28 @@ use leptos::logging::log;
 
 
 #[component]
-pub fn AttributeView() -> impl IntoView {
+pub fn AttributeView(horse: bool) -> impl IntoView {
     let unlocked = create_rw_signal(false);
     let (read_char, write_char) = get_base_context("MainStatsView");
-    let attribute_memo = create_memo(move|_| read_char.with(|c|c.attributes.clone()));
-    let update_stat_if_unlocked = move |id: &str, offset: i32| write_char.update(|f| {
+    let attribute_memo = create_memo(move|_| read_char.with(|c|{
+        if horse {
+            c.animal.attributes.clone()
+        }
+        else {
+            c.attributes.clone()
+        }
+    }));
+    let update_stat_if_unlocked = move |id: &str, offset: i32| write_char.update(|character| {
         if !unlocked.get() {
             return
         }
-        f.attributes.set_stat(id, f.attributes.get_stat_val(id).expect("MainStatsView - update_stat: There should be an attribute of the same name in the char") + offset);
-        f.hp_info.calculate_max_hp(f.level, f.attributes.get_stat_val("con").expect("There should be a con stat"));
+
+        let attributes = if horse {&mut character.animal.attributes} else {&mut character.attributes};
+        let hp_info = if horse {&mut character.animal.hp_info} else {&mut character.hp_info};
+
+        attributes.set_stat(id, attributes.get_stat_val(id).expect("MainStatsView - update_stat: There should be an attribute of the same name in the char") + offset);
+        hp_info.calculate_max_hp(character.level, attributes.get_stat_val("con").expect("There should be a con stat"));
+        
     });
     view! {
         <div class="attribute-view">

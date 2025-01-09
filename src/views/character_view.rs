@@ -155,7 +155,7 @@ pub fn TopCharViewSection() -> impl IntoView {
                         </div>
                     </section>
                     <section class="align-center">
-                        <AttributeView/>
+                        <AttributeView horse=false/>
                     </section>
                     <section class="align-center">
                         <DefenseView/>
@@ -226,6 +226,9 @@ pub fn HorseSection(
     };
     view! {
         <div class="flex-row">
+            <section class="align-center">
+                <AttributeView horse=true/>
+            </section>
             <section class="align-center">
                 <HpView is_horse=true/>
             </section>
