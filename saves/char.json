@@ -248,7 +248,7 @@
     {
       "level": 1,
       "name": "Frightened",
-      "active": true
+      "active": false
     },
     {
       "level": 1,

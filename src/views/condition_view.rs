@@ -68,6 +68,12 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
 
     let get_current_cond_view_state = move || current_state_memo.get();
 
+    let handle_sub_conditions_on_remove = move |full_view: &FullConditionView, conditions_map_clone: &HashMap<String, ConditionData>, character: &mut Character| {
+        for condition_to_add_name in  full_view.condition_data.added_on_remove.clone() {
+            character.add_condition(&conditions_map_clone, &condition_to_add_name, true);
+        }
+    };
+
     let change_level_and_delete_if_zero = {
         let conditions_map_clone = conditions_map.clone();
         move |modifier: i32| {
@@ -95,8 +101,8 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
                 });
                 if delete {
                     c.remove_condition(&cond_name);
-                    for condition_to_add_name in  cond_view.condition_data.added_on_remove {
-                        c.add_condition(&conditions_map_clone, &condition_to_add_name, true);
+                    if cond_view.active { //add on-remove conditions like dying
+                        handle_sub_conditions_on_remove(&cond_view, &conditions_map_clone, c);
                     }
                 }
             });
@@ -118,15 +124,21 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
 
     let change_activate = move || {
         let cond = get_current_cond_view_state();
+        let conditions_map_clone = conditions_map.clone();
         if cond.forced {
             return;
         }
         set_char.update(|c|{
-            c.conditions.iter_mut().for_each(|f_cond| {
-                if f_cond.name == cond.name {
-                    f_cond.active = !f_cond.active;
+            let found_cond = c.conditions.iter_mut().find(|f_cond| f_cond.name == cond.name);
+            match found_cond {
+                Some(char_condition) => {
+                    char_condition.active = !char_condition.active;
+                    if !char_condition.active {
+                        handle_sub_conditions_on_remove(&cond, &conditions_map_clone, c);
+                    }
+                },
+                None => {},
                 }
-            });
         });
     };
 
