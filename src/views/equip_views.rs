@@ -106,7 +106,7 @@ pub fn WeaponView(item: Gear) -> impl IntoView {
 
         let weap_description_clone = weapon.description.clone();
         Ok(view!{
-            <div class="weapon-view bright-bg"
+            <div class="flex-col bright-bg" style="gap: 2px;"
                 on:click=move|_|collapsed_signal.update(|c| *c = !*c)
             >
                 <div class="flex-row space-between">

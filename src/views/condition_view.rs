@@ -30,7 +30,7 @@ pub fn ConditionSection() -> impl IntoView {
                         }
                     }
                 />
-                <img alt="image-not-working" src="icons/add.svg" style="width: 20px; height:20px;"
+                <img alt="image-not-working" src="icons/add.svg" class="icon"
                         on:click={move|_| add_cond_visible_signal.set(true)}
                     />
             </div>
@@ -116,6 +116,7 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
     let open_condition_data_modal = move || {
         let cond_data_clone = condition.condition_data.clone();
         modal_data.update(|data| {
+            data.reset();
             data.title = cond_data_clone.name;
             data.description = cond_data_clone.description;
             data.show();
@@ -165,10 +166,10 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
             </Show> 
             
             <Show when=move||get_current_cond_view_state().forced>
-                <img alt="disabled" src="icons/lock.svg" style="width: 20px; height:20px;"/>
+                <img alt="disabled" src="icons/lock.svg" class="icon"/>
             </Show>
             <Show when=move||{let val: FullConditionView = get_current_cond_view_state(); !val.forced}>
-                <img alt="decr" src="icons/remove.svg" style="width: 20px; height:20px;"
+                <img alt="decr" src="icons/remove.svg" class="icon"
                     on:click={
                         let change_lvl = change_level_and_delete_if_zero.clone();
                         move|ev| {ev.stop_propagation(); change_lvl(-1)}
@@ -176,7 +177,7 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
                 /> 
             </Show>
             <Show when=move||{let val: FullConditionView = get_current_cond_view_state(); !val.forced && val.active && val.level.is_some()}>
-                <img alt="incr" src="icons/add.svg" style="width: 20px; height:20px;"
+                <img alt="incr" src="icons/add.svg" class="icon"
                     on:click={
                         let change_lvl = change_level_and_delete_if_zero_clone.clone();
                         move|ev| {ev.stop_propagation(); change_lvl(1)}

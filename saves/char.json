@@ -20,7 +20,7 @@
   "journals": [
     {
       "name": "Journal",
-      "text": "1 Hero Point\n- 16 + 25gp\nNorik Luke\nVaris Andi\nVinny Joseph\n\nGear:\n- Leder rüstung mit wappen der lizardpeople\n- Medicine Kit\n- 2 poison dosen"
+      "text": "1 Hero Point\n- 16 + 25gp\nNorik Luke\nVaris Andi\nVinny Joseph,\n\nGear:\n- Leder rüstung mit wappen der lizardpeople\n- Medicine Kit\n- 2 poison dosen"
     },
     {
       "name": "Enemy Tactics Log",
@@ -241,23 +241,28 @@
   ],
   "conditions": [
     {
-      "level": 4,
-      "name": "Frightened",
+      "level": null,
+      "name": "Prone",
+      "active": false
+    },
+    {
+      "level": null,
+      "name": "Off-Guard",
+      "active": false
+    },
+    {
+      "level": 2,
+      "name": "Wounded",
+      "active": false
+    },
+    {
+      "level": 2,
+      "name": "Dying",
       "active": false
     },
     {
       "level": 1,
-      "name": "Clumsy",
-      "active": false
-    },
-    {
-      "level": null,
-      "name": "Unconcious",
-      "active": false
-    },
-    {
-      "level": null,
-      "name": "Prone",
+      "name": "Frightened",
       "active": false
     }
   ],

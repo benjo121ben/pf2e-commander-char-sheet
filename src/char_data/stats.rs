@@ -315,7 +315,7 @@ impl CalculatedStat {
                     attribute_used = override_attribute.unwrap();
                 }
                 let mut selectors = self.get_selectors();
-                selectors.push(attribute_used.abbrv.to_lowercase());
+                selectors.push(attribute_used.get_id().to_string());
                 let final_bp = combine_selected_bonus_penalties(bp_map, &selectors);
                 let adjustment = final_bp.calculate_total();
                 return (

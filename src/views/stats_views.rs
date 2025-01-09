@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use crate::char_data::feats::Feat;
 use crate::char_data::proficiency::ProficiencyLevel;
 use crate::char_data::stats::{CalculatedStat, ProficiencyType};
-use crate::views::view_helpers::{get_bonus_penalty_map_from_context, get_modal_context};
+use crate::views::view_helpers::{get_bonus_penalty_map_from_context, get_modal_context, get_prefix};
 use super::action_view::ActionView;
 use super::view_helpers::get_base_context;
 use leptos::ev::Event;
@@ -26,7 +26,7 @@ pub fn AttributeView() -> impl IntoView {
         f.hp_info.calculate_max_hp(f.level, f.attributes.get_stat_val("con").expect("There should be a con stat"));
     });
     view! {
-        <div style="display: flex; flex-direction: row; gap: 10px">
+        <div class="attribute-view">
             <For
                 each=move || {
                     attribute_memo.with(|attributes|
@@ -42,22 +42,23 @@ pub fn AttributeView() -> impl IntoView {
                     let val = create_memo(move |_| {
                         attribute_memo.with(|attributes| attributes.get_stat_val(&id_clone).expect("MainStatsView - View: There should be an attribute of the same name in the char"))
                     });
+                    let sign_prefix = move || {get_prefix(val())};
                     view! { 
+                        <div>{abbr}</div>
                         <div 
                             on:click = {let id_clone = id.clone(); move |_| update_stat_if_unlocked(&id_clone, 1)}
                             on:contextmenu = {let id_clone = id.clone(); move |_| update_stat_if_unlocked(&id_clone, -1)}
                         >
-                            {abbr}: {val}
+                            {sign_prefix}{val}
                         </div>
                     }
                 }
             />
-            <button 
-                on:click=move |_| unlocked.update(|l| *l = !*l)
-            >
-                {move || if unlocked.get() {"Unlocked"} else {"Locked"}}
-            </button>
         </div>
+        <img alt="edit-icon-not-loading" src="icons/pencil-fill.svg" class="icon invisible-border" style="margin-left: 5px; padding: 2px; box-sizing: content-box;"
+            on:click=move |_| unlocked.update(|l| *l = !*l)
+            class:green-border=move|| unlocked()
+        />
     }
 }
 
@@ -385,7 +386,7 @@ pub fn DefenseView() -> impl IntoView {
                 AC: {move||ac_memo.get().0}
             </h3>
             <button on:click=switch_shield_pos style="justify-content:center"
-                class:raised-shield-button=move||shield_info_memo().raised
+                class:activated-button=move||shield_info_memo().raised
             >
                 "Raise +2"
             </button>
@@ -432,6 +433,7 @@ pub fn FeatView() -> impl IntoView {
                             on:contextmenu={
                                 let feat_clone = feat.clone();
                                 move |_| modal_context.update(|context| {
+                                    context.reset();
                                     context.description = feat_clone.description.clone();
                                     context.title = feat_clone.name.clone();
                                     context.traits = feat_clone.traits.clone();
@@ -493,6 +495,7 @@ pub fn TraitView(
                             move|ev|{
                                 ev.stop_propagation();
                                 modal_context.update(|cont| {
+                                    cont.reset();
                                     cont.title = name.clone();
                                     cont.description = desc.clone();
                                     cont.show();

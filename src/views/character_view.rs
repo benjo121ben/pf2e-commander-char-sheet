@@ -130,10 +130,16 @@ pub fn TopCharViewSection() -> impl IntoView {
     view!{
         <div class="flex-row">
             <div id="top_left_div">
-                <div id="header_div" class="flex-row no-grow-children">
-                    <h2 on:click=move|_|send_debug.dispatch(0)>
+                <div id="header_div" class="flex-row no-grow-children" style="align-items:center; gap: 20px">
+                    <h2 on:click=move|_|send_debug.dispatch(0) style="margin: unset;"> 
                         {move || read_char.with(|k| k.name.clone())}
                     </h2>
+                    <button style="padding: 5px;"
+                        on:click=move |_| set_char.update(move |c| c.level_up_down(1))
+                        on:contextmenu=move |_| set_char.update(move |c| c.level_up_down(-1))
+                    >
+                        Level {move || read_char.with(|k| k.level)}
+                    </button>
                     <Show when=move || sheet_error.get().msg != String::from("")>
                         <p style="color: red; margin-left: 40px">{move || sheet_error.get().msg.clone()}</p>
                     </Show>
@@ -141,20 +147,6 @@ pub fn TopCharViewSection() -> impl IntoView {
                 <div id="top_stat_div" class="flex-row no-grow-children">
                     <section>
                         <div class="flex-row align-center no-grow-children">   
-                            <button
-                                on:click=move |_| {set_char.update(move |c| {
-                                    c.level += 1;
-                                    c.hp_info.calculate_max_hp(c.level, c.attributes.get_stat_val("con").expect("There should be a con stat"));
-                                    c.horse_hp_info.calculate_max_hp(c.level, 2);
-                                })}
-                                on:contextmenu=move |_| {set_char.update(move |c| {
-                                    c.level -= 1;
-                                    c.hp_info.calculate_max_hp(c.level, c.attributes.get_stat_val("con").expect("There should be a con stat"));
-                                    c.horse_hp_info.calculate_max_hp(c.level, 2);
-                                })}
-                            >
-                                Level {move || read_char.with(|k| k.level)}
-                            </button>
                             <div>Size<br/>Medium</div>
                             <div 
                                 class:adjust-up={move||get_speed().1 > 0}
@@ -163,20 +155,18 @@ pub fn TopCharViewSection() -> impl IntoView {
                         </div>
                     </section>
                     <section class="align-center">
-                        <DefenseView/>
-                    </section>
-                    <section class="align-center">
                         <AttributeView/>
                     </section>
-                    <section class="align-center" id="hp_section">
-                        <HpView is_horse=false/>
+                    <section class="align-center">
+                        <DefenseView/>
                     </section>
-                    <section class="align-center" id="shield_section">
+                    <section class="flex-row align-center" style="gap: 20px" id="hp_section">
+                        <HpView is_horse=false/>
                         <ShieldView/>
                     </section>
                 </div>
             </div>
-            <div id="top_right_div" class="flex-row" style="flex: 1 1 0; align-items: flex-end;">
+            <div id="top_right_div" class="flex-row">
                 <ConditionSection/>
             </div>
         </div>
@@ -204,8 +194,11 @@ pub fn ProficiencySidebar() -> impl IntoView {
                 </div>
             </Show>
             <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Save] margin=true/>
-            <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Skill, ProficiencyType::Lore] margin=true/>
+            <Show when=move || !show_edit_stats.get()>
+                <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Skill, ProficiencyType::Lore] margin=false/>
+            </Show>
             <Show when=move || show_edit_stats.get()>
+                <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Skill, ProficiencyType::Lore] margin=true/>
                 <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Weapon] margin=true/>
                 <SwitchProfView show_edit_stats=show_edit_stats types=vec![ProficiencyType::Armor] margin=true/>
             </Show>

@@ -197,6 +197,12 @@ impl Character {
 
         return (armor_total, armor_bonus_penalties)
     }
+
+    pub fn level_up_down(self: &mut Self, increase: i32) {
+        self.level += increase;
+        self.hp_info.calculate_max_hp(self.level, self.attributes.get_stat_val("con").expect("There should be a con stat"));
+        self.horse_hp_info.calculate_max_hp(self.level, 2); //todo horse stats
+    } 
 }
 
 
