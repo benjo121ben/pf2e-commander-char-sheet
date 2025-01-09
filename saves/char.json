@@ -368,12 +368,22 @@
     "hardness": 5,
     "raised": false
   },
-  "horse_hp_info": {
-    "ancestry_hp": 8,
-    "class_hp": 6,
-    "max_hp": 40,
-    "current_hp": 40,
-    "temp_hp": 0
+  "animal": {
+    "hp_info": {
+      "ancestry_hp": 8,
+      "class_hp": 6,
+      "max_hp": 44,
+      "current_hp": 44,
+      "temp_hp": 0
+    },
+    "attributes": [
+      4,
+      3,
+      3,
+      -4,
+      2,
+      0
+    ]
   },
   "override_prof": {
     "Medicine": "int"

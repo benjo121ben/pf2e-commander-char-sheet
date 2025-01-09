@@ -211,15 +211,18 @@ pub fn ProficiencySidebar() -> impl IntoView {
 pub fn HorseSection(
 ) -> impl IntoView {
     let (read_c, _) = get_base_context("HorseSection");
-    let get_bonus = move || {
+    let horse_data = create_memo(move |_| read_c.with(|c| c.animal.clone()));
+    let attack_proficiency = ProficiencyLevel::Trained;
+    let unarmored_defense_proficiency = ProficiencyLevel::Trained;
+    let _barding_proficiency = ProficiencyLevel::Trained;
+
+    let get_attack = move || {
         let level = read_c.with(|c| c.level);
-        ProficiencyLevel::Trained.get_bonus(level)
-    };
-    let get_att = move || {
-        get_bonus() + 3
+        horse_data().attributes.get_stat("str").expect("horse should have str").value + attack_proficiency.get_bonus(level)
     };
     let get_ac = move || {
-        get_bonus() + 2 + 10
+        let level = read_c.with(|c| c.level);
+        10 + horse_data().attributes.get_stat("dex").expect("horse should have str").value + unarmored_defense_proficiency.get_bonus(level)
     };
     view! {
         <div class="flex-row">
@@ -230,7 +233,7 @@ pub fn HorseSection(
                 <label>AC: {get_ac}</label>
             </section>
             <section class="align-center">
-                <label>Attack: {get_att}</label>
+                <label>Attack: {get_attack}</label>
             </section>
         </div>
         <img src="horse.png" style="max-width: 100%; height: auto;"/>

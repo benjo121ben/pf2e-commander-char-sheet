@@ -73,7 +73,7 @@ pub fn HpView(
     let temp_hp_switch = create_rw_signal(false);
     let hp_info_memo = create_memo(move |_| read_char.with(|c| {
         if is_horse {
-            c.horse_hp_info.clone()
+            c.animal.hp_info.clone()
         } 
         else {
             c.hp_info.clone()
@@ -82,7 +82,7 @@ pub fn HpView(
     let change_hp = move |val: i32| {
         write_char.update(|c| {
             if is_horse {
-                c.horse_hp_info.change_hp(val)
+                c.animal.hp_info.change_hp(val)
             }
             else {
                 c.hp_info.change_hp(val)
@@ -127,7 +127,7 @@ pub fn HpView(
                                     write_char.update(|c|{
                                         match event_target_value(&event).parse::<i32>() {
                                             Ok(number) => {
-                                                if is_horse {c.horse_hp_info.set_temp(number)}
+                                                if is_horse {c.animal.hp_info.set_temp(number)}
                                                 else {c.hp_info.set_temp(number)}
                                             },
                                             Err(err) => {log!("HpView/tempHP error getting target value: {err}")},

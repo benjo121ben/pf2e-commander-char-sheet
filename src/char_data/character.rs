@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
-use super::{auto_bonus_prog::AbpData, bonus_penalty::{combine_selected_bonus_penalties, StatBonusPenalties}, conditions::CharacterConditionInfo, gear::Gear, hp::{HpInfo, ShieldInfo}, journal::Journal, proficiency::ProficiencyLevel, stats::{Attributes, CalculatedStat, ProficiencyType}, tactics::Tactic};
+use super::{animal::{Animal, SimpleAnimal}, auto_bonus_prog::AbpData, bonus_penalty::{combine_selected_bonus_penalties, StatBonusPenalties}, conditions::CharacterConditionInfo, gear::Gear, hp::{HpInfo, ShieldInfo}, journal::Journal, proficiency::ProficiencyLevel, stats::{Attributes, CalculatedStat, ProficiencyType}, tactics::Tactic};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Character {
@@ -41,7 +41,7 @@ pub struct Character {
     #[serde(default)]
     pub gear_list: Vec<Gear>,
     
-    pub horse_hp_info: HpInfo, 
+    pub animal: Animal, 
     
     #[serde(default)]
     pub override_prof: HashMap<String, String>,
@@ -91,7 +91,7 @@ pub struct SimpleCharacter {
 
     pub shield_info: ShieldInfo,
 
-    pub horse_hp_info: HpInfo,
+    pub animal: SimpleAnimal,
 
     #[serde(default)]
     pub override_prof: HashMap<String, String>,
@@ -108,7 +108,7 @@ impl Character {
         Character {
             name: String::from(""),
             hp_info: HpInfo::new(0,0,1, 0),
-            horse_hp_info: HpInfo::new(0,0,1, 0),
+            animal: Animal::new(),
             shield_info: ShieldInfo::new(20,18,5, false),
             level: 1,
             speed: 25,
@@ -201,7 +201,7 @@ impl Character {
     pub fn level_up_down(self: &mut Self, increase: i32) {
         self.level += increase;
         self.hp_info.calculate_max_hp(self.level, self.attributes.get_stat_val("con").expect("There should be a con stat"));
-        self.horse_hp_info.calculate_max_hp(self.level, 2); //todo horse stats
+        self.animal.hp_info.calculate_max_hp(self.level, self.animal.attributes.get_stat_val("con").expect("There should be a con stat"));
     } 
 }
 
@@ -211,7 +211,7 @@ impl From<SimpleCharacter> for Character{
         let mut ret_val = Character {
             name: simp_char.name,
             hp_info: simp_char.hp_info,
-            horse_hp_info: simp_char.horse_hp_info,
+            animal: Animal::from(&simp_char.animal),
             shield_info: simp_char.shield_info,
             level: simp_char.level,
             speed: simp_char.speed,
@@ -243,12 +243,12 @@ impl From<&SimpleCharacter> for Character{
         let mut ret_val = Character {
             name: simp_char.name.clone(),
             hp_info: simp_char.hp_info.clone(),
-            horse_hp_info: simp_char.horse_hp_info.clone(),
+            animal: Animal::from(&simp_char.animal),
             shield_info: simp_char.shield_info.clone(),
             level: simp_char.level,
             speed: simp_char.speed,
             journals: simp_char.journals.clone(),
-            attributes: Attributes::from(&((*simp_char).attributes)),
+            attributes: Attributes::from(simp_char.attributes.clone()),
             background: simp_char.background.clone(),
             class: simp_char.class.clone(),
             proficiencies: vec![],
@@ -275,7 +275,7 @@ impl From<Character> for SimpleCharacter{
         let mut ret_val = SimpleCharacter {
             name: ref_char.name.clone(),
             hp_info: ref_char.hp_info.clone(),
-            horse_hp_info: ref_char.horse_hp_info.clone(),
+            animal: SimpleAnimal::from(&ref_char.animal),
             shield_info: ref_char.shield_info.clone(),
             level: ref_char.level,
             speed: ref_char.speed,
@@ -303,7 +303,7 @@ impl From<&Character> for SimpleCharacter{
         let mut ret_val = SimpleCharacter {
             name: ref_char.name.clone(),
             hp_info: ref_char.hp_info.clone(),
-            horse_hp_info: ref_char.horse_hp_info.clone(),
+            animal: SimpleAnimal::from(&ref_char.animal),
             shield_info: ref_char.shield_info.clone(),
             level: ref_char.level,
             speed: ref_char.speed,
