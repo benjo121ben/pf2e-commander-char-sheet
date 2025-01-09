@@ -128,18 +128,25 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
         if cond.forced {
             return;
         }
-        set_char.update(|c|{
-            let found_cond = c.conditions.iter_mut().find(|f_cond| f_cond.name == cond.name);
-            match found_cond {
-                Some(char_condition) => {
-                    char_condition.active = !char_condition.active;
-                    if !char_condition.active {
-                        handle_sub_conditions_on_remove(&cond, &conditions_map_clone, c);
-                    }
-                },
-                None => {},
-                }
-        });
+        set_char.update(|c| {
+            let current_condition = c.conditions.iter_mut().find(|f_cond| f_cond.name == cond.name);
+            if current_condition.is_none() {
+                return;
+            }
+
+            let char_condition = current_condition.unwrap();
+            if !char_condition.active {
+                //we add the condition again so that all normal effects on gain are triggered 
+                //and conditions like dying always start at the right level
+                c.add_condition(&conditions_map_clone, &cond.name, false);
+                return;
+            }
+
+            char_condition.active = !char_condition.active;
+            if !char_condition.active {
+                handle_sub_conditions_on_remove(&cond, &conditions_map_clone, c); //trigger remove logic when deactivating condition
+            }
+        }); 
     };
 
     view!{
@@ -151,7 +158,7 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
             <label class="no-grow no-margins">
                 {move || get_current_cond_view_state().name.clone()} 
             </label>
-            <Show when=move||get_current_cond_view_state().level.is_some()>
+            <Show when=move||{let state = get_current_cond_view_state(); state.level.is_some() && state.active}>
                 <label class="no-grow no-margins">
                     {move || get_current_cond_view_state().level.unwrap()}
                 </label>
@@ -168,7 +175,7 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
                     }
                 /> 
             </Show>
-            <Show when=move||{let val: FullConditionView = get_current_cond_view_state(); !val.forced && val.level.is_some()}>
+            <Show when=move||{let val: FullConditionView = get_current_cond_view_state(); !val.forced && val.active && val.level.is_some()}>
                 <img alt="incr" src="icons/add.svg" style="width: 20px; height:20px;"
                     on:click={
                         let change_lvl = change_level_and_delete_if_zero_clone.clone();

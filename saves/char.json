@@ -241,18 +241,23 @@
   ],
   "conditions": [
     {
-      "level": null,
-      "name": "Off-Guard",
-      "active": false
-    },
-    {
-      "level": 1,
+      "level": 4,
       "name": "Frightened",
       "active": false
     },
     {
       "level": 1,
       "name": "Clumsy",
+      "active": false
+    },
+    {
+      "level": null,
+      "name": "Unconcious",
+      "active": false
+    },
+    {
+      "level": null,
+      "name": "Prone",
       "active": false
     }
   ],
@@ -356,7 +361,7 @@
     "max_hp": 20,
     "current_hp": 13,
     "hardness": 5,
-    "raised": true
+    "raised": false
   },
   "horse_hp_info": {
     "ancestry_hp": 8,
