@@ -265,6 +265,7 @@ impl CalculatedStat {
         match self.p_type {
             ProficiencyType::Save => {
                 selectors.push("save".to_string());
+                selectors.push("check".to_string());
             },
             ProficiencyType::Skill => {
                 selectors.push("skill".to_string()); 
