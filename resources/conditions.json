@@ -123,6 +123,36 @@
             }
         ]
     },
+	{
+        "name": "Courageous Anthem",
+        "has_value": false,
+        "description": "",
+        "bonus_penalty": [
+            {
+                "selector": ["attack", "dam"],
+                "calculation": {
+                    "calc_type": "Fixed",
+                    "penalty_type": "Status",
+					"value": 1
+                }
+            }
+        ]
+    },
+	{
+        "name": "Rallying Anthem",
+        "has_value": false,
+        "description": "",
+        "bonus_penalty": [
+            {
+                "selector": ["ac", "save"],
+                "calculation": {
+                    "calc_type": "Fixed",
+                    "penalty_type": "Status",
+					"value": 1
+                }
+            }
+        ]
+    },
     {
         "name": "Enfeebled",
         "has_value": true,

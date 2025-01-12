@@ -6,7 +6,7 @@
     "ancestry_hp": 8,
     "class_hp": 8,
     "max_hp": 44,
-    "current_hp": 40,
+    "current_hp": 32,
     "temp_hp": 0
   },
   "attributes": [
@@ -20,11 +20,11 @@
   "journals": [
     {
       "name": "Journal",
-      "text": "1 Hero Point\n- 16 + 25gp\nNorik Luke\nVaris Andi\nVinny Joseph,\n\nGear:\n- Leder rüstung mit wappen der lizardpeople\n- Medicine Kit\n- 2 poison dosen"
+      "text": "0 Hero Point\n- 61gp\nNorik Luke\nVaris Andi\nVinny Joseph\n\nGear:\n- Leder rüstung mit wappen der lizardpeople\n- Medicine Kit\n- 2 poison dosen\n\nGewinne Duel gegen Baccaris' sohn.\nNächster Tag, werden angestellt von Marshall Vendri angestellt Tatina Ruckledust, gnom Schmiedin aufzusuchen um mehr über die Kriegsmaschinen der Drachenarmee zu erfahren.\n\nTatina hat unwissentlich die Drachen Kriegsmaschine für die Drachenarmee gebaut. Da Vinny sie vor das Konzil von Kalaman bringen will und ich dem Konzil nicht vertraue, lege ich eine niche Paragraphie der Solamnischen Ritter aus, um die Gnomin unter die Verantwortung der Solamnischen Ritter zu stellen, was bedeutet, dass Kalaman nicht über ihr Schicksal entscheiden darf. (Danke, unnötig komplizierte Rechtslage)\n\nVaris konnte druidischen Erwartungen nicht gerecht werden und war nur fähig grundlegende Transformationen seiner Hände und Zähne durchzuführen, Norik hat sein Geschäft verloren (ausgeraubt) und seine Schwertkunst auf seinen Reisen erlernt.\n\nIn der Nähe von Solace (einer stadt im Süden) wurden Drachenähnliche Wesen gesichtet. Dies würde zusammenpassen mit den Bewegungen von Elfen gen Westen.\n\nVinny erhät eine Nachricht von Brancala, die ihn ermutigen soll in einem Tempel den wir nach ein paar Nachforschungen aufgesucht haben.\n\nWir retten einen Spähertrupp in der Nähe von Vogler und nehmen einen roten und gelben Drachen gefangen. Die Drachen Armee hat sich aufgeteilt um Solamnia von Kalaman zu isolieren."
     },
     {
       "name": "Enemy Tactics Log",
-      "text": "yellow fat dragonborn?: werden zu stein und schwert bleibt stecken\n\nRed dragonborn?: use crossbows and poison -> reflex high\n\nDragonborn? with Trident: Magical abilities"
+      "text": "Dragonborn?: can glide\n\nyellow fat dragon soldier: werden zu stein und schwert bleibt stecken. Haben energie potential für rage oder ähnliches.\n\nRed dragon soldier: use crossbows and poison, cannot be off-guard for some reason, reflex high, higher intelligence?\n\nDragon soldier with Trident: Magical abilities\n\nBaccaris Son': Feints und attacks mit extra damage if feint success\n\nGoblin: shortbows, swords, no offensive abilities\n\nHobgoblin: died before analysis was possible"
     }
   ],
   "background": "Squire",
@@ -54,7 +54,7 @@
     {
       "name": "End it",
       "actions": 2,
-      "selected": true,
+      "selected": false,
       "traits": [
         "Commander",
         "Tactic",
@@ -66,7 +66,7 @@
     {
       "name": "Pincer Attack",
       "actions": 1,
-      "selected": false,
+      "selected": true,
       "traits": [
         "Commander",
         "Tactic"
@@ -251,18 +251,18 @@
       "active": false
     },
     {
-      "level": 2,
-      "name": "Wounded",
+      "level": null,
+      "name": "Courageous Anthem",
       "active": false
     },
     {
-      "level": 2,
-      "name": "Dying",
+      "level": null,
+      "name": "Rallying Anthem",
       "active": false
     },
     {
-      "level": 1,
-      "name": "Frightened",
+      "level": null,
+      "name": "Grabbed",
       "active": false
     }
   ],
@@ -363,9 +363,9 @@
     }
   ],
   "shield_info": {
-    "max_hp": 20,
-    "current_hp": 13,
-    "hardness": 5,
+    "max_hp": 42,
+    "current_hp": 42,
+    "hardness": 8,
     "raised": false
   },
   "animal": {
