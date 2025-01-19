@@ -189,11 +189,12 @@ impl Character {
         let calc_stat = self.get_prof_obj_from_name("Medium").expect("Character must have a medium proficiency");
         let dex_cap = 1;
         let item_bonus = 4;
+        let auto_bonus_prog_bonus = self.abp_data.def_pot;
         let dex_bonus = std::cmp::min(self.attributes.get_stat_val("dex").expect("Defense expects a dex attribute to be set"), dex_cap);
         let prof_bonus = calc_stat.proficiency.get_bonus(self.level);
         let selectors = vec!["dex".to_string(), "ac".to_string()];
         let armor_bonus_penalties = combine_selected_bonus_penalties(&bp_map, &selectors).calculate_total();
-        let armor_total = 10 + dex_bonus + prof_bonus + item_bonus + armor_bonus_penalties;
+        let armor_total = 10 + dex_bonus + prof_bonus + item_bonus + armor_bonus_penalties + auto_bonus_prog_bonus;
 
         return (armor_total, armor_bonus_penalties)
     }
