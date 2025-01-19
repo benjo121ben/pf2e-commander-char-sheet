@@ -20,7 +20,7 @@
   "journals": [
     {
       "name": "Journal",
-      "text": "2 Hero Point\n- 58gp\nNorik Luke\nVaris Andi\nVinny Joseph\n\nGear:\n- Breastplate (equipped)\n- Steel shield reinforced (equipped)\n- Leder rüstung mit wappen der lizardpeople\n- Medicine Kit (equipped)\n- 3 poison dosen\n- 1 healing potion minor (1d8)\n- Potion of Waterbreathing (1 hour)\n- Potion of Darkvision (1 hour)\n- Light barding (horse ac +1)\n\nWir kriegen nächstes mal loot\nKansaldi war Knight of Solamnia, irgendwas ist vorgefallen und sie hat die Ritter verlassen. Sie war immer fähig aber hatte sehr andere Ansichten.\n\nSoldaten haben menschlichen Hobgoblin trainer gefunden und getötet. Er hatte einen Brief dabei, \"die Hochmeisterin braucht Soldaten, kein Schläger\" \n"
+      "text": "2 Hero Point\n- 49gp\nNorik Luke\nVaris Andi\nVinny Joseph\n\nGear:\n- Breastplate (equipped)\n- Steel shield reinforced (equipped)\n- Leder rüstung mit wappen der lizardpeople\n- Medicine Kit (equipped)\n- 3 poison dosen\n- 1 healing potion minor (1d8)\n- Potion of Waterbreathing (1 hour)\n- Potion of Darkvision (1 hour)\n- Light barding (horse ac +1)\n\nWir kriegen nächstes mal loot\nKansaldi war Knight of Solamnia, irgendwas ist vorgefallen und sie hat die Ritter verlassen. Sie war immer fähig aber hatte sehr andere Ansichten.\n\nSoldaten haben menschlichen Hobgoblin trainer gefunden und getötet. Er hatte einen Brief dabei, \"die Hochmeisterin braucht Soldaten, kein Schläger\" \n\nWir töten Drachen auf der Mission.\n"
     },
     {
       "name": "Enemy Tactics Log",
@@ -261,12 +261,12 @@
     {
       "level": null,
       "name": "Rallying Anthem",
-      "active": false
+      "active": true
     },
     {
       "level": null,
       "name": "Courageous Anthem",
-      "active": false
+      "active": true
     }
   ],
   "gear_list": [
