@@ -133,5 +133,41 @@
       ],
       "description": "You've trained your mount to become a powerful force on the battlefield. The mount you gained through the Cavalier Dedication feat becomes a mature animal companion, granting it additional capabilities. During an encounter, even if you don't use the Command an Animal action, your animal companion can still use 1 action on your turn to Stride or Strike.",
       "char_additions": []
+    },
+    {
+      "name": "Naural Skill",
+      "actions": 0,
+      "feat_types": [
+        "Ancestry"
+      ],
+      "traits": [
+        "Ancestry"
+      ],
+      "description": "Become trained in two skills of your choice: Religion, Deception",
+      "char_additions": []
+    },
+	{
+      "name": "Military Expertise",
+      "actions": 0,
+      "feat_types": [
+        "Class"
+      ],
+      "traits": [
+        "Class"
+      ],
+      "description": "You’ve studied a wide variety of weapons and learned to apply their principles in combat. Your proficiency rank for martial weapons, simple weapons, and unarmed attacks increases to expert. When you critically succeed at an attack roll with a weapon you are at least an expert with, you apply the weapon’s critical specialization effect.",
+      "char_additions": []
+    },
+	{
+      "name": "Drilled Reactions",
+      "actions": 0,
+      "feat_types": [
+        "Class"
+      ],
+      "traits": [
+        "Class"
+      ],
+      "description": "Your time spent training with your allies allows them to respond quickly and instinctively to your commands. Once per round, when you use a tactic, you can grant one ally of your choice benefiting from that tactic an extra reaction. This reaction has to be used for that tactic, and is lost if not used..",
+      "char_additions": []
     }
   ]
