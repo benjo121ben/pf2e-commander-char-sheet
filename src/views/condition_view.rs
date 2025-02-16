@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use leptos::*;
+use leptos::prelude::*;
 use super::view_helpers::{get_base_context, get_modal_context};
 use crate::{
     char_data::{
@@ -16,7 +16,7 @@ use crate::{
 #[component]
 pub fn ConditionSection() -> impl IntoView {
     let condition_memo = get_all_conditions_vector_memo_from_context("ConditionSection");
-    let add_cond_visible_signal = create_rw_signal(false);
+    let add_cond_visible_signal = RwSignal::new(false);
     view!{
         <section id="condition_section">
             <div class="condition-div">
@@ -50,7 +50,7 @@ pub fn ConditionView(condition: FullConditionView) -> impl IntoView {
     let conditions_map: HashMap<String, ConditionData> = use_context().expect("ConditionsSection expected conditiondata to be ready");
     let name = condition.name.clone();
 
-    let current_state_memo: Memo<FullConditionView> = create_memo({
+    let current_state_memo: Memo<FullConditionView> = Memo::new({
         let cond_map_clone = conditions_map.clone();
         move |_| {
             let cond_name_clone = name.clone();

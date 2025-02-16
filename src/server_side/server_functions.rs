@@ -1,4 +1,4 @@
-use leptos::*;
+use leptos::prelude::*;
 
 use crate::char_data::conditions::ConditionData;
 use crate::char_data::feats::Feat;

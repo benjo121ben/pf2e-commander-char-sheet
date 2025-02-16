@@ -16,7 +16,7 @@ use super::view_helpers::*;
 use super::stats_views::*;
 use super::equip_views::*;
 
-use leptos::*;
+use leptos::prelude::*;
 
 #[component]
 pub fn BaseView(
@@ -25,10 +25,10 @@ pub fn BaseView(
     conditions: Vec<ConditionData>,
     trait_data: HashMap<String, String>
 ) -> impl IntoView {
-    let (read_char, write_char) = create_signal(char);
-    let simple_modal_data = create_rw_signal(SimpleModalData::default());
-    let sheet_error: RwSignal<SheetError> = create_rw_signal(SheetError::new(""));
-    let upload_ketra = create_action( move |_| async move {
+    let (read_char, write_char) = signal(char);
+    let simple_modal_data = RwSignal::new(SimpleModalData::default());
+    let sheet_error: RwSignal<SheetError> = RwSignal::new(SheetError::new(""));
+    let upload_ketra = Action::new( move |_| async move {
         let character = read_char.get_untracked();
         sheet_error.set(SheetError::new(""));
         let ret_val = set_char(character).await;
@@ -36,7 +36,7 @@ pub fn BaseView(
             sheet_error.set(SheetError::new(&ret_val.unwrap_err().to_string()));
         }
     });
-    create_effect(move |prev| {
+    Effect::new(move |prev| {
         let _getUp = read_char.with(|c| c.name.clone());
         match prev {
             Some(_) => {
@@ -58,15 +58,15 @@ pub fn BaseView(
     provide_context(conditions_map.clone());
     provide_context(feat_map.clone());
 
-    let char_level_memo = create_memo(move |_| read_char.with(|c| c.level));
-    let shield_raised_memo = create_memo(move |_| read_char.with(|c| c.shield_info.raised));
-    let condition_memo = create_memo(move |_| {
+    let char_level_memo = Memo::new(move |_| read_char.with(|c| c.level));
+    let shield_raised_memo = Memo::new(move |_| read_char.with(|c| c.shield_info.raised));
+    let condition_memo = Memo::new(move |_| {
         match read_char.with(|c| c.get_all_conditions(&conditions_map)) {
             Ok(condition_list) => condition_list.clone(),
             Err(error) => {panic!("ConditionSection: error getting character conditions: {error}");}
         }
     });
-    let bonus_penalty_memo: Memo<HashMap<String, StatBonusPenalties>> = create_memo(move |_| {
+    let bonus_penalty_memo: Memo<HashMap<String, StatBonusPenalties>> = Memo::new(move |_| {
         let conditions = condition_memo.get();
         let char_level = char_level_memo();
         let shield_raised = shield_raised_memo();
@@ -111,7 +111,7 @@ pub fn TopCharViewSection() -> impl IntoView {
     let (read_char, set_char) = get_base_context("TopCharView");
     let bp_map = get_bonus_penalty_map_from_context("TopCharViewSection");
     let sheet_error = get_sheet_error_context("TopCharView");
-    let send_debug = create_action( move |_:&i32| async move {
+    let send_debug = Action::new( move |_:&i32| async move {
         sheet_error.set(SheetError::new(""));
         let ret_val = ping_server().await;
         match ret_val {
@@ -131,7 +131,7 @@ pub fn TopCharViewSection() -> impl IntoView {
         <div class="flex-row">
             <div id="top_left_div">
                 <div id="header_div" class="flex-row no-grow-children" style="align-items:center; gap: 20px">
-                    <h2 on:click=move|_|send_debug.dispatch(0) style="margin: unset;"> 
+                    <h2 on:click=move|_|{send_debug.dispatch(0);} style="margin: unset;"> 
                         {move || read_char.with(|k| k.name.clone())}
                     </h2>
                     <button style="padding: 5px;"
@@ -176,8 +176,8 @@ pub fn TopCharViewSection() -> impl IntoView {
 #[component]
 pub fn ProficiencySidebar() -> impl IntoView {
     let (read_char, _): (ReadSignal<Character>, WriteSignal<Character>) = get_base_context("ProficiencySidebar");
-    let show_edit_stats= create_rw_signal(false);
-    let has_incr_init_memo = create_memo(move |_| {
+    let show_edit_stats= RwSignal::new(false);
+    let has_incr_init_memo = Memo::new(move |_| {
         read_char.with(|c| {
             check_character_flag(c, "incred_init")
         })
@@ -211,7 +211,7 @@ pub fn ProficiencySidebar() -> impl IntoView {
 pub fn HorseSection(
 ) -> impl IntoView {
     let (read_c, _) = get_base_context("HorseSection");
-    let horse_data = create_memo(move |_| read_c.with(|c| c.animal.clone()));
+    let horse_data = Memo::new(move |_| read_c.with(|c| c.animal.clone()));
     let attack_proficiency = ProficiencyLevel::Trained;
     let unarmored_defense_proficiency = ProficiencyLevel::Trained;
     let _barding_proficiency = ProficiencyLevel::Trained;
@@ -248,8 +248,8 @@ pub fn HorseSection(
 #[component]
 pub fn TextCenterSection() -> impl IntoView {
     let (read_char, write_char) = get_base_context("TextCenterSection");
-    let journal_index: RwSignal<usize> = create_rw_signal(0);
-    let center_journal_memo = create_memo(move|_| {
+    let journal_index: RwSignal<usize> = RwSignal::new(0);
+    let center_journal_memo = Memo::new(move|_| {
         let index = journal_index.get();
         read_char.with(|c|c.journals.get(index).cloned().expect("journal should exist inside character"))
     });
@@ -259,7 +259,7 @@ pub fn TextCenterSection() -> impl IntoView {
                 <For each=move|| (0..read_char.with(|c|c.journals.len()))
                     key=move|index|index.to_string()
                     children=move|index| {
-                        let header_memo = create_memo(move|_|{
+                        let header_memo = Memo::new(move|_|{
                             read_char.with(|c|c.journals.get(index).expect("journal should exist inside character").name.clone())
                         });
                         view! {

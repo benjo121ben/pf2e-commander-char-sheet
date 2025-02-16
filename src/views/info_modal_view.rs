@@ -1,6 +1,6 @@
 use std::vec;
 
-use leptos::*;
+use leptos::prelude::*;
 
 use crate::views::stats_views::TraitView;
 

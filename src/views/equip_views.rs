@@ -3,44 +3,44 @@ use crate::char_data::tactics::Tactic;
 use crate::views::action_view::ActionView;
 use crate::views::view_helpers::*;
 use super::stats_views::TraitView;
-use leptos::*;
+use leptos::prelude::*;
 use leptos::logging::log;
 
 #[component]
-pub fn EquipView() -> impl IntoView {
+pub fn EquipView() -> AnyView {
     let (character_data, _) = get_base_context("EquipView");
-    let gear_list_memo = create_memo(move|_|character_data.with(|k| k.gear_list.clone()));
+    let gear_list_memo = Memo::new(move|_|character_data.with(|k| k.gear_list.clone()));
     view! {
         <For
             each=move || gear_list_memo.get()
             key=|gear_item| gear_item.name.clone()
-            children=move |gear_item| {
+            children={move |gear_item| -> AnyView {
                 let item_name = gear_item.name.clone();
                 if gear_item.g_type == GearType::Weapon {
-                    return view! {<WeaponView item=gear_item/>}.into_view();
+                    return view! {<WeaponView item=gear_item/>}.into_any();
                 } 
-                let collapse = create_rw_signal(false);
+                let collapse = RwSignal::new(false);
                 view! {
                     <div class="flex-col align-flex-start bright-bg" 
                         on:click=move |_| collapse.update(|c| *c = !*c)
                     >
-                        <div style="margin:unset; font-weight:bold">{
-                            move || item_name.clone()
-                        }</div>
+                        <div style="margin:unset; font-weight:bold">
+                            {move || item_name.clone()}
+                        </div>
                         <Show when=move || collapse.get()>
                             <TraitView trait_names=gear_item.traits.clone()/>
                             <hr/>
                             <div class="tiny-text" inner_html={let desc = gear_item.description.clone(); move || desc.clone()}></div>
                         </Show>
-                    </div>
-                }.into_view()
-            }
+                    </div> 
+                }.into_any()
+            }}
         />
-    }
+    }.into_any()
 }
 
 #[component]
-pub fn WeaponView(item: Gear) -> impl IntoView {
+pub fn WeaponView(item: Gear) -> AnyView {
     let (character_data, _) = get_base_context("WeaponView");
     let active_bonus_penalties_memo = get_bonus_penalty_map_from_context("WeaponView");
     let debug_name_clone = item.name.clone();
@@ -58,10 +58,10 @@ pub fn WeaponView(item: Gear) -> impl IntoView {
 
     if &err_text != "" {
         log!("Weaponview: Logged error {err_text}");
-        return err_text.into_view();
+        return err_text.into_any();
     }
 
-    let char_weapon_item_memo = create_memo(move |_| {
+    let char_weapon_item_memo = Memo::new(move |_| {
         let weapon_Item = character_data.with(|c| c.gear_list.iter().find(|i| i.name == item.name.clone()).cloned());
         match weapon_Item {
             Some(weapon) => {
@@ -74,9 +74,9 @@ pub fn WeaponView(item: Gear) -> impl IntoView {
         }
     });
 
-    let collapsed_signal = create_rw_signal(true);
+    let collapsed_signal = RwSignal::new(true);
 
-    let get_weapon_view = move || -> Result<View, String> {
+    let get_weapon_view = move || -> Result<AnyView, String> {
         let weapon = char_weapon_item_memo.get()?;
         let attack_data = character_data.with(|c| get_weapon_attack_data(&c, &active_bonus_penalties_memo.get(), &weapon))?;
         let full_attack_bonus = attack_data.get_full_attack_bonus();
@@ -136,26 +136,29 @@ pub fn WeaponView(item: Gear) -> impl IntoView {
                     <p inner_html={let desc = weap_description_clone.clone(); move|| desc.clone()}/>
                 </Show>
             </div>
-        }.into_view())
+        }.into_any())
     };
 
-    view!{   
+    
+      
+    
+    view! {
         {move || match get_weapon_view() {
-            Ok(w_view) => w_view,
+            Ok(w_view) => w_view.into_any(),
             Err(error_str) => {
                 view!{
-                    <p class="error">{error_str}</p>
-                }.into_view()
+                    <p class="error">{error_str.to_string()}</p>
+                }.into_any()
             }
-        }}    
-    }.into_view()
+        }}
+    }.into_any()
 }
 
 #[component]
 pub fn TacticsView() -> impl IntoView {
     let (character_data, character_write) = get_base_context("TacticsView");
     let max_tactics = 2;
-    let tactics_memo = create_memo(move|_|character_data.with(|c|c.tactics.clone()));
+    let tactics_memo = Memo::new(move|_|character_data.with(|c|c.tactics.clone()));
     let count_tactics = move || {
         tactics_memo.with(|t|t.iter().filter(|tactic| tactic.selected).count())
     };
@@ -172,7 +175,7 @@ pub fn TacticsView() -> impl IntoView {
                     key=|tactic| tactic.name.clone()
                     children=move |tactic| {
                         let tac_name = tactic.name.clone();
-                        let collapse = create_rw_signal(false);
+                        let collapse = RwSignal::new(false);
                         let get_selected_on_tactic = {
                             let tac_name2 = tactic.name.clone();
                             move || tactics_memo.with(|tactics|{
