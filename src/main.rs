@@ -4,6 +4,7 @@ async fn main() {
     use axum::Router;
     use std::env;
     use leptos::prelude::*;
+    use leptos::logging::log;
     use leptos_axum::{generate_route_list, LeptosRoutes};
     use pf2e_char_sheet::app::*;
 
@@ -28,7 +29,7 @@ async fn main() {
         .with_state(leptos_options);
 
     let listener = tokio::net::TcpListener::bind(&addr).await.expect("main.rs expected listener");
-    logging::log!("listening on http://{}", &addr);
+    log!("listening on http://{}", &addr);
     axum::serve(listener, app.into_make_service())
         .await
         .expect("main.rs expected service");

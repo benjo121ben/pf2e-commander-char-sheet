@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use leptos_meta::*;
+use leptos_meta::{provide_meta_context, MetaTags, Stylesheet, Title};
 use std::fmt::Debug;
 
 use crate::views::character_view::BaseView;
@@ -87,7 +87,7 @@ pub fn App() -> impl IntoView {
             <Suspense fallback=move || {
                 view! { <p>"Loading ...."</p> }
             }>
-                {move || {
+                {move || Suspend::new( async move {
                     load_all_data().map(|result|
                         match result {
                             Ok((
@@ -99,7 +99,7 @@ pub fn App() -> impl IntoView {
                             Err(error) => error.into_any()
                         }
                     )
-                }}
+                })}
             </Suspense>
         </body>
     }
