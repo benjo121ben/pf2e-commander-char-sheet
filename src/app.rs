@@ -1,4 +1,3 @@
-use leptos::logging::log;
 use leptos::prelude::*;
 use leptos_meta::{provide_meta_context, MetaTags, Stylesheet, Title};
 use std::collections::HashMap;
@@ -6,7 +5,7 @@ use std::fmt::Debug;
 
 use crate::char_data::character::Character;
 use crate::char_data::conditions::ConditionData;
-use crate::char_data::feats::{self, Feat};
+use crate::char_data::feats::Feat;
 use crate::views::character_view::BaseView;
 use crate::server_side::server_functions::{get_char, get_conditions, get_traits, get_feats};
 
