@@ -1,5 +1,4 @@
 pub mod app;
-pub mod error_template;
 pub mod views;
 pub mod char_data;
 pub mod server_side;

@@ -7,7 +7,6 @@ use crate::char_data::conditions::ConditionData;
 use crate::char_data::feats::Feat;
 use crate::char_data::proficiency::ProficiencyLevel;
 use crate::char_data::stats::ProficiencyType;
-use crate::error_template::SheetError;
 use crate::server_side::server_functions::*;
 use crate::views::condition_view::ConditionSection;
 use crate::views::info_modal_view::SimpleModalData;
@@ -78,13 +77,13 @@ pub fn BaseView(
     });
 
     provide_context(condition_memo);
-    provide_context(bonus_penalty_memo);
+    provide_context(bonus_penalty_memo); 
 
 
     view!{
         <SimpleModalView data=simple_modal_data/>
         <CharView/>
-        <HorseSection/>
+        <HorseSection/> 
     }
 }
 

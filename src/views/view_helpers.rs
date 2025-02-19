@@ -2,9 +2,24 @@ use std::collections::HashMap;
 
 use leptos::prelude::*;
 
-use crate::{char_data::{bonus_penalty::StatBonusPenalties, character::Character, conditions::FullConditionView}, error_template::SheetError};
+use crate::char_data::{bonus_penalty::StatBonusPenalties, character::Character, conditions::FullConditionView};
 
 use super::info_modal_view::SimpleModalData;
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct SheetError{
+    pub msg: String
+}
+
+impl SheetError {
+    pub fn new(value: &str) -> Self {
+        Self{msg: value.to_string()}
+    }
+
+    pub fn zero() -> Self {
+        Self{msg: "".to_string()}
+    }
+}
 
 pub fn get_base_context(view_name: &str) -> (ReadSignal<Character>, WriteSignal<Character>){
     let name = String::from(view_name);

@@ -255,11 +255,6 @@
     },
     {
       "level": null,
-      "name": "Grabbed",
-      "active": false
-    },
-    {
-      "level": null,
       "name": "Rallying Anthem",
       "active": true
     },
@@ -267,6 +262,11 @@
       "level": null,
       "name": "Courageous Anthem",
       "active": true
+    },
+    {
+      "level": null,
+      "name": "Grabbed",
+      "active": false
     }
   ],
   "gear_list": [
