@@ -84,7 +84,7 @@ pub fn BaseView(
         <SimpleModalView data=simple_modal_data/>
         <CharView/>
         <HorseSection/> 
-    }
+    }.into_any()
 }
 
 #[component]
@@ -102,7 +102,7 @@ pub fn CharView() -> impl IntoView {
                 <FeatView/>
             </section>
         </div>
-    }
+    }.into_any()
 }
 
 #[component]

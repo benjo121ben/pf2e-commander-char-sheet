@@ -24,7 +24,7 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
                 <App/>
             </body>
         </html>
-    }
+    }.into_any()
 }
 
 pub async fn try_load_source<T:Clone + std::fmt::Debug + std::marker::Sync + std::marker::Send + 'static>(source: OnceResource<Result<T, ServerFnError>>, name: &str) -> Result<T, View<String>> {
@@ -106,5 +106,5 @@ pub fn App() -> impl IntoView {
                 }
             })}
         </Suspense>
-    }
+    }.into_any()
 }
